@@ -1,9 +1,7 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
-
-require_relative '../../bundler_setup'
+require 'manageiq-gems-pending'
 require 'rubygems'
 require 'log4r'
-require 'miq_hyperv_disk'
+require 'Scvmm/miq_hyperv_disk'
 
 #
 # Formatter to output log messages to the console.

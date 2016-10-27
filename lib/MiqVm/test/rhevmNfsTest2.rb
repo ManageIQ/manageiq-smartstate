@@ -2,7 +2,7 @@
 # This test assumes the NFS share of the storage in question is mounted on the appliance.
 #
 
-require_relative '../../bundler_setup'
+require 'manageiq-gems-pending'
 require 'log4r'
 require 'ostruct'
 require 'MiqVm/MiqVm'

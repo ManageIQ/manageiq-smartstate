@@ -1,4 +1,4 @@
-require_relative '../../bundler_setup'
+require 'manageiq-gems-pending'
 require 'openssl' # Required for 'Digest' in camcorder (< Ruby 2.1)
 require 'camcorder'
 require 'log4r'

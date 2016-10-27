@@ -1,4 +1,4 @@
-require_relative '../../bundler_setup'
+require 'manageiq-gems-pending'
 require 'ostruct'
 require 'log4r'
 require 'MiqVm/MiqVm'
