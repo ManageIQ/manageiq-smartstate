@@ -1,6 +1,6 @@
 require 'camcorder'
 
-Camcorder.config.recordings_dir = ManageIQ::Gems::Pending.root.join('spec/recordings')
+Camcorder.config.recordings_dir = File.expand_path("../recordings", __dir__)
 
 module Camcorder
   def self.intercept(cls, *methods)
