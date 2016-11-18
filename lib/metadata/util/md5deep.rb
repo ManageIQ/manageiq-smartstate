@@ -14,7 +14,7 @@ class MD5deep
     @fullDirCount = 0
     # Create XML document
     @xml = XmlHash.createDoc(:filesystem)
-    @fs = fs if fs.kind_of?(MiqFS)
+    @fs = fs.kind_of?(MiqFS) ? fs : nil
 
     # Read optional parameters if they exist in the options hash
     @opts = {'versioninfo' => true, 'imports' => true, 'contents' => false,

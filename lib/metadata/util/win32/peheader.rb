@@ -21,6 +21,7 @@ class PEheader
     @fname = path
     @dataDirs = []
     @sectionTable = []
+    @baseResDir = nil
 
     if path.class != String
       @fHnd = path
@@ -90,19 +91,19 @@ class PEheader
   end
 
   def imports
-    @import_array || @import_array = getImports
+    @import_array ||= getImports
   end
 
   def icons
-    @icon_array || @icon_array = getIcons(@fBuf)
+    @icon_array ||= getIcons(@fBuf)
   end
 
   def messagetables
-    @messagetable_hash || @messagetable_hash = getMessagetables
+    @messagetable_hash ||= getMessagetables
   end
 
   def versioninfo
-    @versioninfo_array || @versioninfo_array = getVersioninfo
+    @versioninfo_array ||= getVersioninfo
   end
 
   # //////////////////////////////////////////////////////////////////////////
