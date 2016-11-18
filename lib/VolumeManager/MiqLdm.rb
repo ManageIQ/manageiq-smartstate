@@ -475,7 +475,7 @@ if __FILE__ == $0
     exit(1)
   end
 
-  parts = disk.getPartitions
+  # parts = disk.getPartitions
 
   puts "Disk type: #{disk.diskType}"
   puts "Disk partition type: #{disk.partType}"

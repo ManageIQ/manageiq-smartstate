@@ -43,7 +43,6 @@ module DiskProbe
 
     fname = disk.dInfo.fileName rescue ""
 
-    mod = nil
     probes.each do |pmodstr|
       $log.debug "MIQ(DiskProbe-getDiskModForDisk) Disk probe attempting [#{pmodstr}] for [#{fname}]"
       require_relative "modules/#{pmodstr}"

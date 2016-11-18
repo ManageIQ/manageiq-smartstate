@@ -251,19 +251,19 @@ class MiqVolumeManager
 
       pvs = vg.add_element 'physical'
       vgo.physicalVolumes.each do |pvn, pvo|
-        pv = pvs.add_element('volume',                   "name"              => pvn,
-                                                         "uid"               => pvo.pvId,
-                                                         "controller"        => pvo.diskObj.hwId,
-                                                         "os_name"           => pvo.device,
-                                                         "physical_extents"  => pvo.peCount,
-                                                         "virtual_disk_file" => pvo.diskObj.dInfo.fileName)
+        pvs.add_element('volume', "name"              => pvn,
+                                  "uid"               => pvo.pvId,
+                                  "controller"        => pvo.diskObj.hwId,
+                                  "os_name"           => pvo.device,
+                                  "physical_extents"  => pvo.peCount,
+                                  "virtual_disk_file" => pvo.diskObj.dInfo.fileName)
         pext += pvo.peCount
       end
 
       lvs = vg.add_element 'logical'
       vgo.logicalVolumes.each do |lvn, lvo|
-        lv = lvs.add_element('volume',                   "name" => lvn,
-                                                         "uid"  => lvo.lvId)
+        lvs.add_element('volume', "name" => lvn,
+                                  "uid"  => lvo.lvId)
         lvo.segments.each { |s| lext += s.extentCount }
       end
 

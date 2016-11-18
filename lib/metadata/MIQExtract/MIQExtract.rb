@@ -176,7 +176,7 @@ class MIQExtract
         # Log each child snapshot element
         s.find_each("child::snapshot") { |ss| $log.info "Snapshot details:  id:[#{ss.attributes['uid']}]  Name:[#{ss.attributes['displayname']}]" }
       end
-    rescue => e
+    rescue # => e
       # $log.error e
     end
 
@@ -269,7 +269,7 @@ class MIQExtract
     # scanPath = "c:/program files"
     scanPath = "c:/program files/Java/jdk1.5.0_12/jre/lib"
     md5 = MD5deep.new(@systemFs, 'versioninfo' => true, 'imports' => true)
-    xml = md5.scan(scanPath, scanPath)
+    md5.scan(scanPath, scanPath)
   end
 
   def getBaseConfigName

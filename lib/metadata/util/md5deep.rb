@@ -48,7 +48,7 @@ class MD5deep
 
   def self.scan_glob(fs, filename, options = {})
     md5 = MD5deep.new(fs, options)
-    xml = md5.scan_glob(filename)
+    md5.scan_glob(filename)
   end
 
   def scan_glob(filename)
@@ -77,8 +77,6 @@ class MD5deep
   end
 
   def read_fs(path, xmlNode)
-    statHash = {}
-
     if @fs
       @fs.dirForeach(path)  { |x| processFile(path, x, xmlNode) }
       @fs.dirForeach(path)  { |x| processDir(path,  x, xmlNode) }
@@ -244,7 +242,6 @@ if __FILE__ == $0
 
   # Mount VM Image to a real drive letter
   #  mountNative, startPath = false, "M:/WINDOWS/system32/mui"
-  startPath = "c:/windows/system32"
   vmHDImage = "D:\\Virtual Machines\\VC20\\Windows Server 2003 Standard Edition.vmx"
 
   begin

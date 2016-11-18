@@ -77,7 +77,7 @@ class MiqMountManager < MiqFS
 
   # Return free space in file system.
   def freeBytes
-    fs, p = getFsPath(@cwd)
+    fs, _p = getFsPath(@cwd)
     fs.freeBytes
   end
 
@@ -190,7 +190,7 @@ class MiqMountManager < MiqFS
   def toXml(doc = nil)
     doc = MiqXml.createDoc(nil) unless doc
 
-    fses = doc.add_element 'FileSystems'
+    doc.add_element 'FileSystems'
     @fileSystems.each do |fsd|
       $miqOut.puts "FS: #{fsd.fsSpec}, Mounted on: #{fsd.mountPoint}, Type: #{fsd.fs.fsType}, Free bytes: #{fsd.fs.freeBytes}"
     end

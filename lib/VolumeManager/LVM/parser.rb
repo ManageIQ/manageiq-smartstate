@@ -90,14 +90,12 @@ class Lvm2MdParser
   def parseObj(parent, name)
     val = @mda.shift
 
-    rv = case val
-         when HASH_START
-           parent[name] = parseHash
-         when ARRAY_START
-           parent[name] = parseArray
-         else
-           parent[name] = parseVal(val)
-         end
+    parent[name] =
+      case val
+      when HASH_START  then parseHash
+      when ARRAY_START then parseArray
+      else                  parseVal(val)
+      end
   end
 
   def parseVal(val)

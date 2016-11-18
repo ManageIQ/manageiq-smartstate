@@ -148,8 +148,7 @@ module Extract
         currPath = File.join(currPath, p) unless p.nil?
         fs.chdir(currPath)
         fs.dirEntries(fs.pwd).each do |name|
-          item = fs.fileDirectory?(name) ? "<DIR> #{name}" : name
-          # $log.debug item
+          fs.fileDirectory?(name) ? "<DIR> #{name}" : name
         end
       end
     end

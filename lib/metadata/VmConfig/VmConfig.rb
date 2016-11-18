@@ -106,7 +106,7 @@ class VmConfig
       filename = @cfgHash[dk + ".filename"]
       @diskFileHash[dk] = filename
       if @direct_file_access
-        ds, dir, name = split_filename(filename)
+        ds, _dir, _name = split_filename(filename)
         if ds.nil? && !Pathname.new(filename).absolute?
           @diskFileHash[dk] = File.expand_path(File.join(@configPath, filename))
         end
@@ -141,7 +141,7 @@ class VmConfig
       disk_path = filename
 
       if @direct_file_access
-        ds, dir, name = split_filename(filename)
+        ds, _dir, _name = split_filename(filename)
         if ds.nil? && !Pathname.new(@cfgHash[dk + ".filename"]).absolute?
           disk_path = File.join(@configPath, filename)
         end
@@ -158,7 +158,7 @@ class VmConfig
   end
 
   def set_vmconfig_path(config_path)
-    ds, dir, name = split_filename(config_path)
+    ds, _dir, _name = split_filename(config_path)
     @configFile = ds.nil? ? File.normalize(config_path) : config_path
     @configPath = File.dirname(@configFile)
   end
@@ -217,7 +217,6 @@ class VmConfig
     xml = toXML(false)
     # Find the disk section of the XML
     xml.root.each_recursive do |e|
-      controller_type = e.attributes["type"] if e.name == "controller"
       # Only process drives that are present and have a filename
       if (!e.attributes['present'].nil? && e.attributes['present'].downcase == 'true') && !e.attributes['filename'].nil? && (!e.attributes['type'].nil? && e.attributes['type'].downcase == 'disk') && (!e.attributes['id'].nil? && e.attributes['id'].include?(":"))
         # Make sure the disk we are looking at is not a CD-ROM
@@ -455,7 +454,7 @@ class VmConfig
         if miqvm.vim
           filePattern = nil
           pathOnly = false
-          vimDs, ds = nil
+          vimDs = nil
           each_datastore(miqvm) do |ds, dirs|
             begin
               vimDs = miqvm.vim.getVimDataStore(ds)
@@ -476,8 +475,8 @@ class VmConfig
             snap.disks.each { |disk| @files << rhevm_disk_file_entry(disk) unless snap[:type] == 'active' }
           end
         end
-      rescue
-        $log.error "#{log_header} #{$!}\n#{$!.backtrace.join("\n")}"
+      rescue => err
+        $log.error "#{log_header} #{err}\n#{err.backtrace.join("\n")}"
       end
     end
     disk_files(miqvm)
@@ -592,7 +591,7 @@ class VmConfig
         end
       end
       node.add_attributes("disk_free_space" => free_space, "disk_capacity" => disk_capacity)
-    rescue => err
+    rescue
     end
   end
 
@@ -635,7 +634,7 @@ class VmConfig
 
     ds = Hash.new { |h, k| h[k] = {} }
     files.each do |f|
-      dsName, dir, name = split_filename(f)
+      dsName, dir, _name = split_filename(f)
       ds[dsName][dir] = true # unless dsName.nil?
     end
 
@@ -665,13 +664,13 @@ class VmConfig
 
   def getSnapShotPath(name, endType, disk)
     # Initialize variables
-    full_pos, maj_pos, device, pos_idx = split_data(name)
+    full_pos, _maj_pos, _device, pos_idx = split_data(name)
 
     return [["vm"], ["snapshots"]] if pos_idx.nil?
     ret = [["vm"], ["snapshots"], [endType, {"id" => full_pos}]]
 
     if disk
-      a, b, subDevice, c = split_data(disk)
+      subDevice = split_data(disk)[2]
       diskPath = getSnapShotPath(disk, subDevice, nil)
       ret << diskPath.pop
     end
@@ -703,7 +702,7 @@ class VmConfig
           e.add_attribute("mdate_on_disk", fstat[:mtime].getutc.iso8601(6))
         rescue => err
           # Ignore errors here, we will try to load almost anything.
-          $log.error "VmConfig.add_snapshot_size [#{$!.class}]-[#{$!}]\n#{$!.backtrace.join("\n")}"
+          $log.error "VmConfig.add_snapshot_size [#{err.class}]-[#{err}]\n#{err.backtrace.join("\n")}"
         end
       end
     end unless node.nil?
@@ -867,7 +866,7 @@ class VmConfig
   end
 
   def normalize_file_path(filename, config_file = @configFile)
-    cfg_ds, cfg_dir, cfg_name = split_filename(config_file)
+    cfg_ds, cfg_dir, _cfg_name = split_filename(config_file)
     ds, dir, name = split_filename(filename)
     if dir.blank? || dir == '.'
       name = File.join(cfg_dir, name)

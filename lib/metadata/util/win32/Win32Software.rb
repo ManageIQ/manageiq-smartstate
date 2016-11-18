@@ -268,7 +268,7 @@ module MiqWin32
             #  ie = e1.add_element("image",{"file"=>fileName, "count"=>peData.icons.length.to_s, "md5"=>Digest::MD5.hexdigest(peData.icons[0])})
             #  addIconData(ie, peData, iconNode)
             # end
-          rescue Exception => err
+          rescue Exception # => err
             # $log.debug "(Win32Software-postProcessApps) - file:[#{fileName}] - error:[#{err.to_s}]"
           ensure
             fh.close if fh

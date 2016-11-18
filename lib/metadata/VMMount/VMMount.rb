@@ -44,7 +44,7 @@ class VMMount
             Win32::SystemPath.systemRoot(fsPartitions)
             @fs = fsPartitions
             break
-          rescue => err
+          rescue
             # $log.warn "No Windows partition here."
           end
         end

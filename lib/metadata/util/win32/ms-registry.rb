@@ -230,7 +230,7 @@ class MSRegHive
     # Process all values
     if nkHash[:num_values] > 0
       vkOffset = nkHash[:values_offset]
-      for i in 1..nkHash[:num_values]
+      nkHash[:num_values].times do
         vkHash = REGISTRY_STRUCT_VK_OFFSET.decode(read_buffer(vkOffset, SIZEOF_REGISTRY_STRUCT_VK_OFFSET))
         parseRecord(vkHash[:offset_vk], xmlSubNode, fqName, level)
         vkOffset += SIZEOF_REGISTRY_STRUCT_VK_OFFSET
@@ -253,7 +253,7 @@ class MSRegHive
 
     if riHash[:num_keys] > 0
       key_offset = offset + SIZEOF_REGISTRY_STRUCT_RI
-      for i in 1..riHash[:num_keys]
+      riHash[:num_keys].times do
         hash = REGISTRY_STRUCT_RI_OFFSET.decode(read_buffer(key_offset, SIZEOF_REGISTRY_STRUCT_RI_OFFSET))
         parseRecord hash[:offset_ri], xmlNode, fqName, level
         key_offset += SIZEOF_REGISTRY_STRUCT_RI_OFFSET
@@ -267,7 +267,7 @@ class MSRegHive
 
     if lfHash[:num_keys] > 0
       key_offset = offset + SIZEOF_REGISTRY_STRUCT_LF
-      for i in 1..lfHash[:num_keys]
+      lfHash[:num_keys].times do
         hash = REGISTRY_STRUCT_LF_HASH.decode(read_buffer(key_offset, SIZEOF_REGISTRY_STRUCT_LF_HASH))
         parseRecord hash[:offset_nk], xmlNode, fqName, level
         key_offset += SIZEOF_REGISTRY_STRUCT_LF_HASH
@@ -281,7 +281,7 @@ class MSRegHive
 
     if lhHash[:num_keys] > 0
       key_offset = offset + SIZEOF_REGISTRY_STRUCT_LH
-      for i in 1..lhHash[:num_keys]
+      lhHash[:num_keys].times do
         hash = REGISTRY_STRUCT_LH_HASH.decode(read_buffer(key_offset, SIZEOF_REGISTRY_STRUCT_LH_HASH))
         parseRecord hash[:offset_nk], xmlNode, fqName, level
         key_offset += SIZEOF_REGISTRY_STRUCT_LH_HASH

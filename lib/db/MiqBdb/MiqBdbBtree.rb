@@ -182,8 +182,8 @@ module MiqBerkeleyDB
       # 00-01: Key/data item length
       #    02: Page type AND DELETE FLAG
       #        Data Follows
-      len  = page.buf[entryOffset(index, page), 2].unpack('S')[0]
-      data = page.buf[entryOffset(index, page) + 3, len].unpack("A#{len}")[0]
+      len = page.buf[entryOffset(index, page), 2].unpack('S')[0]
+      page.buf[entryOffset(index, page) + 3, len].unpack("A#{len}")[0]
     end
 
     def entryDataOverflow(index, page)
