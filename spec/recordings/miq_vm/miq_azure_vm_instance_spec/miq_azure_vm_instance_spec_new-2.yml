@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://login.windows.net/azure_tenant_id/oauth2/token
+    uri: https://login.microsoftonline.com/azure_tenant_id/oauth2/token
     body:
       encoding: UTF-8
       string: grant_type=client_credentials&client_id=azure_client_id&client_secret=azure_client_key&resource=https%3A%2F%2Fmanagement.azure.com%2F
@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (darwin15.4.0 x86_64) ruby/2.3.1p112
+      - rest-client/2.0.0 (darwin14.5.0 x86_64) ruby/2.3.1p112
       Content-Length:
       - '186'
       Content-Type:
@@ -36,31 +36,29 @@ http_interactions:
       - max-age=31536000; includeSubDomains
       X-Content-Type-Options:
       - nosniff
-      Client-Request-Id:
-      - c1bdce0d-d4bc-43b0-bfc8-fdcb97c5c092
       X-Ms-Request-Id:
-      - da20c6a5-a0aa-40e4-a60a-fff571748dfd
+      - ab4ceb3a-1447-41a4-bb24-0edd1cac84a3
       P3p:
       - CP="DSP CUR OTPi IND OTRi ONL FIN"
       Set-Cookie:
-      - esctx=AQABAAAAAADRNYRQ3dhRSrm-4K-adpCJ_Qh1K2xPfBoFQp3LX-yiz45v-_urcsf_sJmEd-ufK7B-VoN47AlLX7Vz22EUPdn0iPPSFPWEpvSsZ-fnU4jYRoO4S-EH-4rjAn3miqn_V--hGKkIEQd4BUIoUH_1GL_guNtDd9CyPp-f4vkacJ20F0I08h2RYb7cDT_vS8boJBEgAA;
-        domain=.login.windows.net; path=/; secure; HttpOnly
+      - esctx=AQABAAAAAADRNYRQ3dhRSrm-4K-adpCJVGqtzH6PE68IFI17aJq9EqydoHNqUpsm2R_0nzLi1tAQgqqWCSzITdiuLuO_8I8hQixO8syN9R4RpmBsDwatg8jH4lBKAk8qvHV2x1oDU_keZWWZhc3doO-YO63KwGEHsOVenYd06Ww_ZzhCFedFag70dkWtrJjIwMR9x7Jy5o4gAA;
+        domain=.login.microsoftonline.com; path=/; secure; HttpOnly
       - stsservicecookie=ests; path=/; secure; HttpOnly
-      - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
+      - x-ms-gateway-slice=003; path=/; secure; HttpOnly
       X-Powered-By:
       - ASP.NET
       Date:
-      - Mon, 24 Oct 2016 19:59:29 GMT
+      - Mon, 19 Dec 2016 21:49:01 GMT
       Content-Length:
       - '1409'
     body:
       encoding: UTF-8
-      string: '{"token_type":"Bearer","expires_in":"3599","ext_expires_in":"0","expires_on":"1477342768","not_before":"1477338868","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzg4NjgsIm5iZiI6MTQ3NzMzODg2OCwiZXhwIjoxNDc3MzQyNzY4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.G7PklnNL4Tce0US8PaoJQ24nACnnz7UKADXWwzP-s85dhZET-SJhEjc06oXUpUBYle4lr2uKImcZ9QXnYAg1VrJH_Q5rHxezA4zgPm9s1jaLR5CoXMVcBg7zA8dHvGF8a-p9q4Dl3ab_mrVRfDN9XnIvcu_zVOsqaszQpoFz_TiGm1lTQzUHyqynwAmWcFvJ7cqhJ2SxlqlYlDOzvQqCa7uCQwcPWAYHHJBv61NElOvk26h7dDUH58F4E4ou7Nyy1p56UX2YTqZyRIcDgPPYmPAE3CG1IX26lk4_6QXHEIrhHBPPconZBOHDwtZc5R4_R90icyxoAeLJneag1PZSLw"}'
+      string: '{"token_type":"Bearer","expires_in":"3599","ext_expires_in":"0","expires_on":"1482187740","not_before":"1482183840","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlJyUXF1OXJ5ZEJWUldtY29jdVhVYjIwSEdSTSIsImtpZCI6IlJyUXF1OXJ5ZEJWUldtY29jdVhVYjIwSEdSTSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0ODIxODM4NDAsIm5iZiI6MTQ4MjE4Mzg0MCwiZXhwIjoxNDgyMTg3NzQwLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.EMIyZf9OtjCUgvp9WYcyifPUpkT5bM3W7kbC3EMWLsd_-SCRiSJAulkOCnVPQ-N2Cz_qulfnob6SgxujDS8Ccjh_VCT9f39Xspd3PYU9v6ZDsW5w1VYLO8hX8Pb3s8xF8UyX_ZwxhJGQIT4rYTgNX9R_CNdfp8GNDauf_muO5eQF0Oq3KpSil28HrSqQ4Pjv-MUdXZ-Z1bLc-5t-KztRWzJZpZsuVSwhd7AS60ZG2cKZhzieYynH2Pun3eaAlWByR4FOVPkV_nnQ4vciqlgeyCkHZbAhPlxmZxaVFNM7JQ-wZ347-tZ7rTrwWQkQifd6LQdgoewckp50QhJj-aCGtg"}'
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:59:30 GMT
+  recorded_at: Mon, 19 Dec 2016 21:49:00 GMT
 - request:
     method: get
-    uri: https://management.azure.com/subscriptions?api-version=2015-01-01
+    uri: https://management.azure.com/subscriptions?api-version=2016-06-01
     body:
       encoding: US-ASCII
       string: ''
@@ -70,11 +68,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (darwin15.4.0 x86_64) ruby/2.3.1p112
+      - rest-client/2.0.0 (darwin14.5.0 x86_64) ruby/2.3.1p112
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzg4NjgsIm5iZiI6MTQ3NzMzODg2OCwiZXhwIjoxNDc3MzQyNzY4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.G7PklnNL4Tce0US8PaoJQ24nACnnz7UKADXWwzP-s85dhZET-SJhEjc06oXUpUBYle4lr2uKImcZ9QXnYAg1VrJH_Q5rHxezA4zgPm9s1jaLR5CoXMVcBg7zA8dHvGF8a-p9q4Dl3ab_mrVRfDN9XnIvcu_zVOsqaszQpoFz_TiGm1lTQzUHyqynwAmWcFvJ7cqhJ2SxlqlYlDOzvQqCa7uCQwcPWAYHHJBv61NElOvk26h7dDUH58F4E4ou7Nyy1p56UX2YTqZyRIcDgPPYmPAE3CG1IX26lk4_6QXHEIrhHBPPconZBOHDwtZc5R4_R90icyxoAeLJneag1PZSLw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlJyUXF1OXJ5ZEJWUldtY29jdVhVYjIwSEdSTSIsImtpZCI6IlJyUXF1OXJ5ZEJWUldtY29jdVhVYjIwSEdSTSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0ODIxODM4NDAsIm5iZiI6MTQ4MjE4Mzg0MCwiZXhwIjoxNDgyMTg3NzQwLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.EMIyZf9OtjCUgvp9WYcyifPUpkT5bM3W7kbC3EMWLsd_-SCRiSJAulkOCnVPQ-N2Cz_qulfnob6SgxujDS8Ccjh_VCT9f39Xspd3PYU9v6ZDsW5w1VYLO8hX8Pb3s8xF8UyX_ZwxhJGQIT4rYTgNX9R_CNdfp8GNDauf_muO5eQF0Oq3KpSil28HrSqQ4Pjv-MUdXZ-Z1bLc-5t-KztRWzJZpZsuVSwhd7AS60ZG2cKZhzieYynH2Pun3eaAlWByR4FOVPkV_nnQ4vciqlgeyCkHZbAhPlxmZxaVFNM7JQ-wZ347-tZ7rTrwWQkQifd6LQdgoewckp50QhJj-aCGtg
   response:
     status:
       code: 200
@@ -93,23 +91,23 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
-      - '14987'
+      - '14997'
       X-Ms-Request-Id:
-      - 271ddc9c-b80e-4760-bd4d-60ec8196d6b9
+      - 923430da-8cba-499f-9bc8-da72bad4f9ed
       X-Ms-Correlation-Request-Id:
-      - 271ddc9c-b80e-4760-bd4d-60ec8196d6b9
+      - 923430da-8cba-499f-9bc8-da72bad4f9ed
       X-Ms-Routing-Request-Id:
-      - CENTRALUS:20161024T195930Z:271ddc9c-b80e-4760-bd4d-60ec8196d6b9
+      - EASTUS:20161219T214900Z:923430da-8cba-499f-9bc8-da72bad4f9ed
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Mon, 24 Oct 2016 19:59:29 GMT
+      - Mon, 19 Dec 2016 21:49:00 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"id":"/subscriptions/azure_subscription_id","subscriptionId":"azure_subscription_id","displayName":"Microsoft
-        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01","spendingLimit":"Off"}}]}'
+        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01","spendingLimit":"Off"},"authorizationSource":"RoleBased"}]}'
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:59:30 GMT
+  recorded_at: Mon, 19 Dec 2016 21:49:00 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions/azure_subscription_id/providers?api-version=2015-01-01
@@ -122,11 +120,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (darwin15.4.0 x86_64) ruby/2.3.1p112
+      - rest-client/2.0.0 (darwin14.5.0 x86_64) ruby/2.3.1p112
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzg4NjgsIm5iZiI6MTQ3NzMzODg2OCwiZXhwIjoxNDc3MzQyNzY4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.G7PklnNL4Tce0US8PaoJQ24nACnnz7UKADXWwzP-s85dhZET-SJhEjc06oXUpUBYle4lr2uKImcZ9QXnYAg1VrJH_Q5rHxezA4zgPm9s1jaLR5CoXMVcBg7zA8dHvGF8a-p9q4Dl3ab_mrVRfDN9XnIvcu_zVOsqaszQpoFz_TiGm1lTQzUHyqynwAmWcFvJ7cqhJ2SxlqlYlDOzvQqCa7uCQwcPWAYHHJBv61NElOvk26h7dDUH58F4E4ou7Nyy1p56UX2YTqZyRIcDgPPYmPAE3CG1IX26lk4_6QXHEIrhHBPPconZBOHDwtZc5R4_R90icyxoAeLJneag1PZSLw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IlJyUXF1OXJ5ZEJWUldtY29jdVhVYjIwSEdSTSIsImtpZCI6IlJyUXF1OXJ5ZEJWUldtY29jdVhVYjIwSEdSTSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0ODIxODM4NDAsIm5iZiI6MTQ4MjE4Mzg0MCwiZXhwIjoxNDgyMTg3NzQwLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.EMIyZf9OtjCUgvp9WYcyifPUpkT5bM3W7kbC3EMWLsd_-SCRiSJAulkOCnVPQ-N2Cz_qulfnob6SgxujDS8Ccjh_VCT9f39Xspd3PYU9v6ZDsW5w1VYLO8hX8Pb3s8xF8UyX_ZwxhJGQIT4rYTgNX9R_CNdfp8GNDauf_muO5eQF0Oq3KpSil28HrSqQ4Pjv-MUdXZ-Z1bLc-5t-KztRWzJZpZsuVSwhd7AS60ZG2cKZhzieYynH2Pun3eaAlWByR4FOVPkV_nnQ4vciqlgeyCkHZbAhPlxmZxaVFNM7JQ-wZ347-tZ7rTrwWQkQifd6LQdgoewckp50QhJj-aCGtg
   response:
     status:
       code: 200
@@ -143,26 +141,26 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Subscription-Reads:
-      - '14931'
+      - '14827'
       X-Ms-Request-Id:
-      - 6ac71f4b-f1f4-4e03-993f-4923173b26d6
+      - d003d1d8-ecfb-4a91-ac42-b39e82c81012
       X-Ms-Correlation-Request-Id:
-      - 6ac71f4b-f1f4-4e03-993f-4923173b26d6
+      - d003d1d8-ecfb-4a91-ac42-b39e82c81012
       X-Ms-Routing-Request-Id:
-      - CENTRALUS:20161024T195931Z:6ac71f4b-f1f4-4e03-993f-4923173b26d6
+      - EASTUS:20161219T214901Z:d003d1d8-ecfb-4a91-ac42-b39e82c81012
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Mon, 24 Oct 2016 19:59:31 GMT
+      - Mon, 19 Dec 2016 21:49:00 GMT
       Content-Length:
-      - '151753'
+      - '164204'
     body:
       encoding: ASCII-8BIT
-      string: '{"value":[{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ApiManagement","namespace":"Microsoft.ApiManagement","authorization":{"applicationId":"8602e328-9b72-4f2d-a4ae-1387d013a2b3","roleDefinitionId":"e263b525-2e60-4418-b655-420bae0b172e"},"resourceTypes":[{"resourceType":"service","locations":["Australia
+      string: '{"value":[{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Advisor","namespace":"Microsoft.Advisor","authorization":{"applicationId":"c39c9bac-9d1f-4dfb-aa29-27f6365e5cb7","roleDefinitionId":"8a63b04c-3731-409b-9765-f1175c047872"},"resourceTypes":[{"resourceType":"suppressions","locations":[],"apiVersions":["2016-07-12-preview","2016-07-12-alpha","2016-05-09-preview","2016-05-09-alpha"]},{"resourceType":"recommendations","locations":[],"apiVersions":["2016-07-12-preview","2016-07-12-alpha","2016-05-09-preview","2016-05-09-alpha"]},{"resourceType":"generateRecommendations","locations":[],"apiVersions":["2016-07-12-preview","2016-07-12-alpha","2016-05-09-preview","2016-05-09-alpha"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-07-12-preview","2016-07-12-alpha","2016-05-09-preview","2016-05-09-alpha"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ApiManagement","namespace":"Microsoft.ApiManagement","authorization":{"applicationId":"8602e328-9b72-4f2d-a4ae-1387d013a2b3","roleDefinitionId":"e263b525-2e60-4418-b655-420bae0b172e"},"resourceTypes":[{"resourceType":"service","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","North Central
         US","South Central US","West Central US","West US","West US 2","Canada Central","Canada
         East","North Europe","West Europe","UK South","UK West","East Asia","Southeast
-        Asia","Japan East","Japan West","Brazil South"],"apiVersions":["2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"validateServiceName","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkServiceNameAvailability","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkNameAvailability","locations":[],"apiVersions":["2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"reportFeedback","locations":[],"apiVersions":["2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"checkFeedbackRequired","locations":[],"apiVersions":["2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-07-07","2015-09-15","2014-02-14"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Automation","namespace":"Microsoft.Automation","resourceTypes":[{"resourceType":"automationAccounts","locations":["Japan
+        Asia","Japan East","Japan West","Brazil South"],"apiVersions":["2016-10-10","2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"validateServiceName","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkServiceNameAvailability","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkNameAvailability","locations":[],"apiVersions":["2016-10-10","2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"reportFeedback","locations":[],"apiVersions":["2016-10-10","2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"checkFeedbackRequired","locations":[],"apiVersions":["2016-10-10","2016-07-07","2015-09-15","2014-02-14"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-10-10","2016-07-07","2015-09-15","2014-02-14"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Automation","namespace":"Microsoft.Automation","resourceTypes":[{"resourceType":"automationAccounts","locations":["Japan
         East","East US 2","West Europe","Southeast Asia","South Central US","North
         Europe","Canada Central","Australia Southeast"],"apiVersions":["2015-10-31","2015-01-01-preview"]},{"resourceType":"automationAccounts/runbooks","locations":["Japan
         East","East US 2","West Europe","Southeast Asia","South Central US","North
@@ -200,7 +198,7 @@ http_interactions:
         Asia","Southeast Asia","East US","East US 2","West US","West US 2","North
         Central US","South Central US","West Central US","Central US","North Europe","West
         Europe","Japan East","Japan West","Brazil South","Australia East","Australia
-        Southeast","Canada Central","Canada East","UK South","UK West"],"apiVersions":["2016-04-01","2015-12-01","2015-10-01","2015-06-01","2014-06-01","2014-04-01","2014-01-01"]},{"resourceType":"capabilities","locations":[],"apiVersions":["2016-04-01","2015-12-01","2015-10-01","2015-06-01","2014-06-01"]},{"resourceType":"quotas","locations":[],"apiVersions":["2016-04-01","2015-12-01","2015-10-01","2015-06-01","2014-06-01","2014-01-01"]},{"resourceType":"virtualMachines/diagnosticSettings","locations":["East
+        Southeast","Canada Central","Canada East","UK South","UK West"],"apiVersions":["2016-11-01","2016-04-01","2015-12-01","2015-10-01","2015-06-01","2014-06-01","2014-04-01","2014-01-01"]},{"resourceType":"capabilities","locations":[],"apiVersions":["2016-04-01","2015-12-01","2015-10-01","2015-06-01","2014-06-01"]},{"resourceType":"quotas","locations":[],"apiVersions":["2016-04-01","2015-12-01","2015-10-01","2015-06-01","2014-06-01","2014-01-01"]},{"resourceType":"virtualMachines/diagnosticSettings","locations":["East
         US","East US 2","North Central US","North Europe","West Europe","Brazil South","Canada
         Central","Canada East","UK South","UK West","West US","Central US","South
         Central US","Japan East","Japan West","East Asia","Southeast Asia","Australia
@@ -264,11 +262,11 @@ http_interactions:
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast","Brazil South","Canada Central","Canada East","West
-        US 2","West Central US","UK South","UK West"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/virtualMachines/networkInterfaces","locations":["East
+        US 2","West Central US","UK South","UK West"],"apiVersions":["2016-09-01","2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/virtualMachines/networkInterfaces","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast","Brazil South","Canada Central","Canada East","West
-        US 2","West Central US","UK South","UK West"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-04-30-preview","2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/operations","locations":["East
+        US 2","West Central US","UK South","UK West"],"apiVersions":["2016-09-01","2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-04-30-preview","2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/operations","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast","Brazil South","Canada Central","Canada East","West
@@ -289,9 +287,18 @@ http_interactions:
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast","Brazil South","Canada Central","Canada East","West
         US 2","West Central US","UK South","UK West"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"disks","locations":["Southeast
-        Asia","East US 2"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"snapshots","locations":["Southeast
-        Asia","East US 2"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"locations/diskoperations","locations":["Southeast
-        Asia","East US 2"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"virtualMachines/diagnosticSettings","locations":["East
+        Asia","East US 2","Central US","East US","North Central US","South Central
+        US","West US","North Europe","West Europe","East Asia","Brazil South","West
+        US 2","West Central US","UK West","UK South","East US 2 EUAP","Central US
+        EUAP","Japan East","Japan West","Canada Central","Canada East"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"snapshots","locations":["Southeast
+        Asia","East US 2","Central US","East US","North Central US","South Central
+        US","West US","North Europe","West Europe","East Asia","Brazil South","West
+        US 2","West Central US","UK West","UK South","East US 2 EUAP","Central US
+        EUAP","Japan East","Japan West","Canada Central","Canada East"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"locations/diskoperations","locations":["Southeast
+        Asia","East US 2","Central US","East US","North Central US","South Central
+        US","West US","North Europe","West Europe","East Asia","Brazil South","West
+        US 2","West Central US","UK West","UK South","East US 2 EUAP","Central US
+        EUAP","Japan East","Japan West","Canada Central","Canada East"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"virtualMachines/diagnosticSettings","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast","Brazil South","Canada Central","Canada East","West
@@ -299,16 +306,37 @@ http_interactions:
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast","Brazil South","Canada Central","Canada East","West
-        US 2","West Central US","UK South","UK West"],"apiVersions":["2014-04-01"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ContainerService","namespace":"Microsoft.ContainerService","authorization":{"applicationId":"7319c514-987d-4e9b-ac3d-d38c4f427f4c","roleDefinitionId":"1b4a0c7f-2217-416f-acfa-cf73452fdc1c"},"resourceTypes":[{"resourceType":"containerServices","locations":["Japan
+        US 2","West Central US","UK South","UK West"],"apiVersions":["2014-04-01"]},{"resourceType":"images","locations":["Southeast
+        Asia","East US 2","Central US","East US","North Central US","South Central
+        US","West US","North Europe","West Europe","East Asia","Brazil South","West
+        US 2","West Central US","UK West","UK South","East US 2 EUAP","Central US
+        EUAP","Japan East","Japan West","Canada Central","Canada East"],"apiVersions":["2016-04-30-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ContainerService","namespace":"Microsoft.ContainerService","authorization":{"applicationId":"7319c514-987d-4e9b-ac3d-d38c4f427f4c","roleDefinitionId":"1b4a0c7f-2217-416f-acfa-cf73452fdc1c"},"resourceTypes":[{"resourceType":"containerServices","locations":["Japan
         East","Central US","East US 2","Japan West","East Asia","South Central US","Australia
         East","Australia Southeast","Brazil South","Southeast Asia","West US","North
-        Central US","West Europe","North Europe","East US"],"apiVersions":["2016-03-30","2015-11-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-03-30","2015-11-01-preview"]},{"resourceType":"locations/operations","locations":["Japan
+        Central US","West Europe","North Europe","East US"],"apiVersions":["2016-09-30","2016-03-30","2015-11-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-09-30","2016-03-30","2015-11-01-preview"]},{"resourceType":"locations/operations","locations":["Japan
         East","Central US","East US 2","Japan West","East Asia","South Central US","Australia
         East","Australia Southeast","Brazil South","Southeast Asia","West US","North
-        Central US","West Europe","North Europe","East US"],"apiVersions":["2016-03-30","2015-11-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-03-30","2015-11-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/microsoft.insights","namespace":"microsoft.insights","authorization":{"applicationId":"11c174dc-1945-4a9a-a36b-c79a0f246b9b","roleDefinitionId":"dd9d4347-f397-45f2-b538-85f21c90037b"},"resourceTypes":[{"resourceType":"components","locations":["Central
-        US","East US","South Central US","North Europe","West Europe"],"apiVersions":["2015-05-01-privatepreview","2015-05-01","2014-12-01-preview","2014-08-01","2014-04-01"]},{"resourceType":"webtests","locations":["Central
-        US","East US","South Central US","North Europe","West Europe"],"apiVersions":["2015-05-01-privatepreview","2015-05-01","2014-08-01","2014-04-01"]},{"resourceType":"queries","locations":["Central
-        US","East US","South Central US","North Europe","West Europe"],"apiVersions":["2015-05-01","2014-08-01"]},{"resourceType":"logprofiles","locations":[],"apiVersions":["2016-03-01"]},{"resourceType":"alertrules","locations":["West
+        Central US","West Europe","North Europe","East US"],"apiVersions":["2016-09-30","2016-03-30","2015-11-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-09-30","2016-03-30","2015-11-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DevTestLab","namespace":"Microsoft.DevTestLab","authorization":{"applicationId":"1a14be2a-e903-4cec-99cf-b2e209259a0f","roleDefinitionId":"8f2de81a-b9aa-49d8-b24c-11814d3ab525"},"resourceTypes":[{"resourceType":"labs","locations":["Australia
+        East","Australia Southeast","Brazil South","Canada East","Canada Central","Central
+        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
+        US","North Europe","South Central US","Southeast Asia","UK South","UK West","West
+        Central US","West Europe","West US","West US 2"],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"schedules","locations":["Australia
+        East","Australia Southeast","Brazil South","Canada Central","Canada East","Central
+        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
+        US","North Europe","South Central US","Southeast Asia","UK South","UK West","West
+        Central US","West Europe","West US","West US 2"],"apiVersions":["2016-05-15"]},{"resourceType":"labs/virtualMachines","locations":["Australia
+        East","Australia Southeast","Brazil South","Canada East","Canada Central","Central
+        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
+        US","North Europe","South Central US","Southeast Asia","UK South","UK West","West
+        Central US","West Europe","West US","West US 2"],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"labs/serviceRunners","locations":["Central
+        US","East US 2","South Central US"],"apiVersions":["2016-05-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"locations/operations","locations":["Australia
+        East","Australia Southeast","Brazil South","Canada East","Canada Central","Central
+        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
+        US","North Europe","South Central US","Southeast Asia","UK South","UK West","West
+        Central US","West Europe","West US","West US 2"],"apiVersions":["2016-05-15","2015-05-21-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/microsoft.insights","namespace":"microsoft.insights","authorization":{"applicationId":"11c174dc-1945-4a9a-a36b-c79a0f246b9b","roleDefinitionId":"dd9d4347-f397-45f2-b538-85f21c90037b"},"resourceTypes":[{"resourceType":"components","locations":["East
+        US","South Central US","North Europe","West Europe"],"apiVersions":["2015-05-01","2014-12-01-preview","2014-08-01","2014-04-01"]},{"resourceType":"webtests","locations":["East
+        US","South Central US","North Europe","West Europe"],"apiVersions":["2015-05-01","2014-08-01","2014-04-01"]},{"resourceType":"queries","locations":["East
+        US","South Central US","North Europe","West Europe"],"apiVersions":["2015-05-01","2014-08-01"]},{"resourceType":"logprofiles","locations":[],"apiVersions":["2016-03-01"]},{"resourceType":"alertrules","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","Japan
         East","Japan West","North Central US","South Central US","East US 2","Central
         US","Australia East","Australia Southeast","Brazil South","UK South","UK West","Canada
@@ -316,7 +344,7 @@ http_interactions:
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","Japan
         East","Japan West","North Central US","South Central US","East US 2","Central
         US","Australia East","Australia Southeast","Brazil South","UK South","UK West","Canada
-        East","Canada Central","West Central US","West US 2"],"apiVersions":["2015-04-01","2014-04-01"]},{"resourceType":"eventtypes","locations":[],"apiVersions":["2015-04-01","2014-11-01","2014-04-01"]},{"resourceType":"locations","locations":["East
+        East","Canada Central","West Central US","West US 2"],"apiVersions":["2015-04-01","2014-04-01"]},{"resourceType":"eventtypes","locations":[],"apiVersions":["2016-09-01-preview","2015-04-01","2014-11-01","2014-04-01"]},{"resourceType":"locations","locations":["East
         US"],"apiVersions":["2015-04-01","2014-04-01"]},{"resourceType":"locations/operationResults","locations":[],"apiVersions":["2015-04-01","2014-04-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-04-01","2014-06-01","2014-04-01"]},{"resourceType":"automatedExportSettings","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","Japan
         East","Japan West","North Central US","South Central US","East US 2","Central
@@ -325,11 +353,11 @@ http_interactions:
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","Japan
         East","Japan West","North Central US","South Central US","East US 2","Central
         US","Australia East","Australia Southeast","Brazil South","UK South","UK West","Canada
-        East","Canada Central","West Central US","West US 2"],"apiVersions":["2015-07-01"]},{"resourceType":"metricDefinitions","locations":["West
+        East","Canada Central","West Central US","West US 2"],"apiVersions":["2016-09-01","2015-07-01"]},{"resourceType":"metricDefinitions","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","Japan
         East","Japan West","North Central US","South Central US","East US 2","Central
         US","Australia East","Australia Southeast","Brazil South","UK South","UK West","Canada
-        East","Canada Central","West Central US","West US 2"],"apiVersions":["2016-03-01","2015-07-01"]},{"resourceType":"logDefinitions","locations":["West
+        East","Canada Central","West Central US","West US 2","Global"],"apiVersions":["2016-03-01","2015-07-01"]},{"resourceType":"logDefinitions","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","Japan
         East","Japan West","North Central US","South Central US","East US 2","Central
         US","Australia East","Australia Southeast","Brazil South","UK South","UK West","Canada
@@ -353,59 +381,68 @@ http_interactions:
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"publicIPAddresses","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"publicIPAddresses","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"networkInterfaces","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"networkInterfaces","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"loadBalancers","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"loadBalancers","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"networkSecurityGroups","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"networkSecurityGroups","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"routeTables","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"routeTables","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"virtualNetworkGateways","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"virtualNetworkGateways","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"localNetworkGateways","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"localNetworkGateways","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"connections","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"connections","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"applicationGateways","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"applicationGateways","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/operations","locations":[],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/operationResults","locations":[],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/CheckDnsNameAvailability","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/operations","locations":[],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/operationResults","locations":[],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/CheckDnsNameAvailability","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/usages","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"locations/usages","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"dnszones","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnsOperationResults","locations":["global"],"apiVersions":["2016-04-01"]},{"resourceType":"dnsOperationStatuses","locations":["global"],"apiVersions":["2016-04-01"]},{"resourceType":"dnszones/A","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/AAAA","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/CNAME","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/PTR","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/MX","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/TXT","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/SRV","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"trafficmanagerprofiles","locations":["global"],"apiVersions":["2015-11-01","2015-04-28-preview"]},{"resourceType":"checkTrafficManagerNameAvailability","locations":["global"],"apiVersions":["2015-11-01","2015-04-28-preview"]},{"resourceType":"expressRouteCircuits","locations":["West
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"dnszones","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnsOperationResults","locations":["global"],"apiVersions":["2016-04-01"]},{"resourceType":"dnsOperationStatuses","locations":["global"],"apiVersions":["2016-04-01"]},{"resourceType":"dnszones/A","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/AAAA","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/CNAME","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/PTR","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/MX","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/TXT","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"dnszones/SRV","locations":["global"],"apiVersions":["2016-04-01","2015-05-04-preview"]},{"resourceType":"trafficmanagerprofiles","locations":["global"],"apiVersions":["2015-11-01","2015-04-28-preview"]},{"resourceType":"checkTrafficManagerNameAvailability","locations":["global"],"apiVersions":["2015-11-01","2015-04-28-preview"]},{"resourceType":"expressRouteCircuits","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
         Central US","South Central US","Central US","East US 2","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"expressRouteServiceProviders","locations":[],"apiVersions":["2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.OperationalInsights","namespace":"Microsoft.OperationalInsights","authorization":{"applicationId":"d2a0a418-0aac-4541-82b2-b3142c89da77","roleDefinitionId":"86695298-2eb9-48a7-9ec3-2fdb38b6878b"},"resourceTypes":[{"resourceType":"workspaces","locations":["East
+        East","West Central US","West US 2","UK West","UK South"],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]},{"resourceType":"expressRouteServiceProviders","locations":[],"apiVersions":["2016-10-01","2016-09-01","2016-08-01","2016-07-01","2016-06-01","2016-03-30","2015-06-15","2015-05-01-preview","2014-12-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.OperationalInsights","namespace":"Microsoft.OperationalInsights","authorization":{"applicationId":"d2a0a418-0aac-4541-82b2-b3142c89da77","roleDefinitionId":"86695298-2eb9-48a7-9ec3-2fdb38b6878b"},"resourceTypes":[{"resourceType":"workspaces","locations":["East
         US","West Europe","Southeast Asia","Australia Southeast"],"apiVersions":["2015-11-01-preview","2015-03-20"]},{"resourceType":"workspaces/dataSources","locations":["East
         US","West Europe","Southeast Asia","Australia Southeast"],"apiVersions":["2015-11-01-preview"]},{"resourceType":"storageInsightConfigs","locations":[],"apiVersions":["2014-10-10"]},{"resourceType":"workspaces/linkedServices","locations":["East
         US","West Europe","Southeast Asia","Australia Southeast"],"apiVersions":["2015-11-01-preview"]},{"resourceType":"linkTargets","locations":["East
-        US"],"apiVersions":["2015-03-20","2014-10-10"]},{"resourceType":"operations","locations":[],"apiVersions":["2014-11-10"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ResourceHealth","namespace":"Microsoft.ResourceHealth","authorization":{"applicationId":"8bdebf23-c0fe-4187-a378-717ad86f6a53","roleDefinitionId":"cc026344-c8b1-4561-83ba-59eba84b27cc"},"resourceTypes":[{"resourceType":"availabilityStatuses","locations":[],"apiVersions":["2015-01-01"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Security","namespace":"Microsoft.Security","authorization":{"applicationId":"8edd93e1-2103-40b4-bd70-6e34e586362d","roleDefinitionId":"855AF4C4-82F6-414C-B1A2-628025628B9A"},"resourceTypes":[{"resourceType":"securityStatus","locations":["Central
+        US"],"apiVersions":["2015-03-20","2014-10-10"]},{"resourceType":"operations","locations":[],"apiVersions":["2014-11-10"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.OperationsManagement","namespace":"Microsoft.OperationsManagement","authorization":{"applicationId":"d2a0a418-0aac-4541-82b2-b3142c89da77","roleDefinitionId":"aa249101-6816-4966-aafa-08175d795f14"},"resourceTypes":[{"resourceType":"solutions","locations":["East
+        US","West Europe","Southeast Asia","Australia Southeast"],"apiVersions":["2015-11-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Portal","namespace":"Microsoft.Portal","resourceTypes":[{"resourceType":"dashboards","locations":["Central
+        US","East Asia","Southeast Asia","East US","East US 2","West US","West US
+        2","North Central US","South Central US","West Central US","North Europe","West
+        Europe","Japan East","Japan West","Brazil South","Australia Southeast","Australia
+        East","Canada Central","Canada East"],"apiVersions":["2015-08-01-preview"]},{"resourceType":"operations","locations":["Central
+        US","East Asia","Southeast Asia","East US","East US 2","West US","West US
+        2","North Central US","South Central US","West Central US","North Europe","West
+        Europe","Japan East","Japan West","Brazil South","Australia Southeast","Australia
+        East","Canada Central","Canada East"],"apiVersions":["2015-08-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ResourceHealth","namespace":"Microsoft.ResourceHealth","authorization":{"applicationId":"8bdebf23-c0fe-4187-a378-717ad86f6a53","roleDefinitionId":"cc026344-c8b1-4561-83ba-59eba84b27cc"},"resourceTypes":[{"resourceType":"availabilityStatuses","locations":[],"apiVersions":["2015-01-01"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Security","namespace":"Microsoft.Security","authorization":{"applicationId":"8edd93e1-2103-40b4-bd70-6e34e586362d","roleDefinitionId":"855AF4C4-82F6-414C-B1A2-628025628B9A"},"resourceTypes":[{"resourceType":"securityStatus","locations":["Central
         US","East US"],"apiVersions":["2015-06-01-preview"]},{"resourceType":"securityStatuses","locations":["Central
         US","East US"],"apiVersions":["2015-06-01-preview"]},{"resourceType":"securityStatus/virtualMachines","locations":["Central
         US","East US"],"apiVersions":["2015-06-01-preview"]},{"resourceType":"securityStatus/endpoints","locations":["Central
@@ -553,7 +590,7 @@ http_interactions:
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Canada Central","Canada East","West
-        US 2","West Central US","UK South","UK West"],"apiVersions":["2014-04-01-preview","2014-04-01","2014-01-01"]},{"resourceType":"servers/disasterRecoveryConfiguration","locations":["East
+        US 2","West Central US","UK South","UK West"],"apiVersions":["2015-09-01-preview","2014-04-01-preview","2014-04-01","2014-01-01"]},{"resourceType":"servers/disasterRecoveryConfiguration","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Canada Central","Canada East","West
@@ -610,6 +647,14 @@ http_interactions:
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Canada Central","Canada East","West
         US 2","West Central US","UK South","UK West"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/databases/auditRecords","locations":["West
+        US","South Central US","East US 2","Central US","North Central US","East US","East
+        Asia","Southeast Asia","Japan West","Japan East","North Europe","West Europe","Brazil
+        South","Australia East","Australia Southeast","Canada Central","Canada East","West
+        US 2","West Central US","UK South","UK West"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/VulnerabilityAssessmentScans","locations":["West
+        US","South Central US","East US 2","Central US","North Central US","East US","East
+        Asia","Southeast Asia","Japan West","Japan East","North Europe","West Europe","Brazil
+        South","Australia East","Australia Southeast","Canada Central","Canada East","West
+        US 2","West Central US","UK South","UK West"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/databases/VulnerabilityAssessmentScans","locations":["West
         US","South Central US","East US 2","Central US","North Central US","East US","East
         Asia","Southeast Asia","Japan West","Japan East","North Europe","West Europe","Brazil
         South","Australia East","Australia Southeast","Canada Central","Canada East","West
@@ -740,23 +785,30 @@ http_interactions:
         East","West Central US","UK West","UK South","West US 2"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"ishostingenvironmentnameavailable","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"classicMobileServices","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"connections","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations/managedApis","locations":["North
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations/managedApis","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations/apiOperations","locations":["North
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations/apiOperations","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"connectionGateways","locations":["North
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"connectionGateways","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations/connectionGatewayInstallations","locations":["North
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"locations/connectionGatewayInstallations","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"checkNameAvailability","locations":["South
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview"]},{"resourceType":"checkNameAvailability","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","UK West","UK South","West US 2"],"apiVersions":["2016-03-01","2015-08-01-preview","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Aspera.Transfers","namespace":"Aspera.Transfers","resourceTypes":[{"resourceType":"services","locations":["West
+        East","West Central US","UK West","UK South","West US 2"],"apiVersions":["2016-03-01","2015-08-01-preview","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/84codes.CloudAMQP","namespace":"84codes.CloudAMQP","resourceTypes":[{"resourceType":"operations","locations":[],"apiVersions":["2016-08-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/AppDynamics.APM","namespace":"AppDynamics.APM","resourceTypes":[{"resourceType":"services","locations":["West
+        US"],"apiVersions":["2016-05-26"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-05-26"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-05-26"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-05-26"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-05-26"]},{"resourceType":"locations/operationResults","locations":["West
+        US"],"apiVersions":["2016-05-26"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Aspera.Transfers","namespace":"Aspera.Transfers","resourceTypes":[{"resourceType":"services","locations":["West
         US","North Europe","Central US","East US","West Europe","East Asia","Southeast
         Asia","Japan East","Japan West"],"apiVersions":["2016-03-25"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-03-25"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-03-25"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-03-25"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Citrix.Cloud","namespace":"Citrix.Cloud","resourceTypes":[{"resourceType":"accounts","locations":["West
         US"],"apiVersions":["2015-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-01-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Cloudyn.Analytics","namespace":"Cloudyn.Analytics","resourceTypes":[{"resourceType":"accounts","locations":["East
@@ -765,7 +817,7 @@ http_interactions:
         US"],"apiVersions":["2016-04-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-09-07","2016-04-01"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-04-01"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-04-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/LiveArena.Broadcast","namespace":"LiveArena.Broadcast","resourceTypes":[{"resourceType":"services","locations":["West
         US","North Europe","Japan West","Japan East","East Asia","West Europe","East
         US","Southeast Asia","Central US"],"apiVersions":["2016-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-06-15"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Lombiq.DotNest","namespace":"Lombiq.DotNest","resourceTypes":[{"resourceType":"sites","locations":["East
-        US"],"apiVersions":["2015-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-01-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Mailjet.Email","namespace":"Mailjet.Email","resourceTypes":[{"resourceType":"operations","locations":[],"apiVersions":["2016-07-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ADHybridHealthService","namespace":"Microsoft.ADHybridHealthService","resourceTypes":[{"resourceType":"services","locations":["West
+        US"],"apiVersions":["2015-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-01-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Mailjet.Email","namespace":"Mailjet.Email","resourceTypes":[{"resourceType":"operations","locations":[],"apiVersions":["2016-11-01","2016-07-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ADHybridHealthService","namespace":"Microsoft.ADHybridHealthService","resourceTypes":[{"resourceType":"services","locations":["West
         US"],"apiVersions":["2014-01-01"]},{"resourceType":"addsservices","locations":["West
         US"],"apiVersions":["2014-01-01"]},{"resourceType":"configuration","locations":["West
         US"],"apiVersions":["2014-01-01"]},{"resourceType":"operations","locations":["West
@@ -775,8 +827,12 @@ http_interactions:
         US"],"apiVersions":["2014-01-01"]},{"resourceType":"servicehealthmetrics","locations":["West
         US"],"apiVersions":["2014-01-01"]},{"resourceType":"logs","locations":["West
         US"],"apiVersions":["2014-01-01"]},{"resourceType":"anonymousapiusers","locations":["West
-        US"],"apiVersions":["2014-01-01"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.AnalysisServices","namespace":"Microsoft.AnalysisServices","authorization":{"applicationId":"4ac7d521-0382-477b-b0f8-7e1d95f85ca2","roleDefinitionId":"490d5987-bcf6-4be6-b6b2-056a78cb693a"},"resourceTypes":[{"resourceType":"locations","locations":[],"apiVersions":["2016-05-16"]},{"resourceType":"operations","locations":["East
-        US 2","South Central US","West Central US"],"apiVersions":["2016-05-16"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.AppService","namespace":"Microsoft.AppService","authorization":{"applicationId":"dee7ba80-6a55-4f3b-a86c-746a9231ae49","roleDefinitionId":"6715d172-49c4-46f6-bb21-60512a8689dc"},"resourceTypes":[{"resourceType":"apiapps","locations":["East
+        US"],"apiVersions":["2014-01-01"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.AnalysisServices","namespace":"Microsoft.AnalysisServices","authorization":{"applicationId":"4ac7d521-0382-477b-b0f8-7e1d95f85ca2","roleDefinitionId":"490d5987-bcf6-4be6-b6b2-056a78cb693a"},"resourceTypes":[{"resourceType":"servers","locations":["West
+        US","North Europe","South Central US","West Europe","West Central US"],"apiVersions":["2016-05-16"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-05-16"]},{"resourceType":"locations/checkNameAvailability","locations":["West
+        US","North Europe","South Central US","West Europe","West Central US"],"apiVersions":["2016-05-16"]},{"resourceType":"locations/operationresults","locations":["West
+        US","North Europe","South Central US","West Europe","West Central US"],"apiVersions":["2016-05-16"]},{"resourceType":"locations/operationstatuses","locations":["West
+        US","North Europe","South Central US","West Europe","West Central US"],"apiVersions":["2016-05-16"]},{"resourceType":"operations","locations":["East
+        US 2","South Central US"],"apiVersions":["2016-05-16"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.AppService","namespace":"Microsoft.AppService","authorization":{"applicationId":"dee7ba80-6a55-4f3b-a86c-746a9231ae49","roleDefinitionId":"6715d172-49c4-46f6-bb21-60512a8689dc"},"resourceTypes":[{"resourceType":"apiapps","locations":["East
         US","West US","South Central US","North Europe","East Asia","Japan East","West
         Europe","Southeast Asia","Japan West","North Central US","Central US","Brazil
         South","East US 2","Australia Southeast","Australia East"],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]},{"resourceType":"appIdentities","locations":["East
@@ -785,7 +841,8 @@ http_interactions:
         South","East US 2","Australia Southeast","Australia East"],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]},{"resourceType":"gateways","locations":["East
         US","West US","South Central US","North Europe","East Asia","Japan East","West
         Europe","Southeast Asia","Japan West","North Central US","Central US","Brazil
-        South","East US 2","Australia Southeast","Australia East"],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]},{"resourceType":"deploymenttemplates","locations":[],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Authorization","namespace":"Microsoft.Authorization","resourceTypes":[{"resourceType":"roleAssignments","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"roleDefinitions","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"classicAdministrators","locations":[],"apiVersions":["2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"permissions","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"locks","locations":[],"apiVersions":["2016-09-01","2015-06-01","2015-05-01-preview","2015-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-01-01","2014-10-01-preview","2014-06-01"]},{"resourceType":"policyDefinitions","locations":[],"apiVersions":["2016-04-01","2015-10-01-preview"]},{"resourceType":"policyAssignments","locations":[],"apiVersions":["2016-04-01","2015-10-01-preview"]},{"resourceType":"providerOperations","locations":[],"apiVersions":["2016-07-01","2015-07-01-preview","2015-07-01"]},{"resourceType":"elevateAccess","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.BingMaps","namespace":"Microsoft.BingMaps","resourceTypes":[{"resourceType":"mapApis","locations":["West
+        South","East US 2","Australia Southeast","Australia East"],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]},{"resourceType":"deploymenttemplates","locations":[],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-03-01-preview","2015-03-01-alpha"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Authorization","namespace":"Microsoft.Authorization","resourceTypes":[{"resourceType":"roleAssignments","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"roleDefinitions","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"classicAdministrators","locations":[],"apiVersions":["2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"permissions","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]},{"resourceType":"locks","locations":[],"apiVersions":["2016-09-01","2015-06-01","2015-05-01-preview","2015-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-01-01","2014-10-01-preview","2014-06-01"]},{"resourceType":"policyDefinitions","locations":[],"apiVersions":["2016-12-01","2016-04-01","2015-10-01-preview"]},{"resourceType":"policyAssignments","locations":[],"apiVersions":["2016-12-01","2016-04-01","2015-10-01-preview"]},{"resourceType":"providerOperations","locations":[],"apiVersions":["2016-07-01","2015-07-01-preview","2015-07-01"]},{"resourceType":"elevateAccess","locations":[],"apiVersions":["2016-07-01","2015-07-01","2015-06-01","2015-05-01-preview","2014-10-01-preview","2014-07-01-preview","2014-04-01-preview"]}],"registrationState":"Registered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.AzureActiveDirectory","namespace":"Microsoft.AzureActiveDirectory","resourceTypes":[{"resourceType":"b2cDirectories","locations":["global","United
+        States","Europe"],"apiVersions":["2016-12-13-preview","2016-02-10-privatepreview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.BingMaps","namespace":"Microsoft.BingMaps","resourceTypes":[{"resourceType":"mapApis","locations":["West
         US"],"apiVersions":["2016-08-18","2015-07-02"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-08-18","2015-07-02"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-08-18","2015-07-02"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-08-18","2015-07-02"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.BizTalkServices","namespace":"Microsoft.BizTalkServices","resourceTypes":[{"resourceType":"BizTalk","locations":["East
         US","West US","North Europe","West Europe","Southeast Asia","East Asia","North
         Central US","Japan West","Japan East","South Central US"],"apiVersions":["2014-04-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Cache","namespace":"Microsoft.Cache","authorization":{"applicationId":"96231a05-34ce-4eb4-aa6a-70759cbb5e83","roleDefinitionId":"4f731528-ba85-45c7-acfb-cd0a9b3cf31b"},"resourceTypes":[{"resourceType":"Redis","locations":["North
@@ -844,7 +901,11 @@ http_interactions:
         East","Australia Southeast","Brazil South","Canada Central","Canada East","Central
         US","East Asia","East US","East US 2","Japan East","Japan West","North Central
         US","North Europe","South Central US","Southeast Asia","West Europe","West
-        US"],"apiVersions":["2016-10-02","2016-04-02","2015-06-01"]},{"resourceType":"operations","locations":["Australia
+        US"],"apiVersions":["2016-10-02","2016-04-02","2015-06-01"]},{"resourceType":"checkResourceUsage","locations":["Australia
+        East","Australia Southeast","Brazil South","Canada Central","Canada East","Central
+        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
+        US","North Europe","South Central US","Southeast Asia","West Europe","West
+        US"],"apiVersions":["2016-10-02"]},{"resourceType":"operations","locations":["Australia
         East","Australia Southeast","Brazil South","Canada Central","Canada East","Central
         US","East Asia","East US","East US 2","Japan East","Japan West","North Central
         US","North Europe","South Central US","Southeast Asia","West Europe","West
@@ -857,8 +918,27 @@ http_interactions:
         Central US","Central US","North Europe","West Europe","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-06-15"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.CognitiveServices","namespace":"Microsoft.CognitiveServices","resourceTypes":[{"resourceType":"accounts","locations":["Global","West
         US"],"apiVersions":["2016-02-01-preview"]},{"resourceType":"operations","locations":["Global","West
-        US"],"apiVersions":["2016-02-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ContentModerator","namespace":"Microsoft.ContentModerator","resourceTypes":[{"resourceType":"applications","locations":["Central
-        US"],"apiVersions":["2016-04-08"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-04-08"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-04-08"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-04-08"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DataCatalog","namespace":"Microsoft.DataCatalog","resourceTypes":[{"resourceType":"catalogs","locations":["East
+        US"],"apiVersions":["2016-02-01-preview"]},{"resourceType":"locations","locations":["Global","West
+        US","East Asia"],"apiVersions":["2016-02-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ContainerRegistry","namespace":"Microsoft.ContainerRegistry","authorization":{"applicationId":"6a0ec4d3-30cb-4a83-91c0-ae56bc0e3d26","roleDefinitionId":"78e18383-93eb-418a-9887-bc9271046576"},"resourceTypes":[{"resourceType":"registries","locations":["West
+        US","East US","South Central US"],"apiVersions":["2016-06-27-preview"]},{"resourceType":"registries/GetCredentials","locations":["West
+        US","East US","South Central US"],"apiVersions":["2016-06-27-preview"]},{"resourceType":"registries/regenerateCredentials","locations":["West
+        US","East US","South Central US"],"apiVersions":["2016-06-27-preview"]},{"resourceType":"checkNameAvailability","locations":["South
+        Central US","West Central US","East US","West US","West Europe"],"apiVersions":["2016-06-27-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ContentModerator","namespace":"Microsoft.ContentModerator","resourceTypes":[{"resourceType":"applications","locations":["Central
+        US"],"apiVersions":["2016-04-08"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-04-08"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-04-08"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-04-08"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.CustomerInsights","namespace":"Microsoft.CustomerInsights","authorization":{"applicationId":"38c77d00-5fcb-4cce-9d93-af4738258e3c","roleDefinitionId":"E006F9C7-F333-477C-8AD6-1F3A9FE87F55"},"resourceTypes":[{"resourceType":"hubs","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/profiles","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/interactions","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/AuthorizationPolicies","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/connectors","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/connectors/mappings","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/kpi","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/views","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/links","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/roleAssignments","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/roles","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/widgetTypes","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"hubs/suggestTypeSchema","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]},{"resourceType":"operations","locations":["East
+        US 2"],"apiVersions":["2016-01-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DataCatalog","namespace":"Microsoft.DataCatalog","resourceTypes":[{"resourceType":"catalogs","locations":["East
         US","West US","Australia East","West Europe","North Europe","Southeast Asia"],"apiVersions":["2016-03-30","2015-07-01-preview"]},{"resourceType":"checkNameAvailability","locations":["West
         Europe"],"apiVersions":["2016-03-30","2015-07-01-preview"]},{"resourceType":"operations","locations":["West
         Europe"],"apiVersions":["2016-03-30","2015-07-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-03-30","2015-07-01-preview"]},{"resourceType":"locations/jobs","locations":["East
@@ -869,40 +949,34 @@ http_interactions:
         US","North Europe","East US"],"apiVersions":["2015-10-01","2015-09-01","2015-08-01","2015-07-01-preview","2015-05-01-preview","2015-01-01-preview"]},{"resourceType":"dataFactorySchema","locations":["West
         US","North Europe","East US"],"apiVersions":["2015-10-01","2015-09-01","2015-08-01","2015-07-01-preview","2015-05-01-preview","2015-01-01-preview"]},{"resourceType":"operations","locations":["West
         US","North Europe","East US"],"apiVersions":["2015-10-01","2015-09-01","2015-08-01","2015-07-01-preview","2015-05-01-preview","2015-01-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DataLakeAnalytics","namespace":"Microsoft.DataLakeAnalytics","resourceTypes":[{"resourceType":"accounts","locations":["East
-        US 2"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/dataLakeStoreAccounts","locations":["East
-        US 2"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/storageAccounts","locations":["East
-        US 2"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/storageAccounts/containers","locations":["East
-        US 2"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/storageAccounts/containers/listSasTokens","locations":["East
-        US 2"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/operationresults","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/checkNameAvailability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/capability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DataLakeStore","namespace":"Microsoft.DataLakeStore","authorization":{"applicationId":"e9f49c6b-5ce5-44c8-925d-015017e9f7ad","roleDefinitionId":"17eb9cca-f08a-4499-b2d3-852d175f614f"},"resourceTypes":[{"resourceType":"accounts","locations":["East
-        US 2"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/firewallRules","locations":["East
-        US 2"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/operationresults","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/checkNameAvailability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/capability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Devices","namespace":"Microsoft.Devices","resourceTypes":[{"resourceType":"checkNameAvailability","locations":["East
-        US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
-        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"operations","locations":["East
-        US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
-        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"IotHubs","locations":["East
-        US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
-        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DevTestLab","namespace":"Microsoft.DevTestLab","authorization":{"applicationId":"1a14be2a-e903-4cec-99cf-b2e209259a0f","roleDefinitionId":"8f2de81a-b9aa-49d8-b24c-11814d3ab525"},"resourceTypes":[{"resourceType":"labs","locations":["Australia
-        East","Australia Southeast","Brazil South","Canada East","Canada Central","Central
-        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
-        US","North Europe","South Central US","Southeast Asia","West Central US","West
-        Europe","West US","West US 2"],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"labs/virtualMachines","locations":["Australia
-        East","Australia Southeast","Brazil South","Canada East","Canada Central","Central
-        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
-        US","North Europe","South Central US","Southeast Asia","West Central US","West
-        Europe","West US","West US 2"],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-05-15","2015-05-21-preview"]},{"resourceType":"locations/operations","locations":["Australia
-        East","Australia Southeast","Brazil South","Canada East","Canada Central","Central
-        US","East Asia","East US","East US 2","Japan East","Japan West","North Central
-        US","North Europe","South Central US","Southeast Asia","West Central US","West
-        Europe","West US","West US 2"],"apiVersions":["2016-05-15","2015-05-21-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DocumentDB","namespace":"Microsoft.DocumentDB","resourceTypes":[{"resourceType":"databaseAccounts","locations":["Australia
+        US 2","Central US"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/dataLakeStoreAccounts","locations":["East
+        US 2","Central US"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/storageAccounts","locations":["East
+        US 2","Central US"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/storageAccounts/containers","locations":["East
+        US 2","Central US"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/storageAccounts/containers/listSasTokens","locations":["East
+        US 2","Central US"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/operationresults","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/checkNameAvailability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/capability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DataLakeStore","namespace":"Microsoft.DataLakeStore","authorization":{"applicationId":"e9f49c6b-5ce5-44c8-925d-015017e9f7ad","roleDefinitionId":"17eb9cca-f08a-4499-b2d3-852d175f614f"},"resourceTypes":[{"resourceType":"accounts","locations":["East
+        US 2","Central US"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"accounts/firewallRules","locations":["East
+        US 2","Central US"],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/operationresults","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/checkNameAvailability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"locations/capability","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-11-01","2015-10-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Devices","namespace":"Microsoft.Devices","resourceTypes":[{"resourceType":"checkNameAvailability","locations":["West
+        US","North Europe","East Asia","East US","West Europe","Southeast Asia","Japan
+        East","Japan West","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"operations","locations":["West
+        US","North Europe","East Asia","East US","West Europe","Southeast Asia","Japan
+        East","Japan West","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"IotHubs","locations":["West
+        US","North Europe","East Asia","East US","West Europe","Southeast Asia","Japan
+        East","Japan West","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-02-03","2015-08-15-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DocumentDB","namespace":"Microsoft.DocumentDB","resourceTypes":[{"resourceType":"databaseAccounts","locations":["Australia
         East","Australia Southeast","Canada Central","Canada East","Central US","East
         Asia","East US","East US 2","Japan East","Japan West","North Central US","North
-        Europe","South Central US","Southeast Asia","West Europe","West US"],"apiVersions":["2016-03-31","2016-03-19","2015-11-06","2015-04-08","2014-04-01"]},{"resourceType":"databaseAccountNames","locations":["Australia
+        Europe","South Central US","Southeast Asia","West Central US","West Europe","West
+        US","West US 2","UK West","UK South","Brazil South"],"apiVersions":["2016-03-31","2016-03-19","2015-11-06","2015-04-08","2014-04-01"]},{"resourceType":"databaseAccountNames","locations":["Australia
         East","Australia Southeast","Canada Central","Canada East","Central US","East
         Asia","East US","East US 2","Japan East","Japan West","North Central US","North
-        Europe","South Central US","Southeast Asia","West Europe","West US"],"apiVersions":["2016-03-31","2016-03-19","2015-11-06","2015-04-08","2014-04-01"]},{"resourceType":"operations","locations":["Australia
+        Europe","South Central US","Southeast Asia","West Central US","West Europe","West
+        US","West US 2","UK West","UK South","Brazil South"],"apiVersions":["2016-03-31","2016-03-19","2015-11-06","2015-04-08","2014-04-01"]},{"resourceType":"operations","locations":["Australia
         East","Australia Southeast","Canada Central","Canada East","Central US","East
         Asia","East US","East US 2","Japan East","Japan West","North Central US","North
-        Europe","South Central US","Southeast Asia","West Europe","West US"],"apiVersions":["2016-03-31","2016-03-19","2015-11-06","2015-04-08","2014-04-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DomainRegistration","namespace":"Microsoft.DomainRegistration","resourceTypes":[{"resourceType":"domains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"domains/domainOwnershipIdentifiers","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"topLevelDomains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"checkDomainAvailability","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"listDomainRecommendations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"validateDomainRegistrationInformation","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"generateSsoRequest","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"operations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DynamicsLcs","namespace":"Microsoft.DynamicsLcs","resourceTypes":[{"resourceType":"lcsprojects","locations":["Brazil
+        Europe","South Central US","Southeast Asia","West Central US","West Europe","West
+        US","West US 2","UK West","UK South","Brazil South"],"apiVersions":["2016-03-31","2016-03-19","2015-11-06","2015-04-08","2014-04-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DomainRegistration","namespace":"Microsoft.DomainRegistration","resourceTypes":[{"resourceType":"domains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"domains/domainOwnershipIdentifiers","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"topLevelDomains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"checkDomainAvailability","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"listDomainRecommendations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"validateDomainRegistrationInformation","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"generateSsoRequest","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"operations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.DynamicsLcs","namespace":"Microsoft.DynamicsLcs","resourceTypes":[{"resourceType":"lcsprojects","locations":["Brazil
         South","East Asia","East US","Japan East","Japan West","North Central US","North
         Europe","South Central US","West Europe","West US","Southeast Asia","Central
         US","East US 2","Australia East","Australia Southeast"],"apiVersions":["2015-05-01-alpha","2015-04-01-alpha","2015-03-01-alpha","2015-02-01-privatepreview","2015-02-01-preview","2015-02-01-beta","2015-02-01-alpha"]},{"resourceType":"lcsprojects/connectors","locations":["Brazil
@@ -945,62 +1019,77 @@ http_interactions:
         West","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-03-01-preview"]},{"resourceType":"operations","locations":["East
         Asia","Southeast Asia","East US","East US 2","West US","North Central US","South
         Central US","Central US","North Europe","West Europe","Japan East","Japan
-        West","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-03-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ImportExport","namespace":"Microsoft.ImportExport","authorization":{"applicationId":"7de4d5c5-5b32-4235-b8a9-33b34d6bcd2a","roleDefinitionId":"9f7aa6bb-9454-46b6-8c01-a4b0f33ca151"},"resourceTypes":[{"resourceType":"locations","locations":[],"apiVersions":["2016-07-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-07-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Logic","namespace":"Microsoft.Logic","authorization":{"applicationId":"7cd684f4-8a78-49b0-91ec-6a35d38739ba","roleDefinitionId":"cb3ef1fb-6e31-49e2-9d87-ed821053fe58"},"resourceTypes":[{"resourceType":"workflows","locations":["North
+        West","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-03-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ImportExport","namespace":"Microsoft.ImportExport","authorization":{"applicationId":"7de4d5c5-5b32-4235-b8a9-33b34d6bcd2a","roleDefinitionId":"9f7aa6bb-9454-46b6-8c01-a4b0f33ca151"},"resourceTypes":[{"resourceType":"jobs","locations":["Central
+        US","East US","East US 2","North Central US","South Central US","West US","North
+        Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
+        East","Australia Southeast","Canada East","Canada Central"],"apiVersions":["2016-11-01","2016-07-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-11-01","2016-07-01-preview"]},{"resourceType":"operationResults","locations":[],"apiVersions":["2016-11-01","2016-07-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-11-01","2016-07-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Logic","namespace":"Microsoft.Logic","authorization":{"applicationId":"7cd684f4-8a78-49b0-91ec-6a35d38739ba","roleDefinitionId":"cb3ef1fb-6e31-49e2-9d87-ed821053fe58"},"resourceTypes":[{"resourceType":"workflows","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"locations/workflows","locations":["North
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"locations/workflows","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"locations","locations":["North
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"locations","locations":["North
         Central US"],"apiVersions":["2016-06-01","2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"operations","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"integrationAccounts","locations":["North
+        East","Brazil South","Australia East","Australia Southeast","West US 2","West
+        Central US"],"apiVersions":["2016-06-01","2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"integrationAccounts","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
         East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.MachineLearning","namespace":"Microsoft.MachineLearning","authorization":{"applicationId":"0736f41a-0425-4b46-bdb5-1563eff02385","roleDefinitionId":"1cc297bc-1829-4524-941f-966373421033"},"resourceTypes":[{"resourceType":"Workspaces","locations":["South
-        Central US","West Europe","Southeast Asia"],"apiVersions":["2016-04-01"]},{"resourceType":"webServices","locations":["South
-        Central US","West Europe","Southeast Asia"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"locations","locations":["South
+        Central US","West Europe","Southeast Asia","Japan East","West Central US"],"apiVersions":["2016-04-01"]},{"resourceType":"webServices","locations":["South
+        Central US","West Europe","Southeast Asia","Japan East","East US 2","West
+        Central US"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"operations","locations":["South
+        Central US"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"locations","locations":["South
         Central US"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"locations/operations","locations":["South
-        Central US","West Europe","Southeast Asia"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"locations/operationsStatus","locations":["South
-        Central US","West Europe","Southeast Asia"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"commitmentPlans","locations":["South
-        Central US","West Europe","Southeast Asia","Japan East","East US 2"],"apiVersions":["2016-05-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.MarketplaceOrdering","namespace":"Microsoft.MarketplaceOrdering","resourceTypes":[{"resourceType":"agreements","locations":["South
+        Central US","West Europe","Southeast Asia","Japan East","East US 2","West
+        Central US"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"locations/operationsStatus","locations":["South
+        Central US","West Europe","Southeast Asia","Japan East","East US 2","West
+        Central US"],"apiVersions":["2016-05-01-preview"]},{"resourceType":"commitmentPlans","locations":["South
+        Central US","West Europe","Southeast Asia","Japan East","East US 2","West
+        Central US"],"apiVersions":["2016-05-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.MarketplaceOrdering","namespace":"Microsoft.MarketplaceOrdering","resourceTypes":[{"resourceType":"agreements","locations":["South
         Central US","West US"],"apiVersions":["2015-06-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Media","namespace":"Microsoft.Media","authorization":{"applicationId":"374b2a64-3b6b-436b-934c-b820eacca870","roleDefinitionId":"aab70789-0cec-44b5-95d7-84b64c9487af"},"resourceTypes":[{"resourceType":"mediaservices","locations":["Japan
         West","Japan East","East Asia","Southeast Asia","West Europe","North Europe","East
         US","West US","Australia East","Australia Southeast","Central US","Brazil
         South","South Central US","Canada Central","Canada East"],"apiVersions":["2015-10-01","2015-04-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-10-01","2015-04-01"]},{"resourceType":"checknameavailability","locations":[],"apiVersions":["2015-10-01","2015-04-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.NotificationHubs","namespace":"Microsoft.NotificationHubs","resourceTypes":[{"resourceType":"namespaces","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US","North
-        Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
-        East","Japan West","North Europe","West Europe"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"namespaces/notificationHubs","locations":["Australia
+        Central US","South Central US","West Central US","East Asia","Southeast Asia","Brazil
+        South","Japan East","Japan West","North Europe","West Europe","Canada Central","Canada
+        East"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"namespaces/notificationHubs","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US","North
-        Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
-        East","Japan West","North Europe","West Europe"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"checkNamespaceAvailability","locations":["Australia
+        Central US","South Central US","West Central US","East Asia","Southeast Asia","Brazil
+        South","Japan East","Japan West","North Europe","West Europe","Canada Central","Canada
+        East"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"checkNamespaceAvailability","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US","North
-        Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
-        East","Japan West","North Europe","West Europe"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"operations","locations":["Australia
+        Central US","South Central US","West Central US","East Asia","Southeast Asia","Brazil
+        South","Japan East","Japan West","North Europe","West Europe","Canada Central","Canada
+        East"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"operations","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US","North
-        Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
-        East","Japan West","North Europe","West Europe"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"operationResults","locations":["Australia
+        Central US","South Central US","West Central US","East Asia","Southeast Asia","Brazil
+        South","Japan East","Japan West","North Europe","West Europe","Canada Central","Canada
+        East"],"apiVersions":["2016-03-01","2014-09-01"]},{"resourceType":"operationResults","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US","North
-        Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
-        East","Japan West","North Europe","West Europe"],"apiVersions":["2016-03-01","2014-09-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.OperationsManagement","namespace":"Microsoft.OperationsManagement","authorization":{"applicationId":"d2a0a418-0aac-4541-82b2-b3142c89da77","roleDefinitionId":"aa249101-6816-4966-aafa-08175d795f14"},"resourceTypes":[{"resourceType":"solutions","locations":["East
-        US","West Europe","Southeast Asia","Australia Southeast"],"apiVersions":["2015-11-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Portal","namespace":"Microsoft.Portal","resourceTypes":[{"resourceType":"dashboards","locations":["Central
-        US","East Asia","Southeast Asia","East US","East US 2","West US","West US
-        2","North Central US","South Central US","West Central US","North Europe","West
-        Europe","Japan East","Japan West","Brazil South","Australia Southeast","Australia
-        East","Canada Central","Canada East"],"apiVersions":["2015-08-01-preview"]},{"resourceType":"operations","locations":["Central
-        US","East Asia","Southeast Asia","East US","East US 2","West US","West US
-        2","North Central US","South Central US","West Central US","North Europe","West
-        Europe","Japan East","Japan West","Brazil South","Australia Southeast","Australia
-        East","Canada Central","Canada East"],"apiVersions":["2015-08-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.PowerBI","namespace":"Microsoft.PowerBI","resourceTypes":[{"resourceType":"workspaceCollections","locations":["South
+        Central US","South Central US","West Central US","East Asia","Southeast Asia","Brazil
+        South","Japan East","Japan West","North Europe","West Europe","Canada Central","Canada
+        East"],"apiVersions":["2016-03-01","2014-09-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.PowerBI","namespace":"Microsoft.PowerBI","resourceTypes":[{"resourceType":"workspaceCollections","locations":["South
         Central US","North Central US","East US 2","West US","West Europe","North
-        Europe","Brazil South","Southeast Asia","Australia Southeast","Canada Central"],"apiVersions":["2016-01-29"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-01-29"]},{"resourceType":"locations/checkNameAvailability","locations":["South
+        Europe","Brazil South","Southeast Asia","Australia Southeast","Canada Central","Japan
+        East","UK South"],"apiVersions":["2016-01-29"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-01-29"]},{"resourceType":"locations/checkNameAvailability","locations":["South
         Central US","North Central US","East US 2","West US","West Europe","North
-        Europe","Brazil South","Southeast Asia","Australia Southeast","Canada Central"],"apiVersions":["2016-01-29"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.RecoveryServices","namespace":"Microsoft.RecoveryServices","authorization":{"applicationId":"262044b1-e2ce-469f-a196-69ab7ada62d3","roleDefinitionId":"21CEC436-F7D0-4ADE-8AD8-FEC5668484CC"},"resourceTypes":[{"resourceType":"vaults","locations":["West
+        Europe","Brazil South","Southeast Asia","Australia Southeast","Canada Central","Japan
+        East","UK South"],"apiVersions":["2016-01-29"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.RecoveryServices","namespace":"Microsoft.RecoveryServices","authorization":{"applicationId":"262044b1-e2ce-469f-a196-69ab7ada62d3","roleDefinitionId":"21CEC436-F7D0-4ADE-8AD8-FEC5668484CC"},"resourceTypes":[{"resourceType":"vaults","locations":["West
         US","East US","North Europe","West Europe","Brazil South","East Asia","Southeast
         Asia","North Central US","South Central US","Japan East","Japan West","Australia
         East","Australia Southeast","Central US","East US 2"],"apiVersions":["2016-08-10","2016-06-01","2016-05-01","2015-12-15","2015-12-10","2015-11-10","2015-08-15","2015-08-10","2015-06-10","2015-03-15"]},{"resourceType":"operations","locations":["Southeast
         Asia"],"apiVersions":["2016-08-10","2016-06-01","2015-12-15","2015-12-10","2015-11-10","2015-08-15","2015-08-10","2015-06-10","2015-03-15"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-06-01"]},{"resourceType":"locations/backupStatus","locations":["West
+        US","East US","North Europe","West Europe","Brazil South","East Asia","Southeast
+        Asia","North Central US","South Central US","Japan East","Japan West","Australia
+        East","Australia Southeast","Central US","East US 2"],"apiVersions":["2016-06-01"]},{"resourceType":"locations/allocatedStamp","locations":["West
+        US","East US","North Europe","West Europe","Brazil South","East Asia","Southeast
+        Asia","North Central US","South Central US","Japan East","Japan West","Australia
+        East","Australia Southeast","Central US","East US 2"],"apiVersions":["2016-06-01"]},{"resourceType":"locations/allocateStamp","locations":["West
         US","East US","North Europe","West Europe","Brazil South","East Asia","Southeast
         Asia","North Central US","South Central US","Japan East","Japan West","Australia
         East","Australia Southeast","Central US","East US 2"],"apiVersions":["2016-06-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Relay","namespace":"Microsoft.Relay","authorization":{"applicationId":"80369ed6-5f11-4dd9-bef3-692475845e77"},"resourceTypes":[{"resourceType":"namespaces","locations":["Australia
@@ -1033,10 +1122,10 @@ http_interactions:
         East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-08-01-preview","2015-02-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.Search","namespace":"Microsoft.Search","resourceTypes":[{"resourceType":"searchServices","locations":["West
         US","East US","North Europe","West Europe","Southeast Asia","East Asia","North
         Central US","South Central US","Japan West","Australia East","Brazil South","West
-        Central US","Canada Central"],"apiVersions":["2015-08-19","2015-02-28"]},{"resourceType":"checkServiceNameAvailability","locations":[],"apiVersions":["2015-02-28","2014-07-31-Preview"]},{"resourceType":"checkNameAvailability","locations":[],"apiVersions":["2015-08-19"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-08-19","2015-02-28"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ServerManagement","namespace":"Microsoft.ServerManagement","resourceTypes":[{"resourceType":"operations","locations":["Central
-        US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]},{"resourceType":"gateways","locations":["Central
-        US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]},{"resourceType":"nodes","locations":["Central
-        US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ServiceBus","namespace":"Microsoft.ServiceBus","resourceTypes":[{"resourceType":"namespaces","locations":["Australia
+        Central US","Canada Central"],"apiVersions":["2015-08-19","2015-02-28"]},{"resourceType":"checkServiceNameAvailability","locations":[],"apiVersions":["2015-02-28","2014-07-31-Preview"]},{"resourceType":"checkNameAvailability","locations":[],"apiVersions":["2015-08-19"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-08-19","2015-02-28"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ServerManagement","namespace":"Microsoft.ServerManagement","resourceTypes":[{"resourceType":"operations","locations":["West
+        US","West Central US","Central US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]},{"resourceType":"gateways","locations":["West
+        US","West Central US","Central US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]},{"resourceType":"nodes","locations":["West
+        US","West Central US","Central US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.ServiceBus","namespace":"Microsoft.ServiceBus","resourceTypes":[{"resourceType":"namespaces","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US 2","West
         US","North Central US","South Central US","West Central US","East Asia","Southeast
         Asia","Brazil South","Japan East","Japan West","North Europe","West Europe","Canada
@@ -1048,10 +1137,18 @@ http_interactions:
         US","West US 2","West Central US","East US","East US 2","Central US","West
         Europe","North Europe","UK West","UK South","Australia East","Australia Southeast","North
         Central US","East Asia","Southeast Asia","Japan West","Japan East","Brazil
+        South","South Central US","Canada Central","Canada East"],"apiVersions":["2016-09-01","2016-03-01","2016-01-01-beta","2015-01-01-alpha"]},{"resourceType":"locations/operations","locations":["West
+        US","West US 2","West Central US","East US","East US 2","Central US","West
+        Europe","North Europe","UK West","UK South","Australia East","Australia Southeast","North
+        Central US","East Asia","Southeast Asia","Japan West","Japan East","Brazil
+        South","South Central US","Canada Central","Canada East"],"apiVersions":["2016-09-01","2016-03-01","2016-01-01-beta","2015-01-01-alpha"]},{"resourceType":"locations/operationResults","locations":["West
+        US","West US 2","West Central US","East US","East US 2","Central US","West
+        Europe","North Europe","UK West","UK South","Australia East","Australia Southeast","North
+        Central US","East Asia","Southeast Asia","Japan West","Japan East","Brazil
         South","South Central US","Canada Central","Canada East"],"apiVersions":["2016-09-01","2016-03-01","2016-01-01-beta","2015-01-01-alpha"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.StorSimple","namespace":"Microsoft.StorSimple","resourceTypes":[{"resourceType":"managers","locations":["West
         US","East US","North Europe","West Europe","Brazil South","East Asia","Southeast
-        Asia","Japan East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-03-15","2014-09-01"]},{"resourceType":"operations","locations":["Southeast
-        Asia"],"apiVersions":["2016-06-01","2015-03-15","2014-09-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.StreamAnalytics","namespace":"Microsoft.StreamAnalytics","resourceTypes":[{"resourceType":"streamingjobs","locations":["Central
+        Asia","Japan East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-10-01","2016-06-01","2015-03-15","2014-09-01"]},{"resourceType":"operations","locations":["Southeast
+        Asia"],"apiVersions":["2016-10-01","2016-06-01","2015-03-15","2014-09-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Microsoft.StreamAnalytics","namespace":"Microsoft.StreamAnalytics","resourceTypes":[{"resourceType":"streamingjobs","locations":["Central
         US","West Europe","East US 2","North Europe","Japan East","West US","Southeast
         Asia","South Central US","East Asia","Japan West","North Central US","East
         US","Australia East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-01","2015-11-01","2015-10-01","2015-09-01","2015-08-01-preview","2015-06-01","2015-05-01","2015-04-01","2015-03-01-preview"]},{"resourceType":"locations","locations":["West
@@ -1095,11 +1192,12 @@ http_interactions:
         Asia","Southeast Asia","East US","East US 2","West US","North Central US","South
         Central US","Central US","North Europe","West Europe","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Canada Central","Canada
-        East","West Central US","West US 2"],"apiVersions":["2015-01-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Signiant.Flight","namespace":"Signiant.Flight","resourceTypes":[{"resourceType":"accounts","locations":["East
+        East","West Central US","West US 2","UK South","UK West"],"apiVersions":["2015-01-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Signiant.Flight","namespace":"Signiant.Flight","resourceTypes":[{"resourceType":"accounts","locations":["East
         US","Central US","North Central US","South Central US","West US","North Europe","West
         Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast"],"apiVersions":["2015-06-29"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-29"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-29"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-29"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/Sparkpost.Basic","namespace":"Sparkpost.Basic","resourceTypes":[{"resourceType":"services","locations":["West
-        US"],"apiVersions":["2016-08-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-08-01"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-08-01"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-08-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/SuccessBricks.ClearDB","namespace":"SuccessBricks.ClearDB","resourceTypes":[{"resourceType":"databases","locations":["Brazil
+        US"],"apiVersions":["2016-08-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-08-01"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-08-01"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-08-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/stackify.retrace","namespace":"stackify.retrace","resourceTypes":[{"resourceType":"services","locations":["West
+        US"],"apiVersions":["2016-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-01-01"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2016-01-01"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2016-01-01"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/SuccessBricks.ClearDB","namespace":"SuccessBricks.ClearDB","resourceTypes":[{"resourceType":"databases","locations":["Brazil
         South","Central US","East Asia","East US","East US 2","Japan East","Japan
         West","North Central US","North Europe","Southeast Asia","West Europe","West
         US","South Central US","Australia East","Australia Southeast","Canada Central","Canada
@@ -1111,5 +1209,5 @@ http_interactions:
         US"],"apiVersions":["2015-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/U2uconsult.TheIdentityHub","namespace":"U2uconsult.TheIdentityHub","resourceTypes":[{"resourceType":"services","locations":["West
         Europe"],"apiVersions":["2015-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]}],"registrationState":"NotRegistered"}]}'
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:59:31 GMT
+  recorded_at: Mon, 19 Dec 2016 21:49:01 GMT
 recorded_with: VCR 3.0.3
