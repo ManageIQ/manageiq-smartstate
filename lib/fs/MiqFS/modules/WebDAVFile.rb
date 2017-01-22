@@ -1,15 +1,14 @@
 require 'net/http'
 
 class WebDAVFile
-  def initialize(uri, verify_mode, headers)
+  def initialize(uri, http_options, headers)
     @uri = uri
     @headers = headers
     @offset = 0
     @connection = Net::HTTP.start(
       @uri.host,
       @uri.port,
-      :use_ssl     => @uri.scheme == 'https',
-      :verify_mode => verify_mode
+      http_options
     )
   end
 

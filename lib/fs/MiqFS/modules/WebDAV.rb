@@ -16,8 +16,7 @@ module WebDAV
     @connection = Net::HTTP.start(
       @uri.host,
       @uri.port,
-      :use_ssl     => @uri.scheme == 'https',
-      :verify_mode => @dobj.verify_mode || OpenSSL::SSL::VERIFY_PEER
+      @dobj.http_options
     )
   end
 
@@ -89,7 +88,7 @@ module WebDAV
 
   def fs_fileOpen(path, mode = "r")
     raise Errno::EACCES unless mode == 'r'
-    WebDAVFile.new(remote_uri(path), @connection.verify_mode, @headers)
+    WebDAVFile.new(remote_uri(path), @dobj.http_options, @headers)
   end
 
   def fs_fileSeek(fobj, offset, whence)
