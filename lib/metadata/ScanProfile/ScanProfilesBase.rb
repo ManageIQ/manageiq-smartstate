@@ -7,7 +7,7 @@ class ScanProfilesBase
     return k unless k.nil?
 
     k = "#{from.name.underscore.split('_')[0..-2].join('_').camelize}#{type.camelize}"
-    require k
+    require "metadata/ScanProfile/#{k}"
     from.instance_variable_set("@scan_#{type}_class", Object.const_get(k))
   end
 
