@@ -22,10 +22,10 @@ module NTFS
       raise "MIQ(NTFS::ObjectId.initialize) Nil buffer" if buf.nil?
       buf = buf.read(buf.length) if buf.kind_of?(DataRun)
       len = 16
-      @objectId       = MiqUUID.parse_raw(buf[len * 0, len])
-      @birthVolumeId  = MiqUUID.parse_raw(buf[len * 1, len]) if buf.length > 16
-      @birthObjectId  = MiqUUID.parse_raw(buf[len * 2, len]) if buf.length > 16
-      @domainId       = MiqUUID.parse_raw(buf[len * 3, len]) if buf.length > 16
+      @objectId       = UUIDTools::UUID.parse_raw(buf[len * 0, len])
+      @birthVolumeId  = UUIDTools::UUID.parse_raw(buf[len * 1, len]) if buf.length > 16
+      @birthObjectId  = UUIDTools::UUID.parse_raw(buf[len * 2, len]) if buf.length > 16
+      @domainId       = UUIDTools::UUID.parse_raw(buf[len * 3, len]) if buf.length > 16
     end
 
     def dump

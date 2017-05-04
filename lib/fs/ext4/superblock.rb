@@ -183,9 +183,9 @@ module Ext4
       @sb['last_mnt_path'].delete!("\000")
       @numGroups, @lastGroupBlocks = @sb['num_blocks'].divmod(@sb['blocks_in_group'])
       @numGroups += 1 if @lastGroupBlocks > 0
-      @fsId = MiqUUID.parse_raw(@sb['fs_id'])
+      @fsId = UUIDTools::UUID.parse_raw(@sb['fs_id'])
       @volName = @sb['vol_name']
-      @jrnlId = MiqUUID.parse_raw(@sb['jrnl_id'])
+      @jrnlId = UUIDTools::UUID.parse_raw(@sb['jrnl_id'])
     end
 
     # ////////////////////////////////////////////////////////////////////////////

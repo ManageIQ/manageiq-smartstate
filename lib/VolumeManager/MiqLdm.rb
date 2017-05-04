@@ -264,13 +264,13 @@ module LdmScanner
       vblk.dg_guid    = getChunk(buf)
 
     when VBT_DISKV2     # Disk v2
-      vblk.disk_guid1   = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
-      vblk.disk_guid2   = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      vblk.disk_guid1   = UUIDTools::UUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      vblk.disk_guid2   = UUIDTools::UUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
       ph.diskVb     = vblk if ph.disk_id == vblk.disk_guid1
 
     when VBT_DISKGROUPV2  # Disk Group v2
-      vblk.dg_guid    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
-      vblk.ds_guid    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      vblk.dg_guid    = UUIDTools::UUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      vblk.ds_guid    = UUIDTools::UUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
 
     when VBT_VOLUME     # Volume
       vblk.children   = []
@@ -287,7 +287,7 @@ module LdmScanner
       vblk.size     = getNum(buf)
       BinaryStruct.stepDecode(buf, "C4")
       vblk.partition_type = BinaryStruct.stepDecode(buf, "C")
-      vblk.volume_id    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      vblk.volume_id    = UUIDTools::UUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
 
       vblk.id1      = getChunk(buf) if (vblk.flags & 0x08) != 0x0
       vblk.id2      = getChunk(buf) if (vblk.flags & 0x20) != 0x0
