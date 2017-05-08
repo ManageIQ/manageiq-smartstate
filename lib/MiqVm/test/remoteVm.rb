@@ -2,7 +2,7 @@ require 'manageiq-gems-pending'
 require 'ostruct'
 require 'log4r'
 require 'MiqVm/MiqVm'
-require 'VmwareWebService/MiqVim'
+require 'VMwareWebService/MiqVim'
 
 class ConsoleFormatter < Log4r::Formatter
   def format(event)
