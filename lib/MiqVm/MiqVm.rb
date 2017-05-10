@@ -85,11 +85,10 @@ class MiqVm
         dInfo.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(df)
         if @ost.miqVimVm
           @vdlConnection = @ost.miqVimVm.vdlVcConnection unless @vdlConnection
-          $log.debug "openDisks (VC): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         else
           @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection
-          $log.debug "openDisks (ESX): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         end
+        $log.debug "openDisks: using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         dInfo.vixDiskInfo[:connection]  = @vdlConnection
       elsif @ost.miq_hyperv
         init_disk_info(dInfo, df)
