@@ -126,6 +126,7 @@ class MiqDisk
 
   MBR_SIZE = 512
   DOS_SIG  = "55aa"
+  GPT_SIG  = 238   # 0xEE GPT Protective MBR
   DISK_SIG_OFFSET = 0x1B8
   DISK_SIG_SIZE = 4
 
@@ -135,24 +136,6 @@ class MiqDisk
     ds = read(DISK_SIG_SIZE).unpack('L')[0]
     seek(sp, IO::SEEK_SET)
     ds
-  end
-
-  def discoverPartitions
-    return @partitions unless @partitions.nil?
-
-    $log.debug "MiqDisk<#{object_id}> discoverPartitions, disk file: #{@dInfo.fileName}" if $log
-    seek(0, IO::SEEK_SET)
-    mbr = read(MBR_SIZE)
-
-    if mbr.length < MBR_SIZE
-      $log.info "MiqDisk<#{object_id}> discoverPartitions, disk file: #{@dInfo.fileName} does not contain a master boot record"
-      return @partitions = []
-    end
-
-    sig = mbr[510..511].unpack('H4')
-
-    return(discoverDosPriPartitions(mbr)) if sig[0] == DOS_SIG
-    @partitions = []
   end
 
   DOS_PARTITION_ENTRY = BinaryStruct.new([
@@ -174,6 +157,76 @@ class MiqDisk
   PTYPE_EXT_CHS = 0x05
   PTYPE_EXT_LBA = 0x0f
   PTYPE_LDM   = 0x42
+
+  GPT_HEADER = BinaryStruct.new([
+    'a8',    :signature, 	  # 00-07: Signature "EFI PART"
+    'a4',    :version, 	 	  # 08-11: Revision
+    'L',     :header_size, 	# 12-15: Header size
+    'L',     :crc32_header, # 16-19: 
+    'L',     :reserved, 	  # 20-23: 
+    'Q',     :cur_lba, 		  # 24-31: 
+    'Q',     :bak_lba, 		  # 32-39: 
+    'Q',     :first_lba, 	  # 40-47: 
+    'Q',     :last_lba, 	  # 48-55: 
+    'a16',   :guid, 		    # 56-71: 
+    'Q',     :startLBA, 	  # 72-79: 
+    'L',     :partNum, 		  # 80-83: 
+    'L',     :partSize, 	  # 84-87: 
+    'L',     :part_array, 	# 88-91: 
+    'a420',  :reserved2, 	  # 92-511: 
+  ])
+
+  GPT_PARTITION_ENTRY = BinaryStruct.new([
+    'a16',   :ptype, 		  # 00-15: partition type
+    'a16',   :pguid, 		  # 16-31: partition GUID
+    'Q',     :firstLBA, 	# 32-39: first LBA
+    'Q',     :lastLBA, 		# 40-47: last LBA
+    'a8',    :attr_flag, 	# 48-55: attribute flag
+    'a72',   :pname, 		  # 56-127: partition name
+  ])
+
+  def discoverPartitions
+    return @partitions unless @partitions.nil?
+
+    $log.debug "MiqDisk<#{object_id}> discoverPartitions, disk file: #{@dInfo.fileName}" if $log
+    seek(0, IO::SEEK_SET)
+    mbr = read(MBR_SIZE)
+
+    if mbr.length < MBR_SIZE
+      $log.info "MiqDisk<#{object_id}> discoverPartitions, disk file: #{@dInfo.fileName} does not contain a master boot record"
+      return @partitions = []
+    end
+
+    sig = mbr[510..511].unpack('H4')
+
+    ptEntry = DOS_PARTITION_ENTRY.decode(mbr[DOS_PT_START, PTE_LEN])
+    ptype = ptEntry[:ptype]
+
+    return(discoverDosGptPartitions) if ptype == GPT_SIG && sig[0] == DOS_SIG
+    return(discoverDosPriPartitions(mbr)) if sig[0] == DOS_SIG
+    @partitions = []
+  end
+
+  def discoverDosGptPartitions
+    $log.info "Parsing GPT disk ..."
+    seek(MBR_SIZE, IO::SEEK_SET)
+    gpt_header = read(GPT_HEADER.size)
+    header = GPT_HEADER.decode(gpt_header)
+
+    $log.debug "header = #{header}"
+    @partitions = []
+    pte = GPT_HEADER.size + MBR_SIZE
+    (1..header[:partNum]).each do |n|
+      seek(pte, IO::SEEK_SET)
+      gpt = read(GPT_PARTITION_ENTRY.size)
+      ptEntry = GPT_PARTITION_ENTRY.decode(gpt)
+      ptype = ptEntry[:ptype]
+
+      @partitions.push(MiqPartition.new(self, ptype, ptEntry[:firstLBA], ptEntry[:lastLBA], n)) if ptEntry[:firstLBA] != 0
+      pte += header[:partSize]
+    end
+    (@partitions)
+  end
 
   def discoverDosPriPartitions(mbr)
     pte = DOS_PT_START
