@@ -1,5 +1,3 @@
-require 'util/extensions/miq-string'
-
 require 'stringio'
 require 'find'
 
