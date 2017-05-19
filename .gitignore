@@ -10,3 +10,6 @@
 
 # rspec failure tracking
 .rspec_status
+
+# Log files generated from running test:miq_disk
+mdfs*.log
