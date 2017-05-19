@@ -83,20 +83,12 @@ class MiqVm
       if @ost.miqVim
         dInfo.vixDiskInfo            = {}
         dInfo.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(df)
-        if @ost.miqVimVm && @ost.miqVim.isVirtualCenter?
-          thumb_print    = VcenterThumbPrint.new(@ost.miqVimVm.invObj.server)
-          @vdlConnection = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
-          $log.debug "openDisks (VC): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
-        elsif @ost.miqVimVm
-          esx_host       = @ost.miqVimVm.invObj.server
-          esx_username   = @ost.miqVimVm.invObj.username
-          esx_password   = @ost.miqVimVm.invObj.password
-          thumb_print    = ESXThumbPrint.new(esx_host, esx_username, esx_password)
-          @vdlConnection = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
+        if @ost.miqVimVm
+          @vdlConnection = @ost.miqVimVm.vdlVcConnection unless @vdlConnection
         else
           @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection
-          $log.debug "openDisks (ESX): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         end
+        $log.debug "openDisks: using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         dInfo.vixDiskInfo[:connection]  = @vdlConnection
       elsif @ost.miq_hyperv
         init_disk_info(dInfo, df)
