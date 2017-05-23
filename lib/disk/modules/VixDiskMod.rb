@@ -1,4 +1,4 @@
-require 'VixDiskLib/VixDiskLib'
+require 'VMwareWebService/VixDiskLib/VixDiskLib'
 
 module VixDiskMod
   def d_init
