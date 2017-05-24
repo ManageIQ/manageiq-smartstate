@@ -400,7 +400,7 @@ class VmConfig
       ems_display_text = "host(#{ems_host['use_vim_broker'] ? 'via broker' : 'directly'}):#{ems_host['host']}"
       $log.info "#{conn_reason}: Connecting to [#{ems_display_text}] for VM:[#{vmCfgFile}]"
 
-      require 'miq_fault_tolerant_vim'
+      require 'VMwareWebService/miq_fault_tolerant_vim'
 
       password_decrypt = MiqPassword.decrypt(ems_host['password'])
       hostVim = MiqFaultTolerantVim.new(:ip => ems_host['host'], :user => ems_host['user'], :pass => password_decrypt, :use_broker => ems_host['use_vim_broker'], :vim_broker_drb_port => ems_host['vim_broker_drb_port'])
