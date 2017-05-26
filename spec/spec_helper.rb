@@ -1,5 +1,10 @@
+if ENV['CI']
+  require 'simplecov'
+  SimpleCov.start
+end
+
 require "bundler/setup"
-require "manageiq/smartstate"
+require "manageiq-smartstate"
 
 # Initialize the global logger that might be expected
 require 'logger'

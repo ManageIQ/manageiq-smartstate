@@ -1,5 +1,14 @@
 # ManageIQ::Smartstate
 
+[![Gem Version](https://badge.fury.io/rb/manageiq-smartstate.svg)](http://badge.fury.io/rb/manageiq-smartstate)
+[![Build Status](https://travis-ci.org/ManageIQ/manageiq-smartstate.svg)](https://travis-ci.org/ManageIQ/manageiq-smartstate)
+[![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq-smartstate.svg)](https://codeclimate.com/github/ManageIQ/manageiq-smartstate)
+[![Test Coverage](https://codeclimate.com/github/ManageIQ/manageiq-smartstate/badges/coverage.svg)](https://codeclimate.com/github/ManageIQ/manageiq-smartstate/coverage)
+[![Dependency Status](https://gemnasium.com/ManageIQ/manageiq-smartstate.svg)](https://gemnasium.com/ManageIQ/manageiq-smartstate)
+[![Security](https://hakiri.io/github/ManageIQ/manageiq-smartstate/master.svg)](https://hakiri.io/github/ManageIQ/manageiq-smartstate/master)
+
+[![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/manageiq-smartstate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Installation
 
 Add this line to your application's Gemfile:
