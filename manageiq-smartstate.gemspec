@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "manageiq-gems-pending"
   spec.add_dependency "vmware_web_service", "~>0.1.1"
 
   spec.add_development_dependency "bundler"
