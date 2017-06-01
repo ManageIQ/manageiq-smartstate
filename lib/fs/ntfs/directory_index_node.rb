@@ -52,10 +52,6 @@ module NTFS
         # Child node VCN is located 8 bytes before 'length' bytes.
         # NOTE: If the node has 0 contents, it's offset 16.
         @child = buf[@contentLen == 0 ? 16 : @length - 8, 8].unpack('Q')[0]
-        if @child.class == Bignum
-          # buf.hex_dump(:obj => STDOUT, :meth => :puts, :newline => false)
-          raise "MIQ(NTFS::DirectoryIndexNode.initialize) Bad child node: #{@child}"
-        end
       end
     end
 
