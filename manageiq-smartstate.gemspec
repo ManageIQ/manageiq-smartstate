@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "azure-armrest"
+  spec.add_dependency "binary_struct",      "~> 2.1"
   spec.add_dependency "iniparse"
   spec.add_dependency "linux_block_device", "~>0.2.1"
   spec.add_dependency "memory_buffer",      ">=0.1.0"
