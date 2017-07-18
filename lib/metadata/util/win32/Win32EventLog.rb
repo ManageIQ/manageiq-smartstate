@@ -13,7 +13,6 @@ require 'metadata/util/win32/peheader'
 require 'metadata/util/win32/remote-registry'
 
 # Dev needs this.
-require 'Win32API' if Sys::Platform::OS == :windows
 require 'metadata/util/win32/system_path_win'
 
 require 'digest/md5'
@@ -149,7 +148,7 @@ class Win32EventLog
 
     # If an MiqFS instance was not passed, then the OS has to be (or emulate) Win32.
     # If an MiqFS instance *was* passed, then if the guest OS is not Windows then getSystemRoot will throw.
-    raise "#{self.class}::initialize: Platform is not Windows and file system is not MiqFS: cannot continue" if Sys::Platform::OS != :windows and !vmMiqFs.class.to_s.include?('Miq')
+    raise "#{self.class}::initialize: Filesystem is not MiqFS: cannot continue" if !vmMiqFs.class.to_s.include?('Miq')
 
     # Get a file system instance if we don't already have one.
     @fs = vmMiqFs

@@ -6,15 +6,11 @@ if Sys::Platform::IMPL == :linux
     require 'linux_block_device'
     require 'disk/modules/RawBlockIO'
   end
-elsif Sys::Platform::OS == :windows
-  require 'disk/modules/MiqLargeFileWin32'
 end
 
 module MiqLargeFile
   def self.open(file_name, flags)
     case Sys::Platform::OS
-    when :windows
-      return(MiqLargeFileWin32.new(file_name, flags))
     when :unix
       if Sys::Platform::IMPL == :linux
         return(RawBlockIO.new(file_name, flags)) if MiqLargeFileStat.new(file_name).blockdev?
@@ -26,17 +22,10 @@ module MiqLargeFile
   end
 
   def self.size(file_name)
-    case Sys::Platform::OS
-    when :windows
-      # The win32/file require is needed to support +2GB file sizes
-      require 'win32/file'
-      File.size(file_name)
-    else
-      f = open(file_name, "r")
-      s = f.size
-      f.close
-      return s
-    end
+    f = open(file_name, "r")
+    s = f.size
+    f.close
+    s
   end
 
   # For camcorder interposition.
