@@ -258,7 +258,7 @@ class VmConfig
     ds, _dir, _name = split_filename(config_file)
     return config_file unless ds.nil?
 
-    File.expand_path(config_file.gsub(/\\/, "/"))
+    File.expand_path(config_file.tr('\\', '/'))
   end
 
   def diskKey?(key)
