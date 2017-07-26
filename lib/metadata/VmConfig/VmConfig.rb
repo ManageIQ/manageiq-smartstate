@@ -158,8 +158,7 @@ class VmConfig
   end
 
   def set_vmconfig_path(config_path)
-    ds, _dir, _name = split_filename(config_path)
-    @configFile = ds.nil? ? File.normalize(config_path) : config_path
+    @configFile = normalize_vmconfig_file(config_path)
     @configPath = File.dirname(@configFile)
   end
 
@@ -254,6 +253,13 @@ class VmConfig
   end
 
   private
+
+  def normalize_vmconfig_file(config_file)
+    ds, _dir, _name = split_filename(config_file)
+    return config_file unless ds.nil?
+
+    File.expand_path(config_file.tr('\\', '/'))
+  end
 
   def diskKey?(key)
     key =~ /^ide\d+:\d+\.filename$/ || key =~ /^scsi\d+:\d+\.filename$/
