@@ -452,7 +452,7 @@ class VmConfig
     @files = []
     if @direct_file_access
       Dir.glob(File.join(@configPath, "/*.*")) do |f|
-        s = File.sizeEx(f) rescue 0
+        s = File.size(f) rescue 0
         @files << {:path => f, :name => File.basename(f), :size => s, :mtime => File.mtime(f)}
       end
     else
