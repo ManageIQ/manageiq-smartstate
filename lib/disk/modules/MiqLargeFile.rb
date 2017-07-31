@@ -1,23 +1,17 @@
 require 'sys-uname'
 require 'util/miq-system'
 
-if Sys::Platform::IMPL == :linux
-  if MiqSystem.arch == :x86_64
-    require 'linux_block_device'
-    require 'disk/modules/RawBlockIO'
-  end
+if Sys::Platform::IMPL == :linux && MiqSystem.arch == :x86_64
+  require 'linux_block_device'
+  require 'disk/modules/RawBlockIO'
 end
 
 module MiqLargeFile
   def self.open(file_name, flags)
-    case Sys::Platform::OS
-    when :unix
-      if Sys::Platform::IMPL == :linux
-        return(RawBlockIO.new(file_name, flags)) if MiqLargeFileStat.new(file_name).blockdev?
-      end
-      return(MiqLargeFileOther.new(file_name, flags))
+    if Sys::Platform::IMPL == :linux && MiqLargeFileStat.new(file_name).blockdev?
+      RawBlockIO.new(file_name, flags)
     else
-      return(MiqLargeFileOther.new(file_name, flags))
+      MiqLargeFileOther.new(file_name, flags)
     end
   end
 
