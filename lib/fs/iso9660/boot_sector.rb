@@ -1,5 +1,6 @@
 require 'fs/iso9660/util'
 
+require 'sys-uname'
 require 'binary_struct'
 require 'util/miq-unicode'
 
