@@ -1,4 +1,3 @@
-require 'sys-uname'
 require 'fs/MiqFS/MiqFS'
 require 'metadata/util/win32/boot_info_win'
 

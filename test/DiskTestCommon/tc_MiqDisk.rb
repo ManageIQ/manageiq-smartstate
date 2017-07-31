@@ -5,7 +5,7 @@ require 'minitest/unit'
 
 module DiskTestCommon
   class TestMiqDisk < Minitest::Test
-    FILE_PATH = (Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
+    FILE_PATH = smartstate_images_root.to_s
 
     FILE_DESC_4GB    = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Flat4GB.vmdk"
     FILE_FLAT_4GB    = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Flat4GB-flat.vmdk"
