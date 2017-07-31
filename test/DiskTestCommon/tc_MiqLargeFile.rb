@@ -6,12 +6,10 @@ require 'tmpdir'
 
 module DiskTestCommon
   class TestMiqLargeFile < Minitest::Test
-    FILE_PATH = smartstate_images_root.to_s
-
-    FILE_1MB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1MB"
-    FILE_1GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1GB"
-    FILE_4GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_4GB"
-    FILE_5GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_5GB"
+    FILE_1MB = smartstate_images_root.join("containers/raw/DiskTestCommon_MiqLargeFile_1MB").to_s
+    FILE_1GB = smartstate_images_root.join("containers/raw/DiskTestCommon_MiqLargeFile_1GB").to_s
+    FILE_4GB = smartstate_images_root.join("containers/raw/DiskTestCommon_MiqLargeFile_4GB").to_s
+    FILE_5GB = smartstate_images_root.join("containers/raw/DiskTestCommon_MiqLargeFile_5GB").to_s
 
     SIZE_1MB = 0x00100000
     SIZE_1GB = 0x40000000
