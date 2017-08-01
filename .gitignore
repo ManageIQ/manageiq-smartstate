@@ -5,6 +5,7 @@
 /coverage/
 /doc/
 /pkg/
+/.rubocop-*
 /spec/reports/
 /tmp/
 
