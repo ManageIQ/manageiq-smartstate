@@ -1,4 +1,7 @@
 ---
+MiqLargeFile::MiqLargeFileStat-blockdev?-83aef1f15eef9ac4ab4c26e588ae5bc1: !ruby/object:Camcorder::Recording
+  value: false
+  behavior: :return
 MiqLargeFile::MiqLargeFileOther-size-cf4f9cc938a3ee7bd05bf21bef387099: !ruby/object:Camcorder::Recording
   value: 512
   behavior: :return
