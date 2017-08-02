@@ -74,8 +74,9 @@ module MiqOpenStackCommon
     while image_service.images.get(image_id).status.downcase != 'active'
       sleep(10)
     end
-    volume.destroy
     return image_service.images.get(image_id)
+  ensure
+    volume.destroy
   end
   
   def get_image_file_glance_v2(image_id)
@@ -89,9 +90,12 @@ module MiqOpenStackCommon
       # try getting image from metadata; oddly the image metadata is only available if
       # image is queried through compute service
       if snapshot_id = get_image_metadata_snapshot_id(compute_service.images.get(image_id))
-        image = create_image_from_snapshot(snapshot_id, image.disk_format)
-        tf = download_image_data_glance_v2(image)
-        image.destroy
+        begin
+          temp_image = create_image_from_snapshot(snapshot_id, image.disk_format)
+          tf = download_image_data_glance_v2(temp_image)
+        ensure
+          temp_image.destroy
+        end
       end
     else
       tf = download_image_data_glance_v2(image)
