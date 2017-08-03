@@ -28,6 +28,10 @@ class MiqOpenStackInstance
     @image_service ||= @openstack_handle.detect_image_service
   end
 
+  def volume_service
+    @volume_service ||= @openstack_handle.detect_volume_service
+  end
+
   def instance
     @instance ||= compute_service.servers.get(@instance_id)
   end
