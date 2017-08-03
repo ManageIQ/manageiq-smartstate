@@ -63,20 +63,22 @@ module MiqOpenStackCommon
     }
     volume = volume_service.volumes.new(volume_options)
     volume.save
-    while volume.status != 'available'
-      sleep(10)
-      volume = volume_service.volumes.get(volume.id)
+    begin
+      while volume.status != 'available'
+        sleep(10)
+        volume = volume_service.volumes.get(volume.id)
+      end
+      response = volume_service.action(volume.id, 'os-volume_upload_image' => {
+                                         :image_name => "Temp Image from #{snapshot.name}",
+                                         :disk_format => disk_format})
+      image_id = response.body["os-volume_upload_image"]["image_id"]
+      while image_service.images.get(image_id).status.downcase != 'active'
+        sleep(10)
+      end
+      return image_service.images.get(image_id)
+    ensure
+      volume.destroy
     end
-    response = volume_service.action(volume.id, 'os-volume_upload_image' => {
-                                       :image_name => "Temp Image from #{snapshot.name}",
-                                       :disk_format => disk_format})
-    image_id = response.body["os-volume_upload_image"]["image_id"]
-    while image_service.images.get(image_id).status.downcase != 'active'
-      sleep(10)
-    end
-    return image_service.images.get(image_id)
-  ensure
-    volume.destroy
   end
   
   def get_image_file_glance_v2(image_id)
@@ -89,9 +91,9 @@ module MiqOpenStackCommon
     if image.size.to_i == 0
       # try getting image from metadata; oddly the image metadata is only available if
       # image is queried through compute service
-      if snapshot_id = get_image_metadata_snapshot_id(compute_service.images.get(image_id))
+      unless (snapshot_id = get_image_metadata_snapshot_id(compute_service.images.get(image_id))).nil?
+        temp_image = create_image_from_snapshot(snapshot_id, image.disk_format)
         begin
-          temp_image = create_image_from_snapshot(snapshot_id, image.disk_format)
           tf = download_image_data_glance_v2(temp_image)
         ensure
           temp_image.destroy
