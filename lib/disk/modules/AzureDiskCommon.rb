@@ -1,39 +1,45 @@
 require_relative '../MiqDisk'
 require 'ostruct'
 
-module AzureCommon
+module AzureDiskCommon
   # The maximum read length that supports MD5 return.
   MAX_READ_LEN  = 1024 * 1024 * 4
   SECTOR_LENGTH = 512
 
   def self.d_init_common(dInfo)
     @blockSize        = SECTOR_LENGTH
-    @blob_uri         = dInfo.blob_uri if dInfo.blob_uri
-    @disk_name        = dInfo.disk_name if dInfo.disk_name
-    @storage_acct_svc = dInfo.storage_acct_svc if dInfo.storage_acct_svc
-    @storage_disk_svc = dInfo.storage_disk_svc if dInfo.storage_disk_svc
-    @resource_group   = dInfo.resource_group if dInfo.resource_group
-
-    if @storage_acct_svc
-      @my_class     = "AzureBlobDisk"
-      uri_info      = @storage_acct_svc.parse_uri(@blob_uri)
-      @container    = uri_info[:container]
-      @blob         = uri_info[:blob]
-      @acct_name    = uri_info[:account_name]
-      @snapshot     = uri_info[:snapshot]
-      @storage_acct = @storage_acct_svc.accounts_by_name[@acct_name]
-      @disk_path    = @blob_uri
-      raise "AzureBlob: Storage account #{@acct_name} not found." unless @storage_acct
+    if dInfo.blob_uri
+      d_init_blob_disk(dInfo)
     else
-      @disk_path = @disk_name
-      @my_class     = "AzureManagedDisk"
+      d_init_managed_disk(dInfo)
     end
     $log.debug "#{@class}: open(#{@disk_path})"
-
     @t0 = Time.now.to_i
     @reads = 0
     @bytes = 0
     @split_reads = 0
+  end
+
+  def self.d_init_blob_disk(dInfo)
+    @blob_uri         = dInfo.blob_uri
+    @storage_acct_svc = dInfo.storage_acct_svc
+    @my_class         = "AzureBlobDisk"
+    uri_info          = @storage_acct_svc.parse_uri(@blob_uri)
+    @container        = uri_info[:container]
+    @blob             = uri_info[:blob]
+    @acct_name        = uri_info[:account_name]
+    @snapshot         = uri_info[:snapshot]
+    @storage_acct     = @storage_acct_svc.accounts_by_name[@acct_name]
+    @disk_path        = @blob_uri
+    raise "AzureBlob: Storage account #{@acct_name} not found." unless @storage_acct
+  end
+
+  def self.d_init_managed_disk(dInfo)
+    @disk_name        = dInfo.disk_name
+    @storage_disk_svc = dInfo.storage_disk_svc
+    @resource_group   = dInfo.resource_group
+    @my_class         = "AzureManagedDisk"
+    @disk_path        = @disk_name
   end
 
   def self.d_close_common
@@ -67,8 +73,6 @@ module AzureCommon
       @storage_acct.blob_properties(@container, @blob, key, options)
     end
   end
-
-  private
 
   def self.blob_read(start_byte, length)
     $log.debug "#{@my_class}#blob_read(#{start_byte}, #{length})"
