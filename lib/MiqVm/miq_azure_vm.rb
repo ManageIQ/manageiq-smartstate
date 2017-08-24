@@ -24,7 +24,8 @@ class MiqAzureVm < MiqVm
         @snap_name = os_disk.name + "__EVM__SSA__SNAPSHOT"
       else
         #
-        # TODO: Non-Managed Disk Snapshot handling
+        # Non-Managed Disk Snapshot handling will be added here by a separate PR.
+        #
         @uri = os_disk.vhd.uri
       end
     else
@@ -52,25 +53,14 @@ class MiqAzureVm < MiqVm
   def openDisks(diskFiles)
     p_volumes = []
 
-    $log.debug "openDisks: no disk files supplied." unless diskFiles
+    $log.debug "openDisks: #{diskFiles.size} disk files supplied."
 
     #
     # Build a list of the VM's physical volumes.
     #
     diskFiles.each do |dtag, df|
       $log.debug "openDisks: processing disk file (#{dtag}): #{df}"
-      dInfo = OpenStruct.new
-
-      dInfo.fileName   = df
-      dInfo.hardwareId = dtag
-      disk_format = @vmConfig.getHash["#{dtag}.format"]
-      dInfo.format = disk_format unless disk_format.blank?
-
-      mode = @vmConfig.getHash["#{dtag}.mode"]
-
-      dInfo.hardwareId     = dtag
-      dInfo.rawDisk        = true
-      dInfo.resource_group = @resource_group if @resource_group
+      dInfo = open_disks_info(dtag, df)
 
       begin
         if @uri
@@ -79,8 +69,7 @@ class MiqAzureVm < MiqVm
           d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @snap_name, dInfo), 100, 128)
         end
       rescue => err
-        $log.error "Couldn't open disk file: #{df}"
-        $log.error err.to_s
+        $log.error "#{err}: Couldn't open disk file: #{df}"
         $log.debug err.backtrace.join("\n")
         @diskInitErrors[df] = err.to_s
         next
@@ -104,6 +93,17 @@ class MiqAzureVm < MiqVm
 
     p_volumes
   end # def openDisks
+
+  def  open_disks_info(disk_tag, disk_file)
+    disk_info                = OpenStruct.new
+    disk_info.fileName       = disk_file
+    disk_info.hardwareId     = disk_tag
+    disk_format              = @vmConfig.getHash["#{disk_tag}.format"]
+    disk_info.format         = disk_format unless disk_format.blank?
+    disk_info.rawDisk        = true
+    disk_info.resource_group = @resource_group
+    disk_info
+  end
 
   def vm_svc
     @vm_svc ||= Azure::Armrest::VirtualMachineService.new(@azure_handle)

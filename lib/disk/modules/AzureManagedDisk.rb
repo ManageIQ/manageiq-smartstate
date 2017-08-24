@@ -1,4 +1,6 @@
-require "disk/modules/AzureCommon"
+require "disk/modules/AzureDiskCommon"
+require_relative "../MiqDisk"
+require 'ostruct'
 
 module AzureManagedDisk
 
@@ -13,20 +15,20 @@ module AzureManagedDisk
 
   def d_init
     @diskType         = "azure-managed"
-    @blockSize        = AzureCommon::SECTOR_LENGTH
+    @blockSize        = AzureDiskCommon::SECTOR_LENGTH
     @disk_name        = @dInfo.disk_name
     @storage_disk_svc = @dInfo.storage_disk_svc
     @resource_group   = @dInfo.resource_group
-    AzureCommon.d_init_common(@dInfo)
+    AzureDiskCommon.d_init_common(@dInfo)
   end
 
   def d_close
-    AzureCommon.d_close_common
+    AzureDiskCommon.d_close_common
   end
 
   def d_read(pos, len)
     $log.debug "AzureManagedDisk#d_read(#{pos}, #{len})"
-    AzureCommon.d_read_common(pos, len)
+    AzureDiskCommon.d_read_common(pos, len)
   end
 
   def d_size
