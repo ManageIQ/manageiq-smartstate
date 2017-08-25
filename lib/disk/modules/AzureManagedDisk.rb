@@ -3,7 +3,6 @@ require_relative "../MiqDisk"
 require 'ostruct'
 
 module AzureManagedDisk
-
   def self.new(svc, disk_name, dInfo = nil)
     d_info = dInfo || OpenStruct.new
     d_info.storage_disk_svc = svc

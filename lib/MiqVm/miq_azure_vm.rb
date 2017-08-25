@@ -60,13 +60,13 @@ class MiqAzureVm < MiqVm
     #
     diskFiles.each do |dtag, df|
       $log.debug "openDisks: processing disk file (#{dtag}): #{df}"
-      dInfo = open_disks_info(dtag, df)
+      d_info = open_disks_info(dtag, df)
 
       begin
         if @uri
-          d = MiqDiskCache.new(AzureBlobDisk.new(sa_svc, @uri, dInfo), 100, 128)
+          d = MiqDiskCache.new(AzureBlobDisk.new(sa_svc, @uri, d_info), 100, 128)
         else
-          d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @snap_name, dInfo), 100, 128)
+          d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @snap_name, d_info), 100, 128)
         end
       rescue => err
         $log.error "#{err}: Couldn't open disk file: #{df}"
@@ -94,7 +94,7 @@ class MiqAzureVm < MiqVm
     p_volumes
   end # def openDisks
 
-  def  open_disks_info(disk_tag, disk_file)
+  def open_disks_info(disk_tag, disk_file)
     disk_info                = OpenStruct.new
     disk_info.fileName       = disk_file
     disk_info.hardwareId     = disk_tag
