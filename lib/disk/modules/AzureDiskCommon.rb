@@ -6,12 +6,12 @@ module AzureDiskCommon
   MAX_READ_LEN  = 1024 * 1024 * 4
   SECTOR_LENGTH = 512
 
-  def self.d_init_common(dInfo)
-    @blockSize        = SECTOR_LENGTH
-    if dInfo.blob_uri
-      d_init_blob_disk(dInfo)
+  def self.d_init_common(d_info)
+    @blockSize = SECTOR_LENGTH
+    if d_info.blob_uri
+      d_init_blob_disk(d_info)
     else
-      d_init_managed_disk(dInfo)
+      d_init_managed_disk(d_info)
     end
     $log.debug "#{@class}: open(#{@disk_path})"
     @t0 = Time.now.to_i
@@ -20,9 +20,9 @@ module AzureDiskCommon
     @split_reads = 0
   end
 
-  def self.d_init_blob_disk(dInfo)
-    @blob_uri         = dInfo.blob_uri
-    @storage_acct_svc = dInfo.storage_acct_svc
+  def self.d_init_blob_disk(d_info)
+    @blob_uri         = d_info.blob_uri
+    @storage_acct_svc = d_info.storage_acct_svc
     @my_class         = "AzureBlobDisk"
     uri_info          = @storage_acct_svc.parse_uri(@blob_uri)
     @container        = uri_info[:container]
@@ -34,10 +34,10 @@ module AzureDiskCommon
     raise "AzureBlob: Storage account #{@acct_name} not found." unless @storage_acct
   end
 
-  def self.d_init_managed_disk(dInfo)
-    @disk_name        = dInfo.disk_name
-    @storage_disk_svc = dInfo.storage_disk_svc
-    @resource_group   = dInfo.resource_group
+  def self.d_init_managed_disk(d_info)
+    @disk_name        = d_info.disk_name
+    @storage_disk_svc = d_info.storage_disk_svc
+    @resource_group   = d_info.resource_group
     @my_class         = "AzureManagedDisk"
     @disk_path        = @disk_name
   end
