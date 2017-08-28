@@ -3,6 +3,7 @@ require_relative "../MiqDisk"
 require 'ostruct'
 
 module AzureBlobDisk
+  include AzureDiskCommon
   # The maximum read length that supports MD5 return.
   MAX_READ_LEN = 1024 * 1024 * 4
 
@@ -20,20 +21,20 @@ module AzureBlobDisk
     @blockSize        = AzureDiskCommon::SECTOR_LENGTH
     @blob_uri         = @dInfo.blob_uri
     @storage_acct_svc = @dInfo.storage_acct_svc
-    AzureDiskCommon.d_init_common(@dInfo)
+    d_init_common(@dInfo)
   end
 
   def d_close
-    AzureDiskCommon.d_close_common
+    d_close_common
   end
 
   def d_read(pos, len)
     $log.debug "AzureBlobDisk#d_read(#{pos}, #{len})"
-    AzureDiskCommon.d_read_common(pos, len)
+    d_read_common(pos, len)
   end
 
   def d_size
-    @d_size ||= AzureDiskCommon.blob_properties[:content_length].to_i
+    @d_size ||= blob_properties[:content_length].to_i
   end
 
   def d_write(_pos, _buf, _len)

@@ -6,7 +6,7 @@ module AzureDiskCommon
   MAX_READ_LEN  = 1024 * 1024 * 4
   SECTOR_LENGTH = 512
 
-  def self.d_init_common(d_info)
+  def d_init_common(d_info)
     @blockSize = SECTOR_LENGTH
     if d_info.blob_uri
       d_init_blob_disk(d_info)
@@ -20,7 +20,7 @@ module AzureDiskCommon
     @split_reads = 0
   end
 
-  def self.d_init_blob_disk(d_info)
+  def d_init_blob_disk(d_info)
     @blob_uri         = d_info.blob_uri
     @storage_acct_svc = d_info.storage_acct_svc
     @my_class         = "AzureBlobDisk"
@@ -34,7 +34,7 @@ module AzureDiskCommon
     raise "AzureBlob: Storage account #{@acct_name} not found." unless @storage_acct
   end
 
-  def self.d_init_managed_disk(d_info)
+  def d_init_managed_disk(d_info)
     @disk_name        = d_info.disk_name
     @storage_disk_svc = d_info.storage_disk_svc
     @resource_group   = d_info.resource_group
@@ -42,7 +42,7 @@ module AzureDiskCommon
     @disk_path        = @disk_name
   end
 
-  def self.d_close_common
+  def d_close_common
     return nil unless $log.debug?
     t1 = Time.now.to_i
     $log.debug "#{@my_class}: close(#{@disk_path})"
@@ -52,7 +52,7 @@ module AzureDiskCommon
     nil
   end
 
-  def self.d_read_common(pos, len)
+  def d_read_common(pos, len)
     return blob_read(pos, len) unless len > MAX_READ_LEN
 
     @split_reads += 1
@@ -67,14 +67,14 @@ module AzureDiskCommon
     ret
   end
 
-  def self.blob_properties
+  def blob_properties
     @blob_properties ||= begin
       options = @snapshot ? {:date => @snapshot} : {}
       @storage_acct.blob_properties(@container, @blob, key, options)
     end
   end
 
-  def self.blob_read(start_byte, length)
+  def blob_read(start_byte, length)
     $log.debug "#{@my_class}#blob_read(#{start_byte}, #{length})"
     options = {
       :start_byte => start_byte,
@@ -93,7 +93,7 @@ module AzureDiskCommon
     ret.body
   end
 
-  def self.key
+  def key
     @key ||= @storage_acct_svc.list_account_keys(@storage_acct.name, @storage_acct.resource_group).fetch('key1')
   end
 end
