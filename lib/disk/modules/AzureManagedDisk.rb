@@ -3,6 +3,7 @@ require_relative "../MiqDisk"
 require 'ostruct'
 
 module AzureManagedDisk
+  include AzureDiskCommon
   def self.new(svc, disk_name, dInfo = nil)
     d_info = dInfo || OpenStruct.new
     d_info.storage_disk_svc = svc
@@ -14,20 +15,20 @@ module AzureManagedDisk
 
   def d_init
     @diskType         = "azure-managed"
-    @blockSize        = AzureDiskCommon::SECTOR_LENGTH
+    @blockSize        = SECTOR_LENGTH
     @disk_name        = @dInfo.disk_name
     @storage_disk_svc = @dInfo.storage_disk_svc
     @resource_group   = @dInfo.resource_group
-    AzureDiskCommon.d_init_common(@dInfo)
+    d_init_common(@dInfo)
   end
 
   def d_close
-    AzureDiskCommon.d_close_common
+    d_close_common
   end
 
   def d_read(pos, len)
     $log.debug "AzureManagedDisk#d_read(#{pos}, #{len})"
-    AzureDiskCommon.d_read_common(pos, len)
+    d_read_common(pos, len)
   end
 
   def d_size
