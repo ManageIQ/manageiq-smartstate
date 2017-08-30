@@ -90,11 +90,11 @@ describe AzureManagedDisk do
       end
     end
 
-    # describe "#size" do
-      # it "should return the size of the disk in bytes", :ex_tag => 1 do
-        # expect(@miq_disk.size).to eq(16_492_674_678_784)
-      # end
-    # end
+    describe "#size" do
+      it "should return the size of the disk in bytes", :ex_tag => 1 do
+        expect(@miq_disk.size).to eq(17_592_186_306_560)
+      end
+    end
 
     describe "#lbaStart" do
       it "should return the expected start logical block address", :ex_tag => 1 do
