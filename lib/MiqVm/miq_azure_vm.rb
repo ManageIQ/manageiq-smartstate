@@ -40,7 +40,7 @@ class MiqAzureVm < MiqVm
     cfg_hash['displayname'] = @name
     file_name               = @uri ? @uri : @snap_name
 
-    $log.debug "MiqAzureVm#getCfg: disk = #{file_name}"
+    $log.debug("MiqAzureVm#getCfg: disk = #{file_name}")
 
     tag = "scsi0:0"
     cfg_hash["#{tag}.present"]    = "true"
@@ -53,7 +53,7 @@ class MiqAzureVm < MiqVm
   def openDisks(diskFiles)
     p_volumes = []
 
-    $log.debug "openDisks: #{diskFiles.size} disk files supplied."
+    $log.debug("openDisks: #{diskFiles.size} disk files supplied.")
 
     #
     # Build a list of the VM's physical volumes.
@@ -69,7 +69,7 @@ class MiqAzureVm < MiqVm
           d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @snap_name, d_info), 100, 128)
         end
       rescue => err
-        $log.error "#{err}: Couldn't open disk file: #{df}"
+        $log.error("#{err}: Couldn't open disk file: #{df}")
         $log.debug err.backtrace.join("\n")
         @diskInitErrors[df] = err.to_s
         next

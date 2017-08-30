@@ -27,7 +27,7 @@ module AzureManagedDisk
   end
 
   def d_read(pos, len)
-    $log.debug "AzureManagedDisk#d_read(#{pos}, #{len})"
+    $log.debug("AzureManagedDisk#d_read(#{pos}, #{len})")
     d_read_common(pos, len)
   end
 
@@ -42,7 +42,7 @@ module AzureManagedDisk
   private
 
   def blob_headers
-    $log.debug "AzureManagedDisk#blob_headers"
+    $log.debug("AzureManagedDisk#blob_headers")
     @blob_headers ||= begin
       options = {
         :start_byte => 0,

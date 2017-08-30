@@ -13,7 +13,7 @@ module AzureDiskCommon
     else
       d_init_managed_disk(d_info)
     end
-    $log.debug "#{@class}: open(#{@disk_path})"
+    $log.debug("#{@class}: open(#{@disk_path})")
     @t0 = Time.now.to_i
     @reads = 0
     @bytes = 0
@@ -45,10 +45,10 @@ module AzureDiskCommon
   def d_close_common
     return nil unless $log.debug?
     t1 = Time.now.to_i
-    $log.debug "#{@my_class}: close(#{@disk_path})"
-    $log.debug "#{@my_class}: (#{@disk_path}) time:  #{t1 - @t0}"
-    $log.debug "#{@my_class}: (#{@disk_path}) reads: #{@reads}, split_reads: #{@split_reads}"
-    $log.debug "#{@my_class}: (#{@disk_path}) bytes: #{@bytes}"
+    $log.debug("#{@my_class}: close(#{@disk_path})")
+    $log.debug("#{@my_class}: (#{@disk_path}) time:  #{t1 - @t0}")
+    $log.debug("#{@my_class}: (#{@disk_path}) reads: #{@reads}, split_reads: #{@split_reads}")
+    $log.debug("#{@my_class}: (#{@disk_path}) bytes: #{@bytes}")
     nil
   end
 
@@ -75,7 +75,7 @@ module AzureDiskCommon
   end
 
   def blob_read(start_byte, length)
-    $log.debug "#{@my_class}#blob_read(#{start_byte}, #{length})"
+    $log.debug("#{@my_class}#blob_read(#{start_byte}, #{length})")
     options = {
       :start_byte => start_byte,
       :length     => length
