@@ -26,7 +26,7 @@ engines:
       languages:
         ruby:
           mass_threshold: 25
-      - javascript
+        javascript:
   eslint:
     enabled: false
     channel: "eslint-3"
