@@ -24,8 +24,9 @@ engines:
     enabled: true
     config:
       languages:
-      - ruby
-      - javascript
+        ruby:
+          mass_threshold: 25
+        javascript:
   eslint:
     enabled: false
     channel: "eslint-3"
