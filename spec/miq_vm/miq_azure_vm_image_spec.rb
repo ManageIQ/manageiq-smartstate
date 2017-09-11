@@ -9,12 +9,14 @@ describe MiqAzureVm do
     @test_env = TestEnvHelper.new(__FILE__)
     @test_env.vcr_filter
 
-    @client_id       = @test_env[:azure_client_id]
-    @client_key      = @test_env[:azure_client_key]
-    @tenant_id       = @test_env[:azure_tenant_id]
-    @subscription_id = @test_env[:azure_subscription_id]
-    @image_name      = @test_env[:image_name]
-    @image_uri       = @test_env[:image_uri]
+    @client_id            = @test_env[:azure_client_id]
+    @client_key           = @test_env[:azure_client_key]
+    @tenant_id            = @test_env[:azure_tenant_id]
+    @subscription_id      = @test_env[:azure_subscription_id]
+    @image_name           = @test_env[:image_name]
+    @image_uri            = @test_env[:image_uri]
+    resource_group_json   = '{"name": "#{@test_env[:image_resource_group]}"}'
+    @image_resource_group = Azure::Armrest::ResourceGroup.new(resource_group_json)
 
     @test_env.ensure_recording_dir_exists
   end
@@ -57,14 +59,14 @@ describe MiqAzureVm do
     end
 
     it "should return an MiqAzureVm object", :ex_tag => 4 do
-      azure_vm = MiqAzureVm.new(@azure_config, :name => @image_name, :image_uri => @image_uri)
+      azure_vm = MiqAzureVm.new(@azure_config, :name => @image_name, :image_uri => @image_uri, :resource_group => @image_resource_group)
       expect(azure_vm).to be_kind_of(MiqAzureVm)
     end
   end
 
   describe "Instance methods" do
     before(:each) do
-      @azure_vm = MiqAzureVm.new(@azure_config, :name => @image_name, :image_uri => @image_uri)
+      @azure_vm = MiqAzureVm.new(@azure_config, :name => @image_name, :image_uri => @image_uri, :resource_group => @image_resource_group)
     end
 
     after(:each) do
