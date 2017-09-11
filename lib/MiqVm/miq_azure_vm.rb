@@ -27,7 +27,7 @@ class MiqAzureVm < MiqVm
         # Non-Managed Disk Snapshot handling
         #
         @uri = os_disk.vhd.uri
-        @uri << "?snapshot=" << args[:snapshot] if args[:snapshot]
+        @uri << "?snapshot=#{args[:snapshot]}" if args[:snapshot]
       end
     else
       raise ArgumentError, "MiqAzureVm: missing required args: :image_uri or :resource_group"
