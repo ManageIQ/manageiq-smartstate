@@ -15,7 +15,7 @@ class MiqAzureVm < MiqVm
     if args[:image_uri]
       @uri = args[:image_uri]
     elsif args[:resource_group] && args[:name]
-      vm_obj = vm_svc.get(@name, args[:resource_group])
+      vm_obj = vm_svc.get(@name, @resource_group.name)
       os_disk = vm_obj.properties.storage_profile.os_disk
       if vm_obj.managed_disk?
         #
@@ -24,9 +24,10 @@ class MiqAzureVm < MiqVm
         @snap_name = os_disk.name + "__EVM__SSA__SNAPSHOT"
       else
         #
-        # Non-Managed Disk Snapshot handling will be added here by a separate PR.
+        # Non-Managed Disk Snapshot handling
         #
         @uri = os_disk.vhd.uri
+        @uri << "?snapshot=#{args[:snapshot]}" if args[:snapshot]
       end
     else
       raise ArgumentError, "MiqAzureVm: missing required args: :image_uri or :resource_group"
@@ -101,7 +102,7 @@ class MiqAzureVm < MiqVm
     disk_format              = @vmConfig.getHash["#{disk_tag}.format"]
     disk_info.format         = disk_format unless disk_format.blank?
     disk_info.rawDisk        = true
-    disk_info.resource_group = @resource_group
+    disk_info.resource_group = @resource_group.name
     disk_info
   end
 
