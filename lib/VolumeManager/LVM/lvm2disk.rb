@@ -43,10 +43,14 @@ module Lvm2DiskIO
       device_id = logicalVolume.thin_segment.device_id
       thin_pool = logicalVolume.thin_pool_volume
       data_blks = thin_pool.metadata_volume.superblock.device_to_data(device_id, pos, len)
+
       data_blks.each do |offset, len|
         thin_pool.data_volume.disk.seek offset
         retStr << thin_pool.data_volume.disk.read(len)
       end
+
+      # add zeros to result if reading from unallocated memory
+      retStr << thin_pool.metadata_volume.superblock.device_fill_data(device_id, pos, len)
 
       return retStr
     end

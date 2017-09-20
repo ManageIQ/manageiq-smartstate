@@ -79,18 +79,30 @@ module Lvm2Thin
       device_address % data_block_size
     end
 
-    # return array of tuples containing data volume addresses and lengths to
-    # read from them to read the specified device offset & length
+    # Return array of tuples containing data volume addresses and lengths to
+    # read from them to read the specified device offset & length.
+    #
+    # Note: data blocks may not amount to total requested length (if requesting
+    # data from unallocated space).
+    #
+    # @see DataMap#has_block? and #device_fill_data below
     def device_to_data(device_id, pos, len)
-      dev_blk = device_block(pos)
-      dev_off = device_block_offset(pos)
+      dev_blk  = device_block(pos)
+      dev_off  = device_block_offset(pos)
+      data_map = data_mapping.map_for(device_id)
 
       total_len = 0
       data_blks = []
 
       num_data_blks = (len / data_block_size).to_i + 1
       0.upto(num_data_blks - 1) do |i|
-        data_blk = data_mapping.map_for(device_id).data_block(dev_blk + i)
+        current_blk = dev_blk + i
+
+        # May be caused by trying to read beyond end of
+        # LVM device (too large pos or len):
+        break unless data_map.has_block?(current_blk)
+
+        data_blk = data_map.data_block(current_blk)
 
         blk_start = data_blk * data_block_size
         blk_len   = 0
@@ -111,6 +123,24 @@ module Lvm2Thin
       end
 
       data_blks
+    end
+
+    # Return fill data for device/pos/len read, for cases where we
+    # are trying to read unallocated data
+    def device_fill_data(device_id, pos, len)
+      dev_blk  = device_block(pos)
+      data_map = data_mapping.map_for(device_id)
+      num_data_blks = (len / data_block_size).to_i + 1
+
+      total_len = 0
+
+      0.upto(num_data_blks - 1) do |i|
+        current_blk = dev_blk + i
+        break unless data_map.has_block?(current_blk)
+        total_len += data_block_size
+      end
+
+      return total_len < len ? Array.new(len-total_len, 0).pack("C*") : ""
     end
 
     ### metadata volume disk helpers:
