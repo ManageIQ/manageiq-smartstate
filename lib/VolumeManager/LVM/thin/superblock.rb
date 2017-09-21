@@ -103,7 +103,7 @@ module Lvm2Thin
           data_blk = data_map.data_block(current_blk)
           blk_start = data_blk * data_block_size
 
-          if i == 0
+          if i.zero?
             blk_start += dev_off
             blk_len    = data_block_size - dev_off - 1
 
@@ -111,7 +111,7 @@ module Lvm2Thin
             blk_len = len - total_len
 
           else
-            blk_len    = data_block_size
+            blk_len = data_block_size
           end
 
           data_blks << [current_blk, data_blk, blk_start, blk_len]
