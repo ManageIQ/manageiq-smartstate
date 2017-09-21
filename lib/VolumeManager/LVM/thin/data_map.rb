@@ -22,14 +22,13 @@ module Lvm2Thin
       @total_blocks ||= begin
         t = 0
         entries.each do |entry|
-          t += entry.kind_of?(DataMap) ?
-               entry.total_blocks : 1
+          t += entry.kind_of?(DataMap) ? entry.total_blocks : 1
         end
         t
       end
     end
 
-    def has_block?(blk)
+    def block?(blk)
       blk < total_blocks
     end
 
