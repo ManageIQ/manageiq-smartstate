@@ -79,13 +79,13 @@ module Lvm2Thin
       device_address % data_block_size
     end
 
-    # Return array of tuples containing data volume addresses and lengths to
+    # Return array of tuples device block ids, data block ids, addresses, and lengths to
     # read from them to read the specified device offset & length.
     #
     # Note: data blocks may not amount to total requested length (if requesting
     # data from unallocated space).
     #
-    # @see DataMap#has_block? and #device_fill_data below
+    # @see DataMap#block?
     def device_to_data(device_id, pos, len)
       dev_blk  = device_block(pos)
       dev_off  = device_block_offset(pos)
@@ -97,50 +97,37 @@ module Lvm2Thin
       num_data_blks = (len / data_block_size).to_i + 1
       0.upto(num_data_blks - 1) do |i|
         current_blk = dev_blk + i
+        blk_len = 0
 
-        # May be caused by trying to read beyond end of
+        if data_map.block?(current_blk)
+          data_blk = data_map.data_block(current_blk)
+          blk_start = data_blk * data_block_size
+
+          if i == 0
+            blk_start += dev_off
+            blk_len    = data_block_size - dev_off - 1
+
+          elsif i == num_data_blks - 1
+            blk_len = len - total_len
+
+          else
+            blk_len    = data_block_size
+          end
+
+          data_blks << [current_blk, data_blk, blk_start, blk_len]
+
+        # Missing block may be caused by trying to read beyond end of
         # LVM device (too large pos or len):
-        break unless data_map.has_block?(current_blk)
-
-        data_blk = data_map.data_block(current_blk)
-
-        blk_start = data_blk * data_block_size
-        blk_len   = 0
-
-        if i == 0
-          blk_start += dev_off
-          blk_len    = data_block_size - dev_off - 1
-
-        elsif i == num_data_blks - 1
-          blk_len = len - total_len
-
         else
-          blk_len    = data_block_size
+          remaining  = (len - total_len)
+          blk_len    = remaining > data_block_size ? data_block_size : remaining
+          data_blks << [current_blk, nil, nil, blk_len]
         end
 
         total_len += blk_len
-        data_blks << [blk_start, blk_len]
       end
 
       data_blks
-    end
-
-    # Return fill data for device/pos/len read, for cases where we
-    # are trying to read unallocated data
-    def device_fill_data(device_id, pos, len)
-      dev_blk  = device_block(pos)
-      data_map = data_mapping.map_for(device_id)
-      num_data_blks = (len / data_block_size).to_i + 1
-
-      total_len = 0
-
-      0.upto(num_data_blks - 1) do |i|
-        current_blk = dev_blk + i
-        break unless data_map.has_block?(current_blk)
-        total_len += data_block_size
-      end
-
-      return total_len < len ? Array.new(len-total_len, 0).pack("C*") : ""
     end
 
     ### metadata volume disk helpers:
