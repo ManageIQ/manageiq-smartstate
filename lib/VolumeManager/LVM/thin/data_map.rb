@@ -18,6 +18,20 @@ module Lvm2Thin
       end
     end
 
+    def total_blocks
+      @total_blocks ||= begin
+        t = 0
+        entries.each do |entry|
+          t += entry.kind_of?(DataMap) ? entry.total_blocks : 1
+        end
+        t
+      end
+    end
+
+    def block?(blk)
+      blk < total_blocks
+    end
+
     def data_block(device_block)
       device_blocks.reverse.each do |map_device_block|
         if map_device_block <= device_block
