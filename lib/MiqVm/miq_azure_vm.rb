@@ -67,7 +67,7 @@ class MiqAzureVm < MiqVm
         if @uri
           d = MiqDiskCache.new(AzureBlobDisk.new(sa_svc, @uri, d_info), 100, 128)
         else
-          d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @snap_name, d_info), 100, 128)
+          d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @snap_name, d_info), 200, 512)
         end
       rescue => err
         $log.error("#{err}: Couldn't open disk file: #{df}")
