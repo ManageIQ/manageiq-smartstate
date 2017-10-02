@@ -7,21 +7,24 @@ class MiqAzureVm < MiqVm
   def initialize(azure_handle, args)
     @azure_handle   = azure_handle
     @uri            = nil
-    @snap_name      = nil
+    @disk_name      = nil
     @resource_group = args[:resource_group]
+    @managed_image  = args[:managed_image]
 
     raise ArgumentError, "MiqAzureVm: missing required arg :name" unless (@name = args[:name])
 
     if args[:image_uri]
       @uri = args[:image_uri]
+    elsif args[:managed_image]
+      @disk_name = args[:managed_image]
     elsif args[:resource_group] && args[:name]
-      vm_obj = vm_svc.get(@name, @resource_group.name)
+      vm_obj = vm_svc.get(@name, @resource_group)
       os_disk = vm_obj.properties.storage_profile.os_disk
       if vm_obj.managed_disk?
         #
         # Use the EVM SNAPSHOT Added by the Provider
         #
-        @snap_name = os_disk.name + "__EVM__SSA__SNAPSHOT"
+        @disk_name = os_disk.name + "__EVM__SSA__SNAPSHOT"
       else
         #
         # Non-Managed Disk Snapshot handling
@@ -39,7 +42,7 @@ class MiqAzureVm < MiqVm
   def getCfg
     cfg_hash = {}
     cfg_hash['displayname'] = @name
-    file_name               = @uri ? @uri : @snap_name
+    file_name               = @uri ? @uri : @disk_name
 
     $log.debug("MiqAzureVm#getCfg: disk = #{file_name}")
 
@@ -66,8 +69,10 @@ class MiqAzureVm < MiqVm
       begin
         if @uri
           d = MiqDiskCache.new(AzureBlobDisk.new(sa_svc, @uri, d_info), 100, 128)
+        elsif @managed_image
+          d = MiqDiskCache.new(AzureManagedDisk.new(disk_svc, @disk_name, d_info), 200, 512)
         else
-          d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @snap_name, d_info), 200, 512)
+          d = MiqDiskCache.new(AzureManagedDisk.new(snap_svc, @disk_name, d_info), 200, 512)
         end
       rescue => err
         $log.error("#{err}: Couldn't open disk file: #{df}")
@@ -102,7 +107,7 @@ class MiqAzureVm < MiqVm
     disk_format              = @vmConfig.getHash["#{disk_tag}.format"]
     disk_info.format         = disk_format unless disk_format.blank?
     disk_info.rawDisk        = true
-    disk_info.resource_group = @resource_group.name
+    disk_info.resource_group = @resource_group
     disk_info
   end
 
@@ -116,5 +121,9 @@ class MiqAzureVm < MiqVm
 
   def snap_svc
     @snap_svc ||= Azure::Armrest::Storage::SnapshotService.new(@azure_handle)
+  end
+
+  def disk_svc
+    @disk_svc ||= Azure::Armrest::Storage::DiskService.new(@azure_handle)
   end
 end
