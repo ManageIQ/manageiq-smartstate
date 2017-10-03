@@ -14,8 +14,7 @@ describe MiqAzureVm do
     @tenant_id               = @test_env[:azure_tenant_id]
     @subscription_id         = @test_env[:azure_subscription_id]
     @instance_name           = @test_env[:instance_name]
-    resource_group_json      = "{\"name\": \"#{@test_env[:instance_resource_group]}\"}"
-    @instance_resource_group = Azure::Armrest::ResourceGroup.new(resource_group_json)
+    @instance_resource_group = @test_env[:instance_resource_group]
 
     @test_env.ensure_recording_dir_exists
   end
