@@ -1,23 +1,13 @@
 require 'uri'
-require 'util/MiqSockUtil'
 require 'addressable'
 
 module ManageIQ
   module Smartstate
     module Util
       def self.path_to_uri(file, hostname = nil)
-        hostname ||= MiqSockUtil.getFullyQualifiedDomainName
         file = Addressable::URI.encode(file.tr('\\', '/'))
-
-        begin
-          URI::Generic.build(
-            :scheme => 'file',
-            :host   => hostname,
-            :path   => "/#{file}"
-          ).to_s
-        rescue URI::InvalidComponentError # Punt on Windows volume names, etc
-          "file://#{hostname}/#{file}"
-        end
+        hostname = URI::Generic.build(:host => hostname).host if hostname # ensure IPv6 hostnames
+        "file://#{hostname}/#{file}"
       end
 
       def self.uri_to_local_path(uri_path)
