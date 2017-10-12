@@ -20,12 +20,14 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "addressable",        "~> 2.4"
   spec.add_dependency "azure-armrest"
   spec.add_dependency "binary_struct",      "~> 2.1"
   spec.add_dependency "iniparse"
   spec.add_dependency "linux_block_device", "~>0.2.1"
   spec.add_dependency "memory_buffer",      ">=0.1.0"
   spec.add_dependency "rufus-lru",          "~>1.0.3"
+  spec.add_dependency "sys-uname",          "~>1.0.1"
   spec.add_dependency "vmware_web_service", "~>0.2.0"
 
   spec.add_development_dependency "bundler"
