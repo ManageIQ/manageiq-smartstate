@@ -1,4 +1,3 @@
-require 'util/extensions/miq-file'
 require 'enumerator'
 
 module Win32
