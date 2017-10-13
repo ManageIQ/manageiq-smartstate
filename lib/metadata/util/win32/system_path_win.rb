@@ -31,7 +31,7 @@ module Win32
       # If we are not passed a fs handle return the %systemRoot% from the environment
       if fs.nil?
         raise(MiqException::MiqVmMountError, "System root not available through environment variables.") if ENV["SystemRoot"].nil?
-        return File.normalize(ENV["SystemRoot"])
+        return File.expand_path(ENV["SystemRoot"].tr('\\', '/'))
       end
 
       # Use the boot.ini file to get the starting path to the Windows folder
