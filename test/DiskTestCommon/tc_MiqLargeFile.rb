@@ -18,18 +18,6 @@ module DiskTestCommon
     SIZE_4GB = 0x0000000100000000
     SIZE_5GB = 0x0000000140000000
 
-    def setup
-      #     unless $log
-      #       require 'util/miq-logger'
-      #
-      #       # Setup console logging
-      #       $log = MIQLogger.get_log(nil, nil)
-      #     end
-    end
-
-    def teardown
-    end
-
     def test_open
       params = [FILE_1MB, FILE_1GB, FILE_4GB, FILE_5GB]
 

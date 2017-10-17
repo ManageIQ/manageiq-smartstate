@@ -1,7 +1,6 @@
 require 'MiqVm/MiqVm'
 require 'metadata/util/md5deep'
 require 'util/miq-xml'
-require 'util/miq-logger'
 require 'ostruct'
 require 'metadata/util/win32/Win32Accounts'
 require 'metadata/util/win32/Win32Software'

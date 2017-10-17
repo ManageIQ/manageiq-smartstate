@@ -1,5 +1,4 @@
 require 'util/miq-xml'
-require 'util/miq-logger'
 require 'util/xml/xml_utils'
 require 'util/xml/xml_hash'
 

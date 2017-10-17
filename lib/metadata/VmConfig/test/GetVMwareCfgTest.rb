@@ -1,9 +1,9 @@
 # Only run if we are calling this script directly
-require 'util/miq-logger'
 require 'metadata/VmConfig/VmConfig'
 require 'metadata/MIQExtract/MIQExtract'
-$log = MIQLogger.get_log(nil, __FILE__)
-$log.level = Log4r::DEBUG
+
+$log = Logger.new("#{File.basename(__FILE__, ".*")}.log")
+$log.level = Logger::DEBUG
 
 vmNames = []
 # vmNames << "//miq-websvr1/scratch2/vmimages/VMware/DHCP Server/Windows Server 2003 Standard Edition.vmx"

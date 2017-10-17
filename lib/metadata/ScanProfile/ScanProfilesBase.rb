@@ -1,5 +1,4 @@
 require 'util/miq-xml'
-require 'util/miq-logger'
 
 class ScanProfilesBase
   def self.get_class(type, from)
