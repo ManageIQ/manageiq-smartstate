@@ -233,10 +233,9 @@ end
 if __FILE__ == $0
   # if 1
   require 'MiqVm/MiqVm'
-  require 'util/miq-logger'
 
-  $log = MIQLogger.get_log(nil, __FILE__)
-  $log.level = Log4r::INFO
+  require 'logger'
+  $log = Logger.new("#{File.basename(__FILE__, ".*")}.log")
 
   startTime = Time.now
 

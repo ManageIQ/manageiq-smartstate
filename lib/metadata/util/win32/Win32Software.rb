@@ -1,6 +1,5 @@
 require 'util/xml/xml_utils'
 require 'util/miq-xml'
-require 'util/miq-logger'
 require 'metadata/util/win32/peheader'
 
 module MiqWin32

@@ -19,13 +19,9 @@ miq_test_fat32      = true
 miq_test_ntfs       = true
 miq_test_ext3       = true
 
-if $log.nil?
-  puts "Initializing log"
-  require 'util/miq-logger'
-  include Log4r
-  $log = MIQLogger.get_log(nil, 'mdfs.log')
-  $log.outputters.delete(Outputter.stdout)
-end
+require 'logger'
+$log = Logger.new(File.expand_path("../log/ts_mdfs.log", __dir__))
+$log.level = Logger::DEBUG
 
 # MiqLargeFile tests.
 if miq_test_largefile

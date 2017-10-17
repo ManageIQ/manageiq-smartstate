@@ -1,10 +1,9 @@
 require_relative './test_helper'
 
-require 'util/miq-logger'
-
 # Setup console logging
-$log = MIQLogger.get_log(nil, nil)
-$log.level = Log4r::WARN
+require 'logger'
+$log = Logger.new(File.expand_path("../log/ts_extract.log", __dir__))
+$log.level = Logger::DEBUG
 
 require_relative 'extract/tc_versioninfo.rb'
 require_relative 'extract/tc_md5deep.rb'
