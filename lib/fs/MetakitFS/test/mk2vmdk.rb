@@ -1,22 +1,12 @@
-require 'log4r'
 require 'ostruct'
 require 'disk/MiqDisk'
 
 VMDK  = "/Volumes/WDpassport/Virtual Machines/Red Hat Linux.vmwarevm/payload2.vmdk"
 MKFILE  = "rawmkfs"
 
-#
-# Formatter to output log messages to the console.
-#
-class ConsoleFormatter < Log4r::Formatter
-  def format(event)
-    (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-  end
-end
-$log = Log4r::Logger.new 'toplog'
-$log.level = Log4r::DEBUG
-Log4r::StderrOutputter.new('err_console', :formatter => ConsoleFormatter)
-$log.add 'err_console'
+require 'logger'
+$log = Logger.new(STDERR)
+$log.level = Logger::DEBUG
 
 diskInfo = OpenStruct.new
 diskInfo.mountMode = "rw"

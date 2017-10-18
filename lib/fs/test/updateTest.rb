@@ -1,4 +1,3 @@
-require 'log4r'
 require 'ostruct'
 
 require 'fs/MiqFS/MiqFS'
@@ -12,20 +11,11 @@ REF_DIR   = "copy_dst_ref"
 MK_FILE   = "mkfs"
 MK_FILE_NC  = "mkfs_nc"
 
-#
-# Formatter to output log messages to the console.
-#
-$stderr.sync = true
-$stdout.sync = true
-class ConsoleFormatter < Log4r::Formatter
-  def format(event)
-    t = Time.now
-    "#{t.hour}:#{t.min}:#{t.sec}: " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-  end
-end
-$log = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
-$log.add 'err_console'
+require 'logger'
+STDOUT.sync = true
+STDERR.sync = true
+$log = Logger.new(STDERR)
+$log.level = Logger::DEBUG
 
 fromFs  = MiqFS.new(LocalFS, nil)
 toFs  = MiqFS.new(LocalFS, nil)
