@@ -1,5 +1,4 @@
 require 'manageiq-gems-pending'
-require 'log4r'
 require 'ostruct'
 require 'more_core_extensions/core_ext/object/blank'
 require 'metadata/VmConfig/VmConfig'
@@ -11,15 +10,9 @@ require 'VMwareWebService/MiqVimBroker'
 SRC_VM = raise "please define"
 vmCfg = "/Volumes/WDpassport/Virtual Machines/MIQAppliance-win2008x86/Win2008x86.vmx"
 
-class ConsoleFormatter < Log4r::Formatter
-  def format(event)
-    (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-  end
-end
-$log = Log4r::Logger.new 'toplog'
-$log.level = Log4r::DEBUG
-Log4r::StderrOutputter.new('err_console', :formatter => ConsoleFormatter)
-$log.add 'err_console'
+require 'logger'
+$log = Logger.new(STDERR)
+$log.level = Logger::DEBUG
 
 vm = nil
 vim = nil

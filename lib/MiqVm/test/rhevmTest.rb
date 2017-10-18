@@ -1,5 +1,4 @@
 require 'manageiq-gems-pending'
-require 'log4r'
 require 'ostruct'
 require 'MiqVm/MiqVm'
 require 'ovirt'
@@ -13,16 +12,9 @@ RHEVM_USERNAME      = raise "please define RHEVM_USERNAME"
 RHEVM_PASSWORD      = raise "please define RHEVM_PASSWORD"
 VM_NAME             = raise "please define VM_NAME"
 
-class ConsoleFormatter < Log4r::Formatter
-  def format(event)
-    (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-  end
-end
-
-toplog = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
-toplog.add 'err_console'
-$log = toplog if $log.nil?
+require 'logger'
+$log = Logger.new(STDERR)
+$log.level = Logger::DEBUG
 
 begin
 
