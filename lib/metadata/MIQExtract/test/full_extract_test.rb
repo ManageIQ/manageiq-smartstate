@@ -1,9 +1,7 @@
-require 'util/miq-logger'
 require 'tempfile'
-include Log4r
 
-$log = MIQLogger.get_log(nil, __FILE__)
-$log.level = INFO
+require 'logger'
+$log = Logger.new(File.expand_path("../../../../log/#{File.basename(__FILE__, ".*")}.log", __dir__))
 
 require 'metadata/MIQExtract/MIQExtract'
 require 'util/miq-process'
@@ -39,7 +37,7 @@ begin
 
     $log.warn "Fleece for [#{c}] completed [#{Time.now - stf}]"
 
-    $log.summary "[#{c}] extract return xml of type [#{xml.class}]" if xml
+    $log.info "[#{c}] extract return xml of type [#{xml.class}]" if xml
     File.open(Tempfile.new("extract_#{c}.xml"), "w") { |f| xml.write(f, 2) } if xml
   end
   $log.info "******************** Memory    : [#{MiqProcess.processInfo.inspect}] ********************"

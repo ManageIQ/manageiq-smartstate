@@ -14,14 +14,6 @@ module Extract
     ]
 
     def setup
-      unless $log
-        require 'util/miq-logger'
-
-        # Setup console logging
-        $log = MIQLogger.get_log(nil, nil)
-        $log.level = WARN
-      end
-
       @vm = nil
     end
 

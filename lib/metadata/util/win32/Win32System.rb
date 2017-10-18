@@ -1,6 +1,5 @@
 require 'util/xml/xml_utils'
 require 'util/miq-xml'
-require 'util/miq-logger'
 
 module MiqWin32
   class System
