@@ -207,7 +207,6 @@ class MiqVm
 end # class MiqVm
 
 if __FILE__ == $0
-  require 'log4r'
   require 'metadata/util/win32/boot_info_win'
 
   # vmDir = File.join(ENV.fetch("HOME", '.'), 'VMs')
@@ -217,16 +216,9 @@ if __FILE__ == $0
   targetLv = "rpolv2"
   rootLv = "LogVol00"
 
-  class ConsoleFormatter < Log4r::Formatter
-    def format(event)
-      (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-    end
-  end
-
-  toplog = Log4r::Logger.new 'toplog'
-  Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
-  toplog.add 'err_console'
-  $log = toplog if $log.nil?
+  require 'logger'
+  $log = Logger.new(STDERR)
+  $log.level = Logger::DEBUG
 
   #
   # *** Test start

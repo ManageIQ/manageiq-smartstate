@@ -1,20 +1,12 @@
 require 'manageiq-gems-pending'
 require 'ostruct'
-require 'log4r'
 
 require 'disk/MiqDisk'
 require 'VolumeManager/MiqVolumeManager'
 
-class ConsoleFormatter < Log4r::Formatter
-  def format(event)
-    (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-  end
-end
-
-toplog = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
-toplog.add 'err_console'
-$vim_log = $log = toplog if $log.nil?
+require 'logger'
+$vim_log = $log = Logger.new(STDERR)
+$log.level = Logger::DEBUG
 
 begin
 
