@@ -8,7 +8,7 @@ class MiqAzureVm < MiqVm
     @azure_handle   = azure_handle
     @uri            = nil
     @disk_name      = nil
-    @resource_group = args[:resource_group]
+    @resource_group = args[:resource_group]&.name
     @managed_image  = args[:managed_image]
 
     raise ArgumentError, "MiqAzureVm: missing required arg :name" unless (@name = args[:name])
@@ -17,7 +17,7 @@ class MiqAzureVm < MiqVm
       @uri = args[:image_uri]
     elsif args[:managed_image]
       @disk_name = args[:managed_image]
-    elsif args[:resource_group] && args[:name]
+    elsif @resource_group
       vm_obj = vm_svc.get(@name, @resource_group)
       os_disk = vm_obj.properties.storage_profile.os_disk
       if vm_obj.managed_disk?
