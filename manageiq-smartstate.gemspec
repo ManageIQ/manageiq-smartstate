@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "azure-armrest"
+  spec.add_dependency "azure-armrest",      "~> 0.9"
   spec.add_dependency "binary_struct",      "~> 2.1"
   spec.add_dependency "iniparse"
   spec.add_dependency "linux_block_device", "~>0.2.1"
