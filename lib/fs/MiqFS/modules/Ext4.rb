@@ -5,6 +5,8 @@ require 'fs/ext4/superblock'
 require 'fs/ext4/directory_entry'
 require 'fs/ext4/directory'
 
+require 'fs/MiqFsError'
+
 # Ext4 file system interface to MiqFS.
 module Ext4
   # Default directory cache size.
@@ -225,6 +227,10 @@ module Ext4
     begin
       dirObj = ifs_getDir(dir, miqfs)
       dirEnt = dirObj.nil? ? nil : dirObj.findEntry(fname)
+
+    rescue DirectoryNotFound => err
+      dirEnt = nil
+
     rescue RuntimeError => err
       $log.error err.message.to_s if $log
       dirEnt = nil
@@ -268,7 +274,7 @@ module Ext4
     names.shift
 
     dir = ifs_getDirR(names, miqfs)
-    raise "Directory '#{p}' not found" if dir.nil?
+    raise DirectoryNotFound, p if dir.nil?
     dir
   end
 
