@@ -22,9 +22,9 @@ class MiqAzureVm < MiqVm
       os_disk = vm_obj.properties.storage_profile.os_disk
       if vm_obj.managed_disk?
         #
-        # Use the EVM SNAPSHOT Added by the Provider
+        # Use the Smartstate SNAPSHOT Added by the Provider
         #
-        @disk_name = os_disk.name + "__EVM__SSA__SNAPSHOT"
+        raise ArgumentError, "MiqAzureVm: missing required arg :snapshot for Managed Disk" unless (@disk_name = args[:snapshot])
       else
         #
         # Non-Managed Disk Snapshot handling
