@@ -1,15 +1,12 @@
+require 'sys-uname'
+
 module RealFS
   attr_reader :guestOS
 
   def fs_init
-    case Sys::Platform::IMPL
-    when :mswin, :mingw
-      self.fsType = "NTFS"
-      @guestOS = "Windows"
-    when :linux
+    if Sys::Platform::IMPL == :linux
       self.fsType = `df -lT / | tail -1 | awk '{ print $2 }'`
       @guestOS = "Linux"
-    when :macosx
     end
   end
 

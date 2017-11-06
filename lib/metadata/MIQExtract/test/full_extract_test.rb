@@ -5,6 +5,7 @@ $log = Logger.new(File.expand_path("../../../../log/#{File.basename(__FILE__, ".
 
 require 'metadata/MIQExtract/MIQExtract'
 require 'util/miq-process'
+require 'sys-uname'
 
 PROFILE_INIT = false
 PROFILE_EXTRACT = false

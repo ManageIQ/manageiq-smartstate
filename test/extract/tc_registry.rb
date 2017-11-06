@@ -4,13 +4,11 @@ require 'util/miq-xml'
 require 'digest/md5'
 require 'minitest/unit'
 
-$qaShare = File.join((Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
-
 module Extract
   class TestRegistry < Minitest::Test
     @@vmList = [
-      {:vmName => File.join($qaShare, "vmware", "Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx"), :guestOS => "Windows"},
-      {:vmName => File.join($qaShare, "vmware", "Debian 40 Server/debian40server.vmx"), :guestOS => "Linux"},
+      {:vmName => smartstate_images_root.join("virtual_machines/vmware/Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx").to_s, :guestOS => "Windows"},
+      {:vmName => smartstate_images_root.join("virtual_machines/vmware/Debian 40 Server/debian40server.vmx").to_s, :guestOS => "Linux"},
     ]
 
     def setup

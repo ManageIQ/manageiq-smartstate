@@ -8,6 +8,7 @@ module XmlConfig
 
     xml_data = nil
     unless File.file?(filename)
+      require 'sys-uname'
       if Sys::Platform::IMPL == :linux
         begin
           # First check to see if the command is available

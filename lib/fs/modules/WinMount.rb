@@ -1,4 +1,3 @@
-require 'sys-uname'
 require 'fs/MiqFS/MiqFS'
 require 'metadata/util/win32/boot_info_win'
 
@@ -65,13 +64,10 @@ module WinMount
   private
 
   def normalizePath(p)
-    if Sys::Platform::OS == :unix
-      return p if p[1..1] == ':' # fully qualified path
-      p = p.slice(1..-1) if p[0, 1] == '/'
-      # On Linux, protect the drive letter with a '/', then remove it.
-      return File.expand_path(p, '/' + @cwd).slice(1..-1)
-    end
-    File.expand_path(p, @cwd)
+    return p if p[1..1] == ':' # fully qualified path
+    p = p.slice(1..-1) if p[0, 1] == '/'
+    # On Linux, protect the drive letter with a '/', then remove it.
+    File.expand_path(p, '/' + @cwd).slice(1..-1)
   end
 
   #
