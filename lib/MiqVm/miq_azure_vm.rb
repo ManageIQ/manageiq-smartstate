@@ -23,15 +23,8 @@ class MiqAzureVm < MiqVm
       if vm_obj.managed_disk?
         #
         # Use the Smartstate SNAPSHOT Added by the Provider
-        # If the provider didn't pass the name in then it is running older code that built
-        # the old name - use that instead
         #
-        if args[:snapshot]
-          @disk_name = args[:snapshot]
-        else
-          @disk_name = os_disk.name + "__EVM__SSA__SNAPSHOT"
-          $log.warn("MiqAzureVm: missing required snapshot arg: using old name #{@disk_name}")
-        end
+        raise ArgumentError, "MiqAzureVm: missing required arg :snapshot for Managed Disk" unless (@disk_name = args[:snapshot])
       else
         #
         # Non-Managed Disk Snapshot handling
