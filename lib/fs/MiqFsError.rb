@@ -1,7 +1,7 @@
 class MiqFsError < RuntimeError
 end
 
-class DirectoryNotFound < MiqFsError
+class MiqFsDirectoryNotFound < MiqFsError
   attr_accessor :dir
 
   def initialize(dir)
