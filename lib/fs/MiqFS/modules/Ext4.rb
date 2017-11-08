@@ -228,7 +228,7 @@ module Ext4
       dirObj = ifs_getDir(dir, miqfs)
       dirEnt = dirObj.nil? ? nil : dirObj.findEntry(fname)
 
-    rescue DirectoryNotFound => err
+    rescue MiqFsDirectoryNotFound => err
       dirEnt = nil
 
     rescue RuntimeError => err
@@ -274,7 +274,7 @@ module Ext4
     names.shift
 
     dir = ifs_getDirR(names, miqfs)
-    raise DirectoryNotFound, p if dir.nil?
+    raise MiqFsDirectoryNotFound, p if dir.nil?
     dir
   end
 
