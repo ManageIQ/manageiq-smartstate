@@ -142,7 +142,7 @@ module MiqWin32
           attrs.delete(:description2) if attrs[:description] || attrs[:description2].blank?
           attrs[:description] = attrs.delete(:description2) if attrs[:description2]
 
-          attrs.merge!(:name => e.attributes[:keyname], :vendor => "Microsoft Corporation", :installed_on => @patch_install_dates[e.attributes[:keyname]])
+          attrs.merge!(:name => e.attributes[:keyname], :vendor => "Microsoft Corporation", :installed_on => @patch_install_dates[e.attributes[:keyname]]) unless e.attributes.nil? || e.attributes[:keyname].nil?
           @patches << attrs
         end
       end
@@ -152,6 +152,7 @@ module MiqWin32
       if reg_node
         hotfix = {}
         reg_node.each_element do |e|
+          next if e.attributes.nil? || e.attributes[:keyname].nil?
           if e.attributes[:keyname][0, 8] == 'Package_'
             # Expected pattern: Package_for_KBxxx_RTM~xxxx
             
