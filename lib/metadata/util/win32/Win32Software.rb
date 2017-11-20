@@ -134,17 +134,15 @@ module MiqWin32
 
       # Get the patches (Win2000, Win2003, WinXP)
       reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Hotfix", reg_doc.root)
-      if reg_node
-        reg_node.each_element_with_attribute(:keyname) do |e|
-          attrs = XmlFind.decode(e, HOTFIX_MAPPING)
+      reg_node&.each_element_with_attribute(:keyname) do |e|
+        attrs = XmlFind.decode(e, HOTFIX_MAPPING)
 
-          # Check both descriptions and take the first one with a value
-          attrs.delete(:description2) if attrs[:description] || attrs[:description2].blank?
-          attrs[:description] = attrs.delete(:description2) if attrs[:description2]
+        # Check both descriptions and take the first one with a value
+        attrs.delete(:description2) if attrs[:description] || attrs[:description2].blank?
+        attrs[:description] = attrs.delete(:description2) if attrs[:description2]
 
-          attrs.merge!(:name => e.attributes[:keyname], :vendor => "Microsoft Corporation", :installed_on => @patch_install_dates[e.attributes[:keyname]])
-          @patches << attrs
-        end
+        attrs.merge!(:name => e.attributes[:keyname], :vendor => "Microsoft Corporation", :installed_on => @patch_install_dates[e.attributes[:keyname]]) unless e.attributes.nil? || e.attributes[:keyname].nil?
+        @patches << attrs
       end
 
       # Get the patches (Vista, Win2008, Windows 7)
@@ -152,6 +150,7 @@ module MiqWin32
       if reg_node
         hotfix = {}
         reg_node.each_element do |e|
+          next if e.attributes.nil? || e.attributes[:keyname].nil?
           if e.attributes[:keyname][0, 8] == 'Package_'
             # Expected pattern: Package_for_KBxxx_RTM~xxxx
             
