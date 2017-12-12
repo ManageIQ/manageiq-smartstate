@@ -391,7 +391,7 @@ class VmConfig
       elsif $miqHostCfg.vimHost
         c = $miqHostCfg.vimHost
         return nil if c[:username].nil?
-        creds = {'host' => c[:address], 'user' => c[:username], 'password' => c[:password], 'use_vim_broker' => c[:use_vim_broker]}
+        creds = {'host' => (c[:hostname] || c[:ipaddress]), 'user' => c[:username], 'password' => c[:password], 'use_vim_broker' => c[:use_vim_broker]}
       end
     end
     creds
