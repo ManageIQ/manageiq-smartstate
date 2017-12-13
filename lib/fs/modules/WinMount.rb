@@ -38,7 +38,7 @@ module WinMount
       $log.debug "WinMount.fs_init: @rootDriveLetter = idToDriveLetter[#{key}] = #{@rootDriveLetter}"
     end
     if @rootDriveLetter.nil?
-      $log.debug ("WinMount.fs_init: Could not determine root drive letter. Assuming C: Drive")
+      $log.debug("WinMount.fs_init: Could not determine root drive letter. Assuming C: Drive")
       @rootDriveLetter = "C:"
       idToDriveLetter[key] = @rootDriveLetter
     end
