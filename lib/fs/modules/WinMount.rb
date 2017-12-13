@@ -37,7 +37,11 @@ module WinMount
       @rootDriveLetter = idToDriveLetter[key]
       $log.debug "WinMount.fs_init: @rootDriveLetter = idToDriveLetter[#{key}] = #{@rootDriveLetter}"
     end
-    raise MiqException::MiqVmMountError, "Could not determine root drive letter." unless @rootDriveLetter
+    if @rootDriveLetter.nil?
+      $log.debug ("WinMount.fs_init: Could not determine root drive letter. Assuming C: Drive")
+      @rootDriveLetter = "C:"
+      idToDriveLetter[key] = @rootDriveLetter
+    end
     @driveToFS[@rootDriveLetter] = @rootFS
     saveFs(@rootFS, @rootDriveLetter, key)
 
