@@ -8,7 +8,8 @@ module NTFSProbe
 
     # Check for oem name = NTFS.
     dobj.seek(3)
-    oem = dobj.read(8).unpack('a8')[0].strip
+    bs = dobj.read(8)&.unpack('a8')
+    oem = bs[0].strip if bs
 
     ntfs = oem == 'NTFS'
     if $log
