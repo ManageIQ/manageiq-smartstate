@@ -9,7 +9,7 @@ module Reiser4Probe
 
     # Assume Reiser4 - read magic at offset.
     dobj.seek(REISER4_MAGIC_OFFSET)
-    magic = dobj.read(REISER4_MAGIC_SIZE).strip
+    magic = dobj.read(REISER4_MAGIC_SIZE)&.strip
     raise "Reiser4 is Not Supported" if magic == REISER4_MAGIC
 
     # No Reiser4.

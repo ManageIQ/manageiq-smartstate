@@ -6,7 +6,7 @@ module ReFSProbe
     return false  unless dobj.kind_of?(MiqDisk)
 
     dobj.seek(0, IO::SEEK_SET)
-    magic = dobj.read(FS_SIGNATURE.size).unpack('C*')
+    magic = dobj.read(FS_SIGNATURE.size)&.unpack('C*')
 
     # Check for ReFS signature
     raise "ReFS is Not Supported" if magic == FS_SIGNATURE
