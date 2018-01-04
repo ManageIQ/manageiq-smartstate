@@ -26,12 +26,23 @@ module FsProbe
 
     probes.each do |pmod|
       $log.debug "MIQ(FsProbe-getFsMod) FS probe attempting [#{pmod}] for [#{fname}] [partition: #{partNum}]"
+      unless dobj.kind_of?(MiqDisk)
+        $log.debug "Disk Object class is not MiqDisk, but is '#{dobj.class}.'"
+        next
+      end
+
       require_relative "modules/#{pmod}"
-      if Object.const_get(pmod).probe(dobj)
-        mod = pmod.chomp("Probe")
-        $log.info "MIQ(FsProbe-getFsMod) FS probe detected [#{mod}] for [#{fname}] [partition: #{partNum}]"
-        require_relative "modules/#{mod}"
-        return Object.const_get(mod)
+      begin
+        if Object.const_get(pmod).probe(dobj)
+          mod = pmod.chomp("Probe")
+          $log.info "MIQ(FsProbe-getFsMod) FS probe detected [#{mod}] for [#{fname}] [partition: #{partNum}]"
+          require_relative "modules/#{mod}"
+          return Object.const_get(mod)
+        end
+      rescue => err
+        $log.debug err.to_s
+        # continue to probe even when one probing fails.
+        next
       end
     end
     nil

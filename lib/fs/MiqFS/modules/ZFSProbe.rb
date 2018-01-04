@@ -5,8 +5,6 @@ module ZFSProbe
   ZFS_SUPER_MAGIC   = 0x00bab10c
 
   def self.probe(dobj)
-    return(false) unless dobj.kind_of?(MiqDisk)
-
     # Check for magic at uberblock offset.
     dobj.seek(ZFS_SUPER_OFFSET + ZFS_MAGIC_OFFSET)
     bs = dobj.read(ZFS_MAGIC_SIZE)&.unpack('L')

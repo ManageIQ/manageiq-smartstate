@@ -5,8 +5,6 @@ module UnionFSProbe
   UNIONFS_MAGIC         = 0xf15f083d
 
   def self.probe(dobj)
-    return false unless dobj.kind_of?(MiqDisk)
-
     # Assume UnionFS - read magic at offset.
     dobj.seek(UNIONFS_SUPER_OFFSET + UNIONFS_MAGIC_OFFSET)
     magic = dobj.read(UNIONFS_MAGIC_SIZE)&.unpack('L')

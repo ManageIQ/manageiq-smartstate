@@ -5,8 +5,6 @@ module HFSProbe
   HFS_SUPER_MAGIC   = 0x4c4b
 
   def self.probe(dobj)
-    return(false) unless dobj.kind_of?(MiqDisk)
-
     # Check for HFS signature in first int.
     dobj.seek(HFS_SUPER_OFFSET + HFS_MAGIC_OFFSET)
     bs = dobj.read(HFS_MAGIC_SIZE)&.unpack('S')
