@@ -162,7 +162,8 @@ module Lvm2Scanner
 
   def self.readStruct(d, struct)
     OpenStruct.new(struct.decode(d.read(struct.size)))
-  rescue
+  rescue => err
+    $log&.debug err.to_s
     nil
   end # def self.readStruct
 end # module Lvm2Scanner

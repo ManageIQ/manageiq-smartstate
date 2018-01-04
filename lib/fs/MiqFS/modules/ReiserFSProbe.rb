@@ -12,8 +12,6 @@ module ReiserFSProbe
   REISERFS_MAGIC3 = "ReIsEr3Fs"
 
   def self.probe(dobj)
-    return false unless dobj.kind_of?(MiqDisk)
-
     return true if ReiserFSProbe.isMagic?(ReiserFSProbe.getMagic(dobj, REISERFS_DISK_OFFSET_NEW))
     return true if ReiserFSProbe.isMagic?(ReiserFSProbe.getMagic(dobj, REISERFS_DISK_OFFSET_OLD))
 
