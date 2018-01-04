@@ -39,7 +39,7 @@ module FsProbe
           require_relative "modules/#{mod}"
           return Object.const_get(mod)
         end
-      rescue => err
+      rescue StandardError => err
         $log.debug(err.to_s)
         # continue to probe even when one probing fails.
         next
