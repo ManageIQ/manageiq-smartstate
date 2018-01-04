@@ -1,15 +1,15 @@
 module ReiserFSProbe
   REISERFS_DISK_OFFSET_NEW = 64 * 1024
-  REISERFS_DISK_OFFSET_OLD =  8 * 1024
+  REISERFS_DISK_OFFSET_OLD = 8 * 1024
 
   REISERFS_SUPER_SIZE   = 204
 
   REISERFS_MAGIC_OFFSET = 52
   REISERFS_MAGIC_SIZE   = 10
 
-  REISERFS_MAGIC1 = "ReIsErFs"
-  REISERFS_MAGIC2 = "ReIsEr2Fs"
-  REISERFS_MAGIC3 = "ReIsEr3Fs"
+  REISERFS_MAGIC1 = "ReIsErFs".freeze
+  REISERFS_MAGIC2 = "ReIsEr2Fs".freeze
+  REISERFS_MAGIC3 = "ReIsEr3Fs".freeze
 
   def self.probe(dobj)
     return true if ReiserFSProbe.isMagic?(ReiserFSProbe.getMagic(dobj, REISERFS_DISK_OFFSET_NEW))

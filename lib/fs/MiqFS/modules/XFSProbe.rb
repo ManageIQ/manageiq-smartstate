@@ -10,7 +10,7 @@ module XFSProbe
     $log.debug("XFSProbe << TRUE")
     return true
   rescue => err
-    $log.debug "XFSProbe << FALSE because #{err.message}"
+    $log.debug("XFSProbe << FALSE because #{err.message}")
     return false
   ensure
     dobj.seek(0, IO::SEEK_SET)
