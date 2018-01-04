@@ -2,7 +2,7 @@ module Reiser4Probe
   REISER4_MASTER_OFFSET = 65536
   REISER4_MAGIC_OFFSET  = REISER4_MASTER_OFFSET
   REISER4_MAGIC_SIZE    = 10
-  REISER4_MAGIC         = "ReIsEr4"
+  REISER4_MAGIC         = "ReIsEr4".freeze
 
   def self.probe(dobj)
     # Assume Reiser4 - read magic at offset.
