@@ -5,6 +5,8 @@ module Reiser4Probe
   REISER4_MAGIC         = "ReIsEr4".freeze
 
   def self.probe(dobj)
+    return(false) unless dobj.kind_of?(MiqDisk)
+
     # Assume Reiser4 - read magic at offset.
     dobj.seek(REISER4_MAGIC_OFFSET)
     magic = dobj.read(REISER4_MAGIC_SIZE)&.strip

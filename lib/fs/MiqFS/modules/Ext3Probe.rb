@@ -2,6 +2,11 @@ require 'fs/ext3/superblock'
 
 module Ext3Probe
   def self.probe(dobj)
+    unless dobj.kind_of?(MiqDisk)
+      $log.debug("Ext3Probe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class}'")
+      return false
+    end
+
     dobj.seek(0, IO::SEEK_SET)
     Ext3::Superblock.new(dobj)
 
