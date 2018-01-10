@@ -10,7 +10,7 @@ module AUFSProbe
   AUFS_FSTYPE       = "aufs".freeze
 
   def self.probe(dobj)
-    return(false) unless dobj.kind_of?(MiqDisk)
+    return false unless dobj.kind_of?(MiqDisk)
 
     # Check for aufs magic number or name at offset.
     dobj.seek(AUFS_SUPER_OFFSET + AUFS_MAGIC_OFFSET)
