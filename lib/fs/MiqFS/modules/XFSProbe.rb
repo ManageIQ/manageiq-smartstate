@@ -2,6 +2,11 @@ require 'fs/xfs/superblock'
 
 module XFSProbe
   def self.probe(dobj)
+    unless dobj.kind_of?(MiqDisk)
+      $log.debug("XFSProbe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class}'")
+      return false
+    end
+
     # The first Allocation Group's Superblock is at block zero.
     dobj.seek(0, IO::SEEK_SET)
     XFS::Superblock.new(dobj)

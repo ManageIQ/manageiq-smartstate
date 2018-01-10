@@ -1,5 +1,10 @@
 module Fat32Probe
   def self.probe(dobj)
+    unless dobj.kind_of?(MiqDisk)
+      $log&.debug "Fat32Probe << FALSE because Disk Object class is not MiqDisk, but is '#{dobj.class}'"
+      return false
+    end
+
     # Assume FAT32 - read boot sector.
     dobj.seek(0)
     bs = dobj.read(512)

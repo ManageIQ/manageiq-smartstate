@@ -20,6 +20,8 @@ module ReiserFSProbe
   end
 
   def self.getMagic(dobj, offset)
+    return false unless dobj.kind_of?(MiqDisk)
+
     # Assume ReiserFS - read superblock at desired offset.
     dobj.seek(offset) # new disk start offset.
     sb = dobj.read(REISERFS_SUPER_SIZE)

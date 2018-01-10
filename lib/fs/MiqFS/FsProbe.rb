@@ -26,10 +26,6 @@ module FsProbe
 
     probes.each do |pmod|
       $log.debug("MIQ(FsProbe-getFsMod) FS probe attempting [#{pmod}] for [#{fname}] [partition: #{partNum}]")
-      unless dobj.kind_of?(MiqDisk)
-        $log.debug("Disk Object class is not MiqDisk, but is '#{dobj.class}.'")
-        next
-      end
 
       require_relative "modules/#{pmod}"
       begin
