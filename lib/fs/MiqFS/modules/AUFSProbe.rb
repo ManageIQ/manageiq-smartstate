@@ -18,10 +18,7 @@ module AUFSProbe
     bs = buf&.unpack('L')
     magic = bs.nil? ? nil : bs[0]
 
-    isAufs = false
-    isAufs = true if magic == AUFS_SUPER_MAGIC
-    isAufs = true if buf == AUFS_FSTYPE
-    raise "AUFS is Not Supported" if isAufs
+    raise "AUFS is Not Supported" if magic == AUFS_SUPER_MAGIC || buf == AUFS_FSTYPE
 
     # No AUFS.
     false
