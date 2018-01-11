@@ -40,6 +40,11 @@ engines:
   rubocop:
     enabled: true
     config: '.rubocop_cc.yml'
+checks:
+  method-complexity:
+    enabled: true
+    config:
+      threshold: 8
 prepare:
   fetch:
   - url: "https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml"
