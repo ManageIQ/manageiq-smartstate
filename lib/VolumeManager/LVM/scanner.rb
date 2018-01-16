@@ -5,59 +5,69 @@ module Lvm2Scanner
 
   LVM_ID_LEN          = 8
   LVM_TYPE_LEN        = 8
-  LVM_ID              = "LABELONE"
+  LVM_ID              = "LABELONE".freeze
 
   PV_ID_LEN           = 32
   MDA_MAGIC_LEN       = 16
-  FMTT_MAGIC          = "\040\114\126\115\062\040\170\133\065\101\045\162\060\116\052\076"
+  FMTT_MAGIC          = "\040\114\126\115\062\040\170\133\065\101\045\162\060\116\052\076".freeze
 
   #
   # On disk label header.
   #
-  LABEL_HEADER = BinaryStruct.new([
-    "A#{LVM_ID_LEN}",       'lvm_id',
-    'Q',                    'sector_xl',
-    'L',                    'crc_xl',
-    'L',                    'offset_xl',
-    "A#{LVM_TYPE_LEN}",     'lvm_type'
-  ])
+  LABEL_HEADER = BinaryStruct.new(
+    [
+      "A#{LVM_ID_LEN}",   'lvm_id',
+      'Q',                'sector_xl',
+      'L',                'crc_xl',
+      'L',                'offset_xl',
+      "A#{LVM_TYPE_LEN}", 'lvm_type'
+    ]
+  )
 
   #
   # On disk physical volume header.
   #
-  PV_HEADER = BinaryStruct.new([
-    "A#{PV_ID_LEN}",        'pv_uuid',
-    "Q",                    'device_size_xl'
-  ])
+  PV_HEADER = BinaryStruct.new(
+    [
+      "A#{PV_ID_LEN}", 'pv_uuid',
+      "Q",             'device_size_xl'
+    ]
+  )
 
   #
   # On disk disk location structure.
   #
-  DISK_LOCN = BinaryStruct.new([
-    "Q",                    'offset',
-    "Q",                    'size'
-  ])
+  DISK_LOCN = BinaryStruct.new(
+    [
+      "Q", 'offset',
+      "Q", 'size'
+    ]
+  )
 
   #
   # On disk metadata area header.
   #
-  MDA_HEADER = BinaryStruct.new([
-    "L",                    'checksum_xl',
-    "A#{MDA_MAGIC_LEN}",    'magic',
-    "L",                    'version',
-    "Q",                    'start',
-    "Q",                    'size'
-  ])
+  MDA_HEADER = BinaryStruct.new(
+    [
+      "L",                 'checksum_xl',
+      "A#{MDA_MAGIC_LEN}", 'magic',
+      "L",                 'version',
+      "Q",                 'start',
+      "Q",                 'size'
+    ]
+  )
 
   #
   # On disk raw location header, points to metadata.
   #
-  RAW_LOCN = BinaryStruct.new([
-    "Q",                    'offset',
-    "Q",                    'size',
-    "L",                    'checksum',
-    "L",                    'filler'
-  ])
+  RAW_LOCN = BinaryStruct.new(
+    [
+      "Q", 'offset',
+      "Q", 'size',
+      "L", 'checksum',
+      "L", 'filler'
+    ]
+  )
 
   #
   # Scan the physical volume for LVM headers.
@@ -91,7 +101,7 @@ module Lvm2Scanner
   def self.readLabel(d, s)
     d.seek(s * SECTOR_SIZE, IO::SEEK_SET)
     lh = readStruct(d, LABEL_HEADER)
-    return lh if lh.lvm_id == LVM_ID
+    return lh if lh&.lvm_id == LVM_ID
     nil
   end # def self.readLabel
 
@@ -152,5 +162,8 @@ module Lvm2Scanner
 
   def self.readStruct(d, struct)
     OpenStruct.new(struct.decode(d.read(struct.size)))
+  rescue StandardError => err
+    $log&.debug err.to_s
+    nil
   end # def self.readStruct
 end # module Lvm2Scanner

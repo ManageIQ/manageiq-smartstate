@@ -25,13 +25,20 @@ module FsProbe
     partNum = dobj.partNum
 
     probes.each do |pmod|
-      $log.debug "MIQ(FsProbe-getFsMod) FS probe attempting [#{pmod}] for [#{fname}] [partition: #{partNum}]"
+      $log.debug("MIQ(FsProbe-getFsMod) FS probe attempting [#{pmod}] for [#{fname}] [partition: #{partNum}]")
+
       require_relative "modules/#{pmod}"
-      if Object.const_get(pmod).probe(dobj)
-        mod = pmod.chomp("Probe")
-        $log.info "MIQ(FsProbe-getFsMod) FS probe detected [#{mod}] for [#{fname}] [partition: #{partNum}]"
-        require_relative "modules/#{mod}"
-        return Object.const_get(mod)
+      begin
+        if Object.const_get(pmod).probe(dobj)
+          mod = pmod.chomp("Probe")
+          $log.info("MIQ(FsProbe-getFsMod) FS probe detected [#{mod}] for [#{fname}] [partition: #{partNum}]")
+          require_relative "modules/#{mod}"
+          return Object.const_get(mod)
+        end
+      rescue StandardError => err
+        $log.debug(err.to_s)
+        # continue to probe even when one probing fails.
+        next
       end
     end
     nil

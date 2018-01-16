@@ -9,7 +9,8 @@ module ZFSProbe
 
     # Check for magic at uberblock offset.
     dobj.seek(ZFS_SUPER_OFFSET + ZFS_MAGIC_OFFSET)
-    magic = dobj.read(ZFS_MAGIC_SIZE).unpack('L')[0]
+    bs = dobj.read(ZFS_MAGIC_SIZE)&.unpack('L')
+    magic = bs.nil? ? nil : bs[0]
     raise "ZFS is Not Supported" if magic == ZFS_SUPER_MAGIC
 
     # No ZFS.
