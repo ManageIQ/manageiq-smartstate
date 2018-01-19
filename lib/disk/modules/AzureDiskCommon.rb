@@ -43,6 +43,7 @@ module AzureDiskCommon
   end
 
   def d_close_common
+    @managed_disk&.close
     return nil unless $log.debug?
     t1 = Time.now.to_i
     $log.debug("#{@my_class}: close(#{@disk_path})")
@@ -84,7 +85,16 @@ module AzureDiskCommon
       options[:date] = @snapshot if @snapshot
       ret = @storage_acct.get_blob_raw(@container, @blob, key, options)
     else
-      ret = @storage_disk_svc.get_blob_raw(@disk_name, @resource_group, options)
+      retries = 0
+      begin
+        ret = managed_disk.read(options)
+      rescue Azure::Armrest::ForbiddenException => err
+        raise err if retries > 0
+        $log.warn("#{@class}: blob_read: #{err}: acquiring new SAS URL")
+        @managed_disk = nil
+        retries += 1
+        retry
+      end
     end
 
     @reads += 1
@@ -95,5 +105,9 @@ module AzureDiskCommon
 
   def key
     @key ||= @storage_acct_svc.list_account_keys(@storage_acct.name, @storage_acct.resource_group).fetch('key1')
+  end
+
+  def managed_disk
+    @managed_disk ||= @storage_disk_svc.open(@disk_name, @resource_group)
   end
 end

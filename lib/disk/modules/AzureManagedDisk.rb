@@ -48,7 +48,7 @@ module AzureManagedDisk
         :start_byte => 0,
         :length     => 1
       }
-      data = @storage_disk_svc.get_blob_raw(@disk_name, @resource_group, options)
+      data = managed_disk.read(options)
       data.headers
     end
   end
