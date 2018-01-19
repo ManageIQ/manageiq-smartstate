@@ -85,16 +85,7 @@ module AzureDiskCommon
       options[:date] = @snapshot if @snapshot
       ret = @storage_acct.get_blob_raw(@container, @blob, key, options)
     else
-      retries = 0
-      begin
-        ret = managed_disk.read(options)
-      rescue Azure::Armrest::ForbiddenException => err
-        raise err if retries > 0
-        $log.warn("#{@class}: blob_read: #{err}: acquiring new SAS URL")
-        @managed_disk = nil
-        retries += 1
-        retry
-      end
+      ret = managed_disk.read(options)
     end
 
     @reads += 1
