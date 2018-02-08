@@ -103,8 +103,13 @@ module XFS
         return glob_single_extent_entries_by_linked_list if @inode_object.in['num_extents'] == 1
       end
       loop do
-        header                = DirectoryDataHeader.new(@data[data_pointer..@sb.block_size * block_number], @sb)
-        block_pointer         = header.header_end
+        begin
+          header = DirectoryDataHeader.new(@data[data_pointer..@sb.block_size * block_number], @sb)
+        rescue => err
+          $log.error("Invalid DirectoryDataHeader encountered: #{err}.  Skipping.")
+          break
+        end
+        block_pointer = header.header_end
         data_pointer += header.header_end
         loop do
           break if block_pointer > last_directory_space
