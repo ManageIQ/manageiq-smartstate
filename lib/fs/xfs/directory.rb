@@ -99,12 +99,14 @@ module XFS
       data_pointer              = 0
       block_number              = 1
       last_directory_space      = @sb.block_size - DirectoryEntry::SIZEOF_SMALLEST_DIRECTORY_ENTRY
-      if @inode_object.data_method == :extents
-        return glob_single_extent_entries_by_linked_list if @inode_object.in['num_extents'] == 1
-      end
       loop do
-        header                = DirectoryDataHeader.new(@data[data_pointer..@sb.block_size * block_number], @sb)
-        block_pointer         = header.header_end
+        begin
+          header = DirectoryDataHeader.new(@data[data_pointer..@sb.block_size * block_number], @sb)
+        rescue => err
+          $log.error("Invalid DirectoryDataHeader encountered: #{err}.  Skipping.")
+          break
+        end
+        block_pointer = header.header_end
         data_pointer += header.header_end
         loop do
           break if block_pointer > last_directory_space
@@ -122,7 +124,9 @@ module XFS
 
     def glob_entries_by_linked_list
       return {} if @data.nil?
-      if @inode_object.data_method == :extents || @inode_object.data_method == :btree
+      if @inode_object.data_method == :extents && @inode_object.in['num_extents'] == 1
+        return glob_single_extent_entries_by_linked_list
+      elsif @inode_object.data_method == :extents || @inode_object.data_method == :btree
         return glob_extent_or_btree_entries_by_linked_list
       elsif @inode_object.data_method == :local
         return glob_short_form_entries_by_linked_list
