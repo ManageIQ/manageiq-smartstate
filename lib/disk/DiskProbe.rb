@@ -1,4 +1,5 @@
 module DiskProbe
+  require 'util/miq-exception'
   MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
 
   PROBE_FILES = Dir.glob(File.join(MODDIR, "*Probe.rb*"))
@@ -30,6 +31,9 @@ module DiskProbe
           require_relative "modules/#{mod}"
           return Object.const_get(mod)
         end
+      rescue MiqException::MiqInvalidCredentialsError => err
+        $log.error "MIQ(DiskProbe-getDiskMod) [#{pmod.chomp("Probe")}-#{mod}] for [#{fname}]: #{err}"
+        raise err
       rescue => err
         $log.warn "MIQ(DiskProbe-getDiskMod) [#{pmod.chomp("Probe")}-#{mod}] for [#{fname}]: #{err}"
       end
