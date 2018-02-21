@@ -4,7 +4,7 @@ module MiqDiskCommon
     if dInfo.mountMode.nil? || dInfo.mountMode == "r"
       dInfo.mountMode = "r"
       return "r"
-    elsif dInfo.mountMode = "rw"
+    elsif dInfo.mountMode == "rw"
       return "r+"
     end
     raise "Unrecognized mountMode: #{dInfo.mountMode}"
