@@ -1,18 +1,12 @@
 require 'disk/modules/MiqLargeFile'
+require 'disk/modules/miq_disk_common'
 
 module RawDisk
   def d_init
     self.diskType = "Raw"
     self.blockSize = 512
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
+    fileMode = MiqDiskCommon.file_mode(dInfo)
 
     @dOffset = dInfo.offset
     @rawDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)

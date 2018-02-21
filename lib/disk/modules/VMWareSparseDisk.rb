@@ -1,4 +1,5 @@
 require 'disk/modules/MiqLargeFile'
+require 'disk/modules/miq_disk_common'
 require 'binary_struct'
 require 'memory_buffer'
 
@@ -24,14 +25,7 @@ module VMWareSparseDisk
   def d_init
     self.diskType = "VMWare Sparse"
     self.blockSize = 512
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
+    fileMode = MiqDiskCommon.file_mode(dInfo)
     @vmwareSparseDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
     buf = @vmwareSparseDisk_file.read(SIZEOF_SPARSE_EXTENT_HEADER)
     @sparseHeader = OpenStruct.new(SPARSE_EXTENT_HEADER.decode(buf))
