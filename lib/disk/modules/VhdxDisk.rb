@@ -182,6 +182,7 @@ module VhdxDisk
     @has_parent           = nil
     @parent_locator       = nil
     @file_name            = dInfo.fileName
+    @scvmm                = dInfo.scvmm
     @hyperv_connection    = nil
     @vhdx_file            = connection_to_file(dInfo)
     @converter            = Encoding::Converter.new("UTF-16LE", "UTF-8")
@@ -518,7 +519,7 @@ module VhdxDisk
   def parent_disk(path)
     @parent_ostruct                   = OpenStruct.new
     @parent_ostruct.fileName          = path
-    @parent_ostruct.driveType         = dInfo.driveType
+    @parent_ostruct.driveType         = @scvmm.get_drivetype(path)
     @parent_ostruct.hyperv_connection = @hyperv_connection if @hyperv_connection
     parent                            = MiqDisk.getDisk(@parent_ostruct)
     raise "Unable to access parent disk #{path}" if parent.nil?
