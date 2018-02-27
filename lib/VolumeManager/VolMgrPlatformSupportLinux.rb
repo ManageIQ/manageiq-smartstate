@@ -40,25 +40,27 @@ module VolMgrPlatformSupportLinux
     desc = @ost.snapshotDescription ? @ost.snapshotDescription : "EVM Snapshot"
     st = Time.now
     @snMor = @vimVm.createEvmSnapshot(desc, "false", true, @ost.snapshot_create_free_space)
-    $log.info "VolMgrPlatformSupportLinux.preMount: VM snapshot created in [#{Time.now - st}] seconds"
+    $log.info "VolMgrPlatformSupportLinux.preMount: VM snapshot [#{@snMor}] created in [#{Time.now - st}] seconds"
     $log.debug "VolMgrPlatformSupportLinux.preMount: snMor = \"#{@snMor}\""
   end
 
   def postMount
-    $log.debug "VolMgrPlatformSupportLinux.postMount Enter: force = #{@ost.force}, @vimVm.nil? = #{@vimVm.nil?}"
+    log_prefix = "VolMgrPlatformSupportLinux.postMount"
+    $log.debug "#{log_prefix} Enter: force = #{@ost.force}, @vimVm.nil? = #{@vimVm.nil?}"
     return unless @ost.force
     return unless @vimVm
 
     if @ost.force
       if !@snMor
-        $log.warn "VolMgrPlatformSupportLinux.postMount: VM not snapped: #{@cfgFile}"
+        $log.warn "#{log_prefix}: VM not snapped: #{@cfgFile}"
       else
-        $log.debug "VolMgrPlatformSupportLinux.postMount: removing snapshot snMor = \"#{@snMor}\""
+        $log.debug "#{log_prefix}: removing snapshot snMor = \"#{@snMor}\""
         begin
           @vimVm.removeSnapshot(@snMor, "false", true, @ost.snapshot_remove_free_space)
+          $log.info "#{log_prefix}: VM snapshot [#{@snMor}] removed"
         rescue => err
-          $log.warn "VolMgrPlatformSupportLinux.postMount: failed to remove snapshot for VM: #{@cfgFile}"
-          $log.warn "VolMgrPlatformSupportLinux.postMount: #{err}"
+          $log.warn "#{log_prefix}: failed to remove snapshot for VM: #{@cfgFile}"
+          $log.warn "#{log_prefix}: #{err}"
         end
       end
     end
