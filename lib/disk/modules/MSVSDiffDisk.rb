@@ -1,19 +1,13 @@
 # encoding: US-ASCII
 
 require 'disk/modules/MSCommon'
+require 'disk/modules/miq_disk_common'
 
 module MSVSDiffDisk
   def d_init
     self.diskType = "MSVS Differencing"
     self.blockSize = MSCommon::SECTOR_LENGTH
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
+    fileMode = MiqDiskCommon.file_mode(dInfo)
     if dInfo.hyperv_connection
       @hyperv_connection = dInfo.hyperv_connection
       @ms_disk_file      = MSCommon.connect_to_hyperv(dInfo)

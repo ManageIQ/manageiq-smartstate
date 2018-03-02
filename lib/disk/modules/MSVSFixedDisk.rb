@@ -1,18 +1,12 @@
 require 'disk/modules/MiqLargeFile'
+require 'disk/modules/miq_disk_common'
 
 module MSVSFixedDisk
   def d_init
     @diskType = "MSVSFixed"
     @blockSize = 512
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
+    fileMode = MiqDiskCommon.file_mode
 
     if dInfo.hyperv_connection
       @ms_flat_disk_file = MSCommon.connect_to_hyperv(dInfo)
