@@ -235,7 +235,7 @@ module Ext3
   end
 
   # Create a directory entry.
-  def ifs_putFile(p, miqfs = nil)
+  def ifs_putFile(_p, _miqfs = nil)
     raise "Write functionality is not yet supported on Ext3."
 
     # Commented out for now to avoid unreachable code

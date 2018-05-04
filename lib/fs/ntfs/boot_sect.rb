@@ -158,18 +158,18 @@ module NTFS
       mft = mftEntry(3)
       vi  = {}
 
-      if nameAttrib = mft.getFirstAttribute(AT_VOLUME_NAME)
+      if (nameAttrib = mft.getFirstAttribute(AT_VOLUME_NAME))
         vi["name"] = nameAttrib.name
       end
 
-      if objectidAttrib = mft.getFirstAttribute(AT_OBJECT_ID)
+      if (objectidAttrib = mft.getFirstAttribute(AT_OBJECT_ID))
         vi["objectId"]      = objectidAttrib.objectId.to_s
         vi["birthVolumeId"] = objectidAttrib.birthVolumeId.to_s
         vi["birthObjectId"] = objectidAttrib.birthObjectId.to_s
         vi["domainId"]      = objectidAttrib.domainId.to_s
       end
 
-      if infoAttrib = mft.getFirstAttribute(AT_VOLUME_INFORMATION)
+      if (infoAttrib = mft.getFirstAttribute(AT_VOLUME_INFORMATION))
         vi["version"] = infoAttrib.version
         vi["flags"]   = infoAttrib.flags
       end
@@ -214,6 +214,7 @@ module NTFS
       b &= @bpb['unused2'] == 0
       b &= @bpb['unused4'] == 0
       b &= @bpb['signature'] == 0xaa55
+      b
     end
 
     # Convert a logical cluster number to an absolute byte position.

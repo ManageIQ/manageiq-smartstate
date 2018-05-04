@@ -180,7 +180,6 @@ module MetakitFS
       # Create the file if it doesn't exist.
       #
       fileRow = create(p, TYPE_FILE)
-      fi = getFileIndex(p)
     else
       fileRow = @vFentry[fi]
     end

@@ -34,11 +34,6 @@ if __FILE__ == $0
 
   rootTree = rootTrees[0]
 
-  ts = Time.now
-  fn = "Test-#{ts.year}#{ts.month}#{ts.day}-#{ts.hour}#{ts.min}#{ts.sec}"
-  dn = "Dir-#{fn}"
-  tstring = ts.to_s + "\n"
-
   if rootTree.guestOS == "Linux"
     puts
     puts "Files in /:"

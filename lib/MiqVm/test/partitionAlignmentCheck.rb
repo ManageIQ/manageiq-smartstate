@@ -18,7 +18,7 @@ alignment = 64 * 1024 # Check for alignment on a 64kB boundary
 
 begin
 
-  vim.virtualMachinesByMor.values.each do |vmo|
+  vim.virtualMachinesByMor.each_value do |vmo|
     begin
       vimVm = vim.getVimVmByMor(vmo['MOR'])
 

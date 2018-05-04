@@ -364,7 +364,7 @@ class VmConfig
 
   def resolve_ds_path(filename)
     # TODO: Determine if we need to do any work here.
-    ds, dir, name = split_filename(filename)
+    ds, _dir, _name = split_filename(filename)
     return filename unless ds.nil?
 
     @ds_replace ||= {}
@@ -373,7 +373,7 @@ class VmConfig
     end
 
     ds_filename = resolve_ds_path_with_vim(filename)
-    ds, dir, name = split_filename(ds_filename)
+    ds, dir, _name = split_filename(ds_filename)
     unless ds.nil?
       idx = filename.index(dir)
       replaced_str = filename[0, idx]
@@ -761,7 +761,7 @@ class VmConfig
     pos_idx = name.index(/\d/)
     if pos_idx
       full_pos = name[pos_idx..-1]
-      maj_pos, device = full_pos[0..0]
+      maj_pos, _device = full_pos[0..0]
       device = name[0...pos_idx]
     end
     return full_pos, maj_pos, device, pos_idx

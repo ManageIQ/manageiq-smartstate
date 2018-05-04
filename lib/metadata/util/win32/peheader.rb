@@ -15,8 +15,6 @@ class PEheader
   IMAGE_NT_SIGNATURE = "PE\0\0"
   IMAGE_DOS_SIGNATURE = "MZ"
 
-  attr_reader :imports, :icons, :messagetables, :versioninfo
-
   def initialize(path)
     @fname = path
     @dataDirs = []
@@ -73,7 +71,7 @@ class PEheader
 
     # Read all the data directories & section table.
     offset = getDataDirs(@fBuf, offset)
-    offset = getSectionTable(@fBuf, fhHash, offset)
+    getSectionTable(@fBuf, fhHash, offset)
   end
 
   # These file methods are here to assist in debugging
@@ -402,7 +400,6 @@ class PEheader
     return resDirEntry[:name] unless bit?(resDirEntry[:name], 31)
 
     # The low 30 bits of the 'Name' member is an offset to an IMAGE_RESOURCE_DIRECTORY_STRING_U struct.
-    str = ""
     ptr = (resDirEntry[:name] & 0x7fffffff)
     len = @dataDirs[IMAGE_DIRECTORY_ENTRY_RESOURCE][:data][ptr, 2].unpack('S')[0]
     str = @dataDirs[IMAGE_DIRECTORY_ENTRY_RESOURCE][:data][ptr + 2, len * 2]
@@ -852,7 +849,6 @@ end
 if __FILE__ == $0
   st = Time.now
   puts "Running script [#{__FILE__}]"
-  fileName = "D:/temp/icons/PSPad.exe"
   fileName = "D:/temp/icons/EventMsg2.dll"
   peHdr = PEheader.new(fileName)
   puts "Imports:[#{peHdr.imports.length}] - #{peHdr.imports.join(", ")}"

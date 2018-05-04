@@ -166,6 +166,7 @@ module Iso9660
       out += "Effective date  : #{@bs['effective_date'].strip} (#{@effectiveDate}, tz = #{Util.GetTimezone(@bs['effective_date'])})\n"
       out += "File strct ver  : #{@bs['file_structure_version']}\n"
       out += "Application data: #{@bs['application_data'].strip}\n"
+      out
     end
   end # class
 end # module

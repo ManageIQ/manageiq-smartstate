@@ -72,6 +72,7 @@ module Ext4
       out += "Name len: 0x#{'%04x' % @de['name_len']}\n"
       out += "Type    : #{fileTypeString}\n" if @isNew
       out += "Name    : #{name}\n"
+      out
     end
   end # class
 end # module

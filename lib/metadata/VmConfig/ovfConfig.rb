@@ -48,7 +48,7 @@ module OvfConfig
     end
 
     # Setup parent relationship
-    dh.each do |_d_ref, d|
+    dh.each_value do |_d_ref, d|
       parent = dh[d[:Parent]]
       unless parent.nil?
         d[:parent] = parent
@@ -56,7 +56,7 @@ module OvfConfig
       end
     end
 
-    dh.each { |_d_ref, d| end_disks << d if d[:children].blank? }
+    dh.each_value { |_d_ref, d| end_disks << d if d[:children].blank? }
     end_disks.sort! { |a, b| b[:Caption] <=> a[:Caption] }
 
     end_disks.each do |d|

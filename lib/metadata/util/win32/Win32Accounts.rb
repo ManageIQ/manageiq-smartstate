@@ -1,7 +1,6 @@
 # encoding: US-ASCII
 
 require 'util/miq-xml'
-require 'enumerator'
 
 module MiqWin32
   class Accounts
@@ -140,10 +139,8 @@ module MiqWin32
             # Get the pertinent data from out of that
             nh = {"name" => groupname}
             unless group_data.nil? || group_data.length == 0
-              nh.merge!(
-                "groupid" => group_data['group_num'],
-                "comment" => group_data['group_desc']
-              )
+              nh["groupid"] = group_data['group_num']
+              nh["comment"] = group_data['group_desc']
 
               nh['users'] = []
               group_data['sids'].each do |sid|

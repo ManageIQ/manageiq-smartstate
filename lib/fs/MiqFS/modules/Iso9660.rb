@@ -219,7 +219,6 @@ module Iso9660
 
   # Destroy file object.
   def fs_fileClose(_fobj)
-    fobj = nil
   end
 
   # IFS members: internal file system.

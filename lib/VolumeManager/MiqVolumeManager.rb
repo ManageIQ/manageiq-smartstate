@@ -144,7 +144,7 @@ class MiqVolumeManager
   end
 
   def parseLvmThinMetadata
-    @vgHash.each do |vgname, vg|
+    @vgHash.each_value do |vgname, vg|
       $log.debug "MiqVolumeManager.parseLvmThinMetadata: setting LVM2 thin metadata"
 
       vg.thin_volumes.each do |tv|

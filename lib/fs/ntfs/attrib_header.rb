@@ -67,7 +67,7 @@ module NTFS
 
   # One Attribute Header.
   class AttribHeader
-    attr_reader :name, :type, :typeName, :flags, :id, :length, :specific, :namelen
+    attr_reader :name, :type, :flags, :id, :length, :specific, :namelen
 
     AF_COMPRESSED  = 0x0001
     AF_ENCRPYTED   = 0x4000
@@ -86,7 +86,7 @@ module NTFS
       offset  = SIZEOF_STANDARD_ATTRIBUTE_HEADER
 
       # If type is AT_END we're done.
-      return nil if @header['attrib_type'] == AT_END
+      return if @header['attrib_type'] == AT_END
 
       # Get accessor values.
       @length  = @header['length']

@@ -120,7 +120,7 @@ CLOSE_EOL
 
   def bread_cached(start_sector, number_sectors)
     $log.debug "miq_hyperv_disk.bread_cached(#{start_sector}, #{number_sectors})"
-    @block_cache.keys.each do |block_range|
+    @block_cache.each_key do |block_range|
       sector_offset = start_sector - block_range.first
       buffer_offset = sector_offset * @block_size
       if block_range.include?(start_sector) && block_range.include?(start_sector + number_sectors - 1)

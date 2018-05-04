@@ -189,7 +189,7 @@ module NTFS
 
     def loadAttributeHeaders
       offset = 0
-      while h = AttribHeader.new(@buf[offset..-1])
+      while (h = AttribHeader.new(@buf[offset..-1]))
         break if h.type.nil? || h.type == AT_END
         $log.debug "NtfsMftEntry.loadAttributeHeaders - MFT(#{@recNum}) adding  Attr: #{h.typeName}" if DEBUG_TRACE_MFT
         attrib = {"type" => h.type, "offset" => offset, "header" => h}

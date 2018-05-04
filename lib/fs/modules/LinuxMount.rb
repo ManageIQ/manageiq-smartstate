@@ -283,7 +283,7 @@ module LinuxMount
     h = @mountPoints
     while d = p.shift
       return fs, localPath unless h[d]
-      if tfs = h[d].fs
+      if (tfs = h[d].fs)
         fs = tfs
         localPath = '/' + p.join('/')
       end

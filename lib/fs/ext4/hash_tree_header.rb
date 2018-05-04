@@ -30,6 +30,7 @@ module Ext4
       out += "Hash Version : #{@hash_version}\n"
       out += "Length       : #{@length}\n"
       out += "Leaf Level   : #{@leaf_level}\n"
+      out
     end
   end
 end

@@ -190,7 +190,6 @@ module NTFS
 
   # Unless there's a way to explicitly destroy an object there's nothing to do here.
   def fs_fileClose(_fobj)
-    fobj = nil
   end
 
   # IFS members: internal file system.

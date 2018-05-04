@@ -34,7 +34,7 @@ class MiqFsUtil
   # Load the update spec from a file in the fromFs.
   #
   def loadUpdateSpec(path)
-    @fromFs.fileOpen(path) { |fo| @csa = YAML.load(fo.read) }
+    @fromFs.fileOpen(path) { |fo| @csa = YAML.safe_load(fo.read) }
   end
 
   def update
@@ -207,28 +207,8 @@ class MiqFsUtil
         unless @fromFs.fileDirectory? i
           toFile = File.join(destDir, i)
           makePath(File.dirname(toFile))
-          #
-          # If the file path matches an encrypt RE and doesn't
-          # match a noencrypt RE, then encrypt the contents of
-          # the file before copying it to the collection.
-          #
-          if cs.encrypt && cs.encrypt.detect { |e| i =~ e }
-            if !cs.noencrypt || !cs.noencrypt.detect { |ne| i =~ ne }
-              compressFile(i, toFile)
-              next
-            end
-          end
-          #
-          # If the file path matches an compress RE and doesn't
-          # match a nocompress RE, then compress the contents of
-          # the file before copying it to the collection.
-          #
-          if cs.compress && cs.compress.detect { |e| i =~ e }
-            if !cs.nocompress || !cs.nocompress.detect { |ne| i =~ ne }
-              compressFile(i, toFile)
-              next
-            end
-          end
+
+          checkCompress(cs, i, toFile)
           copyFile(i, toFile)
           next
         end
@@ -251,28 +231,8 @@ class MiqFsUtil
           next if cs.exclude && cs.exclude.detect { |e| path =~ e }
           toFile = File.join(destDir, path)
           makePath(File.dirname(toFile))
-          #
-          # If the file path matches an encrypt RE and doesn't
-          # match a noencrypt RE, then encrypt the contents of
-          # the file before copying it to the collection.
-          #
-          if cs.encrypt && cs.encrypt.detect { |e| path =~ e }
-            if !cs.noencrypt || !cs.noencrypt.detect { |ne| path =~ ne }
-              compressFile(path, toFile)
-              next
-            end
-          end
-          #
-          # If the file path matches an compress RE and doesn't
-          # match a nocompress RE, then compress the contents of
-          # the file before copying it to the collection.
-          #
-          if cs.compress && cs.compress.detect { |e| path =~ e }
-            if !cs.nocompress || !cs.nocompress.detect { |ne| path =~ ne }
-              compressFile(path, toFile)
-              next
-            end
-          end
+
+          checkCompress(cs, i, toFile)
           copyFile(path, toFile)
         end
       end if cs.include
@@ -319,6 +279,31 @@ class MiqFsUtil
     ensure
       @fromFs.chdir(fowd)
       @toFs.chdir(towd)
+    end
+  end
+
+  def checkCompress(cs, i, toFile)
+    #
+    # If the file path matches an encrypt RE and doesn't
+    # match a noencrypt RE, then encrypt the contents of
+    # the file before copying it to the collection.
+    #
+    if cs.encrypt && cs.encrypt.detect { |e| i =~ e }
+      if !cs.noencrypt || !cs.noencrypt.detect { |ne| i =~ ne }
+        compressFile(i, toFile)
+        next
+      end
+    end
+    #
+    # If the file path matches an compress RE and doesn't
+    # match a nocompress RE, then compress the contents of
+    # the file before copying it to the collection.
+    #
+    if cs.compress && cs.compress.detect { |e| i =~ e }
+      if !cs.nocompress || !cs.nocompress.detect { |ne| i =~ ne }
+        compressFile(i, toFile)
+        next
+      end
     end
   end
 

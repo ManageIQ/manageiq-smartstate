@@ -186,7 +186,7 @@ module NTFS
       ret = []
 
       while num > 0
-        data, start_vcn, end_vcn, data_len, offset = getCacheInfo(vcn)
+        data, _start_vcn, _end_vcn, data_len, offset = getCacheInfo(vcn)
 
         len = data_len - offset
         len = num if num < len
@@ -207,7 +207,7 @@ module NTFS
       start_data, start_data_vcn, = getCacheInfo(start_vcn) if has_start
 
       has_end = @clusters.key?(end_vcn)
-      end_data, end_data_vcn, end_data_end_vcn, end_data_len, end_offset = getCacheInfo(end_vcn) if has_end
+      end_data, end_data_vcn, end_data_end_vcn, _end_data_len, end_offset = getCacheInfo(end_vcn) if has_end
 
       # Determine if we are adding an existing item or sub-item back into the cache
       return if has_start && has_end && start_data_vcn == end_data_vcn

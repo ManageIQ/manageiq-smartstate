@@ -198,7 +198,7 @@ module Fat32
       allClusters = []
       clus = @cluster
       allClusters << mkClusterStatus(clus, 0)
-      buf = @bs.getCluster(clus); data = nil
+      buf = @bs.getCluster(clus)
       while (data = @bs.getNextCluster(clus)) != nil
         clus = data[0]; buf += data[1]
         allClusters << mkClusterStatus(clus, 0)

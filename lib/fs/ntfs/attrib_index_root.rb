@@ -91,15 +91,12 @@ module NTFS
       if @indexNodeHeader.hasChildren? && indexAllocations
         indexAllocations.each { |alloc| @indexAllocRuns << [alloc.header, alloc.data_run] }
       end
-      @indexAllocRuns
     end
 
     def bitmap=(bmp)
       if @indexNodeHeader.hasChildren?
         @bitmap = bmp.data.unpack("b#{bmp.length * 8}") unless bmp.nil?
       end
-
-      @bitmap
     end
 
     # Find a name in this index.
@@ -199,7 +196,7 @@ module NTFS
       return @globEntries unless @globEntries.nil?
 
       # Since we are reading all entries, retrieve all of the data in one call
-      @indexAllocRuns.each do |_h, r|
+      @indexAllocRuns.each_value do |_h, r|
         r.rewind
         r.read(r.length)
       end

@@ -703,7 +703,6 @@ class Win32EventLog
     buf = ""
     len = [0].pack('L')
     type = [0].pack('L')
-    res = @@RegQueryValueEx.call(hKey, "EventMessageFile", 0, type, buf, len)
     # Beware: this MAY come up at some point.
     raise "#{self.class}::getEvtMsgFile: Got REG_MULTI_SZ" if type.unpack('L')[0] == REG_MULTI_SZ
 

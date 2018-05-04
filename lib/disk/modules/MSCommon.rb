@@ -107,7 +107,7 @@ module MSCommon
   def self.d_read_common(pos, len, parent = nil)
     # Get starting & ending block, sector & byte offset of read.
     blockStart, sectorStart, byteOffsetStart = blockPos(pos)
-    blockEnd,   sectorEnd,   byteOffsetEnd   = blockPos(pos + len - 1)
+    blockEnd,   sectorEnd,   _byteOffsetEnd  = blockPos(pos + len - 1)
 
     # Loop on blocks (2M entities of storage).
     buf = ""
@@ -154,7 +154,7 @@ module MSCommon
   def self.d_write_common(pos, buf, len, parent = nil)
     # Get starting & ending block, sector & byte offset of read.
     blockStart, sectorStart, byteOffsetStart = blockPos(pos)
-    blockEnd,   sectorEnd,   byteOffsetEnd   = blockPos(pos + len - 1)
+    blockEnd,   sectorEnd,   _byteOffsetEnd  = blockPos(pos + len - 1)
 
     # Loop on blocks (2M entities of storage).
     bytesWritten = 0
@@ -252,7 +252,7 @@ module MSCommon
   def self.process_bae
     @file.seek(@batBase, IO::SEEK_SET)
     @bae = []
-    1.step(@header['max_tbl_ent'], 1) do |block_num|
+    1.step(@header['max_tbl_ent'], 1) do ||
       @bae << @file.read(BAE_SIZE).unpack('N')[0]
     end
   end

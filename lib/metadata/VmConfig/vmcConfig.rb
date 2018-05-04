@@ -21,12 +21,7 @@ module VmcConfig
     element.each_recursive do |e|
       lid = e.attributes["id"] if e.name === "location"
       if e.name === "drive_type"
-        drive_type = e.text.to_i
         case e.text.to_i
-        when 0
-          # No disk present here
-        when 1
-          drive_type = "harddisk"
         when 2
           # Add cd-rom
           add_item("ide#{cid}:#{lid}.present", "TRUE")

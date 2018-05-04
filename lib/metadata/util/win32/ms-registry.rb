@@ -646,5 +646,6 @@ module DumpHash
     return unless DEBUG_PRINT
     $log.debug "#{prefix}(RAW): ========"
     hash.sort { |a, b| a.to_s <=> b.to_s }.each { |x, y| $log.debug "#{prefix}(#{x})\t\t= #{y}" }
+    hash.sort_by(&:to_s).each { |x, y| $log.debug "#{prefix}(#{x})\t\t= #{y}" }
   end
 end

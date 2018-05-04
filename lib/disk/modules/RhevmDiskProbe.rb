@@ -45,7 +45,7 @@ module RhevmDiskProbe
       break if line == 'EOF'
       next unless line.include?('=')
       key, *value = line.split('=')
-      desc[key.downcase.to_sym] = value = value.join('=')
+      desc[key.downcase.to_sym] = value.join('=')
     end
     desc
   end

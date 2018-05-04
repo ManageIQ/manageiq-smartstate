@@ -77,7 +77,7 @@ module Fat32
 
       # For each cluster, read, deposit & write.
       (startCluster..endCluster).each do |clus|
-        offset = 0; len = bpc
+        len = bpc
         if clus == startCluster
           offset = startOffset
           len -= offset

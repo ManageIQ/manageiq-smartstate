@@ -28,7 +28,7 @@ module HostScanItemNteventlog
 
     log['lineText'].each do |line|
       next unless line[0, 1] == '['
-      next unless i = line.index(']')
+      next unless (i = line.index(']'))
       header, message = line[1..i - 1], line[i + 1..-1]
 
       # Process the header parts

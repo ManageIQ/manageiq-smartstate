@@ -51,7 +51,7 @@ module Ext3
       bytes = @inodeObj.length - @pos if @pos + bytes > @inodeObj.length
 
       # get data.
-      startBlock, startByte, endBlock, endByte, nblocks = getStartBlock(@pos, bytes)
+      startBlock, startByte, _endBlock, _endByte, nblocks = getStartBlock(@pos, bytes)
       out = getBlocks(startBlock, nblocks)
       @pos += bytes
       out[startByte, bytes]

@@ -228,7 +228,7 @@ module Ext4
       dirObj = ifs_getDir(dir, miqfs)
       dirEnt = dirObj.nil? ? nil : dirObj.findEntry(fname)
 
-    rescue MiqFsDirectoryNotFound => err
+    rescue MiqFsDirectoryNotFound
       dirEnt = nil
 
     rescue RuntimeError => err
@@ -240,7 +240,7 @@ module Ext4
   end
 
   # Create a directory entry.
-  def ifs_putFile(p, miqfs = nil)
+  def ifs_putFile(_p, _miqfs)
     raise "Write functionality is not yet supported on Ext4."
 
     # Commented out for now to avoid unreachable code

@@ -62,6 +62,7 @@ module Ext3
       out += "Name len: 0x#{'%04x' % @de['name_len']}\n"
       out += "Type    : #{fileType}\n" if @isNew
       out += "Name    : #{name}\n"
+      out
     end
   end # class
 end # module

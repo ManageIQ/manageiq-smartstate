@@ -200,7 +200,7 @@ module Ext4
       nbytes = length - @pos if @pos + nbytes > length
 
       # get data.
-      start_block, start_byte, end_block, end_byte, nblocks = pos_to_block(@pos, nbytes)
+      start_block, start_byte, _end_block, _end_byte, nblocks = pos_to_block(@pos, nbytes)
       out = read_blocks(start_block, nblocks)
       @pos += nbytes
       out[start_byte, nbytes]
