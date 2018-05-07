@@ -127,8 +127,8 @@ class FleeceHives
     begin
       ret = newEle.find_first("//*/key[@keyname=\"Microsoft\"]")
       ret = ret.elements[1] if ret
-    rescue Exception => e
-      $log.warn "Exception during productKeys processing: [#{e}]"
+    rescue => err
+      $log.warn "Exception during productKeys processing: [#{err}]"
     end
     ret
   end
