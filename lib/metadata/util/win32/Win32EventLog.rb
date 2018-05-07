@@ -700,7 +700,6 @@ class Win32EventLog
   end
 
   def getEvtMsgFile(hKey)
-    buf = ""
     len = [0].pack('L')
     type = [0].pack('L')
     # Beware: this MAY come up at some point.
