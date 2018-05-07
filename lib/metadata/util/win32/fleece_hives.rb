@@ -128,7 +128,7 @@ class FleeceHives
       ret = newEle.find_first("//*/key[@keyname=\"Microsoft\"]")
       ret = ret.elements[1] if ret
     rescue => err
-      $log.warn "Exception during productKeys processing: [#{err}]"
+      $log.warn("Exception during productKeys processing: [#{err}]")
     end
     ret
   end
@@ -140,7 +140,7 @@ class FleeceHives
     # implementing application image uploading.
     # iconNode = MIQRexml.findElement("Applications/images", xmlCol.root)
     appPath.each_element do |e|
-      e.each_element_with_attribute('name', '(Default)',) do|e1|
+      e.each_element_with_attribute('name', '(Default)',) do |e1|
         begin
           fileName = e1.text
           fileName.tr!("\\", "/")
