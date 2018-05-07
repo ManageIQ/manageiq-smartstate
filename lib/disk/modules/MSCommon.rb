@@ -252,7 +252,7 @@ module MSCommon
   def self.process_bae
     @file.seek(@batBase, IO::SEEK_SET)
     @bae = []
-    1.step(@header['max_tbl_ent'], 1) do ||
+    1.step(@header['max_tbl_ent'], 1) do
       @bae << @file.read(BAE_SIZE).unpack('N')[0]
     end
   end

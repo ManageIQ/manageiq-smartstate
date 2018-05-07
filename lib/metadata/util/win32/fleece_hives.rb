@@ -139,7 +139,7 @@ class FleeceHives
     # The icon sections below will need to be uncommented when we are ready to start
     # implementing application image uploading.
     # iconNode = MIQRexml.findElement("Applications/images", xmlCol.root)
-    appPath.each_element do|e|
+    appPath.each_element do |e|
       e.each_element_with_attribute('name', '(Default)',) do|e1|
         begin
           fileName = e1.text
