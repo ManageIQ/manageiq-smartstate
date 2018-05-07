@@ -49,7 +49,7 @@ module MiqDiskCache
 
   def d_read_cached(start_sector, number_sectors)
     $log.debug "MiqDiskCache.d_read_cached(#{start_sector}, #{number_sectors})"
-    @block_cache.each_key do |block_range|
+    @block_cache.keys.each do |block_range|
       sector_offset = start_sector - block_range.first
       buffer_offset = sector_offset * @blockSize
       if block_range.include?(start_sector) && block_range.include?(start_sector + number_sectors - 1)

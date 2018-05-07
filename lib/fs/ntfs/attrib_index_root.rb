@@ -196,7 +196,7 @@ module NTFS
       return @globEntries unless @globEntries.nil?
 
       # Since we are reading all entries, retrieve all of the data in one call
-      @indexAllocRuns.each_value do |_h, r|
+      @indexAllocRuns.each do |_h, r|
         r.rewind
         r.read(r.length)
       end
