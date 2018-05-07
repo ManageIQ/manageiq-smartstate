@@ -208,7 +208,8 @@ class MiqFsUtil
           toFile = File.join(destDir, i)
           makePath(File.dirname(toFile))
 
-          checkCompress(cs, i, toFile)
+          check_encrypt(cs, i, toFile)
+          check_compress(cs, i, toFile)
           copyFile(i, toFile)
           next
         end
@@ -232,7 +233,9 @@ class MiqFsUtil
           toFile = File.join(destDir, path)
           makePath(File.dirname(toFile))
 
-          checkCompress(cs, i, toFile)
+          check_encrypt(cs, i, toFile)
+          check_compress(cs, i, toFile)
+
           copyFile(path, toFile)
         end
       end if cs.include
@@ -282,7 +285,7 @@ class MiqFsUtil
     end
   end
 
-  def checkCompress(cs, i, toFile)
+  def check_encrypt(cs, i, toFile)
     #
     # If the file path matches an encrypt RE and doesn't
     # match a noencrypt RE, then encrypt the contents of
@@ -294,6 +297,9 @@ class MiqFsUtil
         next
       end
     end
+  end
+
+  def check_compress(cs, i, toFile)
     #
     # If the file path matches an compress RE and doesn't
     # match a nocompress RE, then compress the contents of
