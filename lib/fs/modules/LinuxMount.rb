@@ -80,11 +80,11 @@ module LinuxMount
     @vmConfig.getAllDiskKeys.each do |dk|
       if dk =~ /^ide.*$/
         @devHash[dk] = "/dev/hd" + ideMap[dk]
-        $log.debug&.("LinuxMount: devHash[#{dk}] = /dev/hd#{ideMap[dk]}")
+        $log.debug("LinuxMount: devHash[#{dk}] = /dev/hd#{ideMap[dk]}") if $log.debug
       elsif dk =~ /^scsi.*$/
         @devHash[dk] = "/dev/sd" + sdLetter
         sdLetter.succ!
-        $log.debug&.("LinuxMount: devHash[#{dk}] = /dev/sd#{sdLetter}")
+        $log.debug("LinuxMount: devHash[#{dk}] = /dev/sd#{sdLetter}") if $log.debug
       end
     end
   end
@@ -93,13 +93,14 @@ module LinuxMount
     #
     # Build hash for fstab fs_spec look up.
     #
+    fs_spec_hash = {}
     @volumes.each do |v|
-      $log.debug&.("LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})")
+      $log.debug("LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})") if $log.debug
       if v == @rootVolume
         fs = @rootFS
       else
         unless (fs = MiqFS.getFS(v))
-          $log.debug&.("LinuxMount: No filesystem on Volume: #{v.dInfo.localDev}, partition = #{v.partNum}")
+          $log.debug("LinuxMount: No filesystem on Volume: #{v.dInfo.localDev}, partition = #{v.partNum}") if $log.debug
           next
         end
       end
@@ -124,13 +125,13 @@ module LinuxMount
     #
     fs_spec_fs_hash = {}
     unless fs.volName.empty?
-      $log.debug&.("LinuxMount: adding \"LABEL=#{fs.volName}\" to fs_spec_hash")
+      $log.debug("LinuxMount: adding \"LABEL=#{fs.volName}\" to fs_spec_hash") if $log.debug
       fs_spec_fs_hash["LABEL=#{fs.volName}"] = fs
-      $log.debug&.("LinuxMount: adding \"LABEL=/#{fs.volName}\" to fs_spec_hash")
+      $log.debug("LinuxMount: adding \"LABEL=/#{fs.volName}\" to fs_spec_hash") if $log.debug
       fs_spec_fs_hash["LABEL=/#{fs.volName}"] = fs
     end
     unless fs.fsId.empty?
-      $log.debug&.("LinuxMount: adding \"UUID=#{fs.fsId}\" to fs_spec_hash")
+      $log.debug("LinuxMount: adding \"UUID=#{fs.fsId}\" to fs_spec_hash") if $log.debug
       fs_spec_fs_hash["UUID=#{fs.fsId}"] = fs
     end
     fs_spec_fs_hash
@@ -147,7 +148,7 @@ module LinuxMount
     fs_spec_logical_hash["/dev/#{vg_name}/#{lv_name}"] = fs
     fs_spec_logical_hash["/dev/mapper/#{vg_name.gsub('-', '--')}-#{lv_name.gsub('-', '--')}"] = fs
     fs_spec_logical_hash["UUID=#{v.dInfo.lvObj.lvId}"] = fs
-    $log.debug&.("LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume")
+    $log.debug("LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume") if $log.debug
     fs_spec_logical_hash
   end
 
@@ -158,7 +159,7 @@ module LinuxMount
     # TODO: support physical volume UUIDs
     #
     fs_spec_physical_hash = {}
-    $log.debug&.("LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}")
+    $log.debug("LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}") if $log.debug
     if v.partNum.zero?
       fs_spec_physical_hash[@devHash[v.dInfo.hardwareId]] = fs
     else
@@ -188,20 +189,20 @@ module LinuxMount
     #
     root_added = false
     @mountPoints = {}
-    $log.debug&.("LinuxMount: processing #{FSTAB_FILE_NAME}")
+    $log.debug("LinuxMount: processing #{FSTAB_FILE_NAME}") if $log.debug
     @rootFS.fileOpen(FSTAB_FILE_NAME, &:read).each_line do |fstl|
-      $log.debug&.("LinuxMount: fstab line: #{fstl}")
+      $log.debug("LinuxMount: fstab line: #{fstl}") if $log.debug
       root_added = true if do_fstab_line(fstl, fs_spec_hash) == '/'
     end
     saveFs(@rootFS, "/", "ROOT") unless root_added
   end
 
-  def do_fstab_line(fstab_line)
+  def do_fstab_line(fstab_line, fs_spec_hash)
     return if fstab_line =~ /^#.*$/ || fstab_line =~ /^\s*$/
     fs_spec, mt_point = fstab_line.split(/\s+/)
     return if fs_spec == "none" || mt_point == "swap"
     return unless (fs = fs_spec_hash[fs_spec])
-    $log.debug&.("LinuxMount: Adding fs_spec: #{fs_spec}, mt_point: #{mt_point}")
+    $log.debug("LinuxMount: Adding fs_spec: #{fs_spec}, mt_point: #{mt_point}") if $log.debug
     addMountPoint(mt_point, fs, fs_spec)
     mt_point
   end
