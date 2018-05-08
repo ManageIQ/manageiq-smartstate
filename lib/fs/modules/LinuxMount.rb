@@ -13,8 +13,7 @@ module LinuxMount
     fs_spec_hash = build_fstab_spec
     build_os_names
     build_mount_point_tree(fs_spec_hash)
-
-  end # def fs_init
+  end
 
   #
   # Given a path to a file, return true if it's a symbolic link.
@@ -36,7 +35,7 @@ module LinuxMount
 
     # Get the file system where the target file resides, and it's local path.
     fs, lp = getFsPathBase(File.join(exp_dir, f))
-    (fs.fileSymLink?(lp))
+    fs.fileSymLink?(lp)
   end
 
   #
@@ -63,7 +62,7 @@ module LinuxMount
     sp = getSymLink(fs, lp)
     # Construct and return the full path to the link target.
     return(sp) if sp[0, 1] == '/'
-    (normalizePath(File.join(exp_dir, sp)))
+    normalizePath(File.join(exp_dir, sp))
   end
 
   private
@@ -75,18 +74,17 @@ module LinuxMount
     # this to assign the proper device names to visible
     # devices.
     #
-    sdLetter  = 'a'
-    ideMap    = {"ide0:0" => "a", "ide0:1" => "b", "ide1:0" => "c", "ide1:1" => "d"}
+    sdLetter = 'a'
+    ideMap   = {"ide0:0" => "a", "ide0:1" => "b", "ide1:0" => "c", "ide1:1" => "d"}
     @devHash = {}
     @vmConfig.getAllDiskKeys.each do |dk|
       if dk =~ /^ide.*$/
         @devHash[dk] = "/dev/hd" + ideMap[dk]
-        $log.debug "LinuxMount: devHash[#{dk}] = /dev/hd#{ideMap[dk]}" if $log.debug?
       elsif dk =~ /^scsi.*$/
         @devHash[dk] = "/dev/sd" + sdLetter
-        $log.debug "LinuxMount: devHash[#{dk}] = /dev/sd#{sdLetter}" if $log.debug?
         sdLetter.succ!
       end
+      $log.debug "LinuxMount: devHash[#{dk}] = #{@devhash[dk]}" if $log.debug?
     end
   end
 
@@ -94,7 +92,6 @@ module LinuxMount
     #
     # Build hash for fstab fs_spec look up.
     #
-    fs_spec_hash = {}
     @volumes.each do |v|
       $log.debug "LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})" if $log.debug?
       if v == @rootVolume
@@ -107,7 +104,7 @@ module LinuxMount
       end
       @allFileSystems << fs
 
-      fs_spec_hash.merge!(add_fstab_fs_entries(fs))
+      fs_spec_hash = add_fstab_fs_entries(fs)
 
       #
       # Logical volumes can be identified by their lv specific
@@ -141,26 +138,26 @@ module LinuxMount
     #
     fs_spec_fs_hash = {}
     unless fs.volName.empty?
-      $log.debug "LinuxMount: adding \"LABEL=#{fs.volName}\" to fs_spec_hash" if $log.debug?
-      fs_spec_fs_hash["LABEL=#{fs.volName}"]  = fs
-      $log.debug "LinuxMount: adding \"LABEL=/#{fs.volName}\" to fs_spec_hash" if $log.debug?
+      $log.debug("LinuxMount: adding \"LABEL=#{fs.volName}\" to fs_spec_hash") if $log.debug?
+      fs_spec_fs_hash["LABEL=#{fs.volName}"] = fs
+      $log.debug("LinuxMount: adding \"LABEL=/#{fs.volName}\" to fs_spec_hash") if $log.debug?
       fs_spec_fs_hash["LABEL=/#{fs.volName}"] = fs
     end
     unless fs.fsId.empty?
-      $log.debug "LinuxMount: adding \"UUID=#{fs.fsId}\" to fs_spec_hash" if $log.debug?
+      $log.debug("LinuxMount: adding \"UUID=#{fs.fsId}\" to fs_spec_hash") if $log.debug?
       fs_spec_fs_hash["UUID=#{fs.fsId}"] = fs
     end
     fs_spec_fs_hash
   end
 
   def add_fstab_logical_entries(fs, v)
-    lvName = v.dInfo.lvObj.lvName
-    vgName = v.dInfo.lvObj.vgObj.vgName
+    lv_name = v.dInfo.lvObj.lvName
+    vg_name = v.dInfo.lvObj.vgObj.vgName
     fs_spec_logical_hash = {}
-    fs_spec_logical_hash["/dev/#{vgName}/#{lvName}"] = fs
-    fs_spec_logical_hash["/dev/mapper/#{vgName.gsub('-','--')}-#{lvName.gsub('-','--')}"] = fs
+    fs_spec_logical_hash["/dev/#{vg_name}/#{lv_name}"] = fs
+    fs_spec_logical_hash["/dev/mapper/#{vg_name.gsub('-', '--')}-#{lv_name.gsub('-', '--')}"] = fs
     fs_spec_logical_hash["UUID=#{v.dInfo.lvObj.lvId}"] = fs
-    $log.debug "LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume" if $log.debug?
+    $log.debug("LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume") if $log.debug?
     fs_spec_logical_hash
   end
 
@@ -171,8 +168,8 @@ module LinuxMount
     # TODO: support physical volume UUIDs
     #
     fs_spec_physical_hash = {}
-    $log.debug "LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}" if $log.debug?
-    if v.partNum == 0
+    $log.debug("LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}") if $log.debug?
+    if v.partNum.zero?
       fs_spec_physical_hash[@devHash[v.dInfo.hardwareId]] = fs
     else
       fs_spec_physical_hash[@devHash[v.dInfo.hardwareId] + v.partNum.to_s] = fs
@@ -206,7 +203,6 @@ module LinuxMount
       $log.debug "LinuxMount: fstab line: #{fstl}" if $log.debug?
       next if fstl =~ /^#.*$/ || fstl =~ /^\s*$/
       fsSpec, mtPoint = fstl.split(/\s+/)
-      $log.debug "LinuxMount: fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
       next if fsSpec == "none" || mtPoint == "swap"
       next unless (fs = fs_spec_hash[fsSpec])
       $log.debug "LinuxMount: Adding fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
