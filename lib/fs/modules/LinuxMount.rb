@@ -84,7 +84,7 @@ module LinuxMount
         @devHash[dk] = "/dev/sd" + sdLetter
         sdLetter.succ!
       end
-      $log.debug "LinuxMount: devHash[#{dk}] = #{@devhash[dk]}" if $log.debug?
+      $log.debug&.("LinuxMount: devHash[#{dk}] = #{@devhash[dk]}")
     end
   end
 
@@ -93,12 +93,12 @@ module LinuxMount
     # Build hash for fstab fs_spec look up.
     #
     @volumes.each do |v|
-      $log.debug "LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})" if $log.debug?
+      $log.debug&.("LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})")
       if v == @rootVolume
         fs = @rootFS
       else
         unless (fs = MiqFS.getFS(v))
-          $log.debug "LinuxMount: No filesystem on Volume: #{v.dInfo.localDev}, partition = #{v.partNum}" if $log.debug?
+          $log.debug&.("LinuxMount: No filesystem on Volume: #{v.dInfo.localDev}, partition = #{v.partNum}")
           next
         end
       end
@@ -106,27 +106,12 @@ module LinuxMount
 
       fs_spec_hash = add_fstab_fs_entries(fs)
 
-      #
-      # Logical volumes can be identified by their lv specific
-      # entries under /dev.
-      #
       if v.dInfo.lvObj
         fs_spec_hash.merge!(add_fstab_logical_entries(fs, v))
         next
       end
 
       fs_spec_hash.merge!(add_fstab_physical_entry(fs, v))
-      #
-      # Physical volumes are identified by entries under
-      # /dev based on OS hardware scan.
-      # TODO: support physical volume UUIDs
-      #
-      $log.debug "LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}" if $log.debug?
-      if v.partNum == 0
-        fs_spec_hash[@devHash[v.dInfo.hardwareId]] = fs
-      else
-        fs_spec_hash[@devHash[v.dInfo.hardwareId] + v.partNum.to_s] = fs
-      end
     end
     fs_spec_hash
   end
@@ -138,26 +123,30 @@ module LinuxMount
     #
     fs_spec_fs_hash = {}
     unless fs.volName.empty?
-      $log.debug("LinuxMount: adding \"LABEL=#{fs.volName}\" to fs_spec_hash") if $log.debug?
+      $log.debug&.("LinuxMount: adding \"LABEL=#{fs.volName}\" to fs_spec_hash")
       fs_spec_fs_hash["LABEL=#{fs.volName}"] = fs
-      $log.debug("LinuxMount: adding \"LABEL=/#{fs.volName}\" to fs_spec_hash") if $log.debug?
+      $log.debug&.("LinuxMount: adding \"LABEL=/#{fs.volName}\" to fs_spec_hash")
       fs_spec_fs_hash["LABEL=/#{fs.volName}"] = fs
     end
     unless fs.fsId.empty?
-      $log.debug("LinuxMount: adding \"UUID=#{fs.fsId}\" to fs_spec_hash") if $log.debug?
+      $log.debug&.("LinuxMount: adding \"UUID=#{fs.fsId}\" to fs_spec_hash")
       fs_spec_fs_hash["UUID=#{fs.fsId}"] = fs
     end
     fs_spec_fs_hash
   end
 
   def add_fstab_logical_entries(fs, v)
+    #
+    # Logical volumes can be identified by their lv specific
+    # entries under /dev.
+    #
     lv_name = v.dInfo.lvObj.lvName
     vg_name = v.dInfo.lvObj.vgObj.vgName
     fs_spec_logical_hash = {}
     fs_spec_logical_hash["/dev/#{vg_name}/#{lv_name}"] = fs
     fs_spec_logical_hash["/dev/mapper/#{vg_name.gsub('-', '--')}-#{lv_name.gsub('-', '--')}"] = fs
     fs_spec_logical_hash["UUID=#{v.dInfo.lvObj.lvId}"] = fs
-    $log.debug("LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume") if $log.debug?
+    $log.debug&.("LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume")
     fs_spec_logical_hash
   end
 
@@ -168,7 +157,7 @@ module LinuxMount
     # TODO: support physical volume UUIDs
     #
     fs_spec_physical_hash = {}
-    $log.debug("LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}") if $log.debug?
+    $log.debug&.("LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}")
     if v.partNum.zero?
       fs_spec_physical_hash[@devHash[v.dInfo.hardwareId]] = fs
     else
@@ -198,14 +187,14 @@ module LinuxMount
     #
     root_added = false
     @mountPoints = {}
-    $log.debug "LinuxMount: processing #{FSTAB_FILE_NAME}" if $log.debug?
+    $log.debug&.("LinuxMount: processing #{FSTAB_FILE_NAME}")
     @rootFS.fileOpen(FSTAB_FILE_NAME, &:read).each_line do |fstl|
-      $log.debug "LinuxMount: fstab line: #{fstl}" if $log.debug?
+      $log.debug&.("LinuxMount: fstab line: #{fstl}")
       next if fstl =~ /^#.*$/ || fstl =~ /^\s*$/
       fsSpec, mtPoint = fstl.split(/\s+/)
       next if fsSpec == "none" || mtPoint == "swap"
       next unless (fs = fs_spec_hash[fsSpec])
-      $log.debug "LinuxMount: Adding fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
+      $log.debug&.("LinuxMount: Adding fsSpec: #{fsSpec}, mtPoint: #{mtPoint}")
       addMountPoint(mtPoint, fs, fsSpec)
       root_added = true if mtPoint == '/'
     end
