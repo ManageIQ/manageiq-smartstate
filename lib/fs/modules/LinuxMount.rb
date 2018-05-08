@@ -80,11 +80,12 @@ module LinuxMount
     @vmConfig.getAllDiskKeys.each do |dk|
       if dk =~ /^ide.*$/
         @devHash[dk] = "/dev/hd" + ideMap[dk]
+        $log.debug&.("LinuxMount: devHash[#{dk}] = /dev/hd#{ideMap[dk]}")
       elsif dk =~ /^scsi.*$/
         @devHash[dk] = "/dev/sd" + sdLetter
         sdLetter.succ!
+        $log.debug&.("LinuxMount: devHash[#{dk}] = /dev/sd#{sdLetter}")
       end
-      $log.debug&.("LinuxMount: devHash[#{dk}] = #{@devhash[dk]}")
     end
   end
 
@@ -190,15 +191,19 @@ module LinuxMount
     $log.debug&.("LinuxMount: processing #{FSTAB_FILE_NAME}")
     @rootFS.fileOpen(FSTAB_FILE_NAME, &:read).each_line do |fstl|
       $log.debug&.("LinuxMount: fstab line: #{fstl}")
-      next if fstl =~ /^#.*$/ || fstl =~ /^\s*$/
-      fsSpec, mtPoint = fstl.split(/\s+/)
-      next if fsSpec == "none" || mtPoint == "swap"
-      next unless (fs = fs_spec_hash[fsSpec])
-      $log.debug&.("LinuxMount: Adding fsSpec: #{fsSpec}, mtPoint: #{mtPoint}")
-      addMountPoint(mtPoint, fs, fsSpec)
-      root_added = true if mtPoint == '/'
+      root_added = true if do_fstab_line(fstl, fs_spec_hash) == '/'
     end
     saveFs(@rootFS, "/", "ROOT") unless root_added
+  end
+
+  def do_fstab_line(fstab_line)
+    return if fstab_line =~ /^#.*$/ || fstab_line =~ /^\s*$/
+    fs_spec, mt_point = fstab_line.split(/\s+/)
+    return if fs_spec == "none" || mt_point == "swap"
+    return unless (fs = fs_spec_hash[fs_spec])
+    $log.debug&.("LinuxMount: Adding fs_spec: #{fs_spec}, mt_point: #{mt_point}")
+    addMountPoint(mt_point, fs, fs_spec)
+    mt_point
   end
 
   def normalizePath(p)
