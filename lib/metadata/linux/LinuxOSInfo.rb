@@ -14,78 +14,95 @@ module MiqLinux
     def initialize(fs)
       @fs = fs
       @os_type = "Linux"
-      @distribution = nil
-      @description  = nil
+      @distribution = ""
+      @description  = ""
       @hostname     = nil
 
-      release_file = nil
-      version_file = nil
       @networks = []
       @os = {}
 
+      process_distributions
+      process_networking(fs)
+
+      @os = {:type => "linux", :machine_name => @hostname, :product_type => @os_type, :distribution => @distribution, :product_name => @description}
+      $log.info "VM OS information: [#{@os.inspect}]" if $log
+    end
+
+    def process_distributions
+      release_file = nil
+      version_file = nil
+      saved_distribution = nil
       DISTRIBUTIONS.each do |dist|
         release_file = File.join(ETC, dist + "-release")
 
         if fs.fileExists?(release_file)
-          @distribution = dist
-          break
+          saved_distribution = @distribution = dist
         end
       end
 
       if @distribution == "lsb"
-        lsbd = ""
-        fs.fileOpen(release_file) { |fo| lsbd = fo.read }
-
-        dist = desc = chrome_dist = chrome_desc = nil
-        lsbd.each_line do |lsbl|
-          dist = $1 if lsbl =~ /^\s*DISTRIB_ID\s*=\s*(.*)$/
-          desc = $1 if lsbl =~ /^\s*DISTRIB_DESCRIPTION\s*=\s*(.*)$/
-          chrome_dist = $1 if lsbl =~ /^\s*CHROMEOS_RELEASE_NAME\s*=\s*(.*)$/
-          chrome_desc = $1 if lsbl =~ /^\s*CHROMEOS_RELEASE_DESCRIPTION\s*=\s*(.*)$/
-        end
-        chrome_desc = "#{chrome_dist} #{chrome_desc}" if chrome_dist && chrome_desc
-
-        @distribution = chrome_dist || dist if chrome_dist || dist
-        @description  = chrome_desc || desc if chrome_desc || desc
-      elsif @distribution
+        process_lsb_distribution(fs)
+      elsif !@distribution.empty?
         fs.fileOpen(release_file) { |fo| @description = fo.read.to_s.chomp }
         @distribution = "CentOS" if @distribution == "redhat" && @description.include?("CentOS")
         @distribution = "rPath"  if @distribution == "distro"
-      end
-
-      unless @distribution
-        DISTRIBUTIONS.each do |distrib|
-          version_file = File.join(ETC, distrib + "-release")
-
-          if fs.fileExists?(version_file)
-            @distribution = distrib
-            break
-          end
-        end
-        fs.fileOpen(version_file) { |fo| @description = fo.read.chomp } if @distribution
-      end
-
-      unless @distribution
-        read_file(fs, File.join(ETC, "issue")) do |line|
-          case line
-          when /\s*Hercules\s*/
-            @distribution = "hercules"
-            @description =  "Hercules"
-            break
-          end
+      elsif @distribution.empty?
+        if (@distribution = saved_distribution).empty?
+          process_hercules_distribution(fs)
+        else
+          fs.fileOpen(version_file) { |fo| @description = fo.read.chomp }
         end
       end
 
-      @distribution = "" unless @distribution
-      @description  = "" unless @description
       @description  = @description.gsub(/^"/, "").gsub(/"$/, "")
+    end
+
+    def process_lsb_distribution(fs)
+      lsbd = ""
+      fs.fileOpen(release_file) { |fo| lsbd = fo.read }
+
+      dist = desc = chrome_dist = chrome_desc = nil
+      lsbd.each_line do |lsbl|
+        dist = $1 if lsbl =~ /^\s*DISTRIB_ID\s*=\s*(.*)$/
+        desc = $1 if lsbl =~ /^\s*DISTRIB_DESCRIPTION\s*=\s*(.*)$/
+        chrome_dist = $1 if lsbl =~ /^\s*CHROMEOS_RELEASE_NAME\s*=\s*(.*)$/
+        chrome_desc = $1 if lsbl =~ /^\s*CHROMEOS_RELEASE_DESCRIPTION\s*=\s*(.*)$/
+      end
+      chrome_desc = "#{chrome_dist} #{chrome_desc}" if chrome_dist && chrome_desc
+
+      @distribution = chrome_dist || dist if chrome_dist || dist
+      @description  = chrome_desc || desc if chrome_desc || desc
+    end
+
+    def process_hercules_distribution(fs)
+      read_file(fs, File.join(ETC, "issue")) do |line|
+        case line
+        when /\s*Hercules\s*/
+          @distribution = "hercules"
+          @description =  "Hercules"
+          break
+        end
+      end
+    end
+
+    def process_networking(fs)
+
+      hostname_from_network_files(fs)
+      network_attrs = {:hostname => @hostname}
+      # Collect network settings
+      case @distribution.downcase
+      when "ubuntu" then networking_debian(fs, network_attrs)
+      when "redhat", "fedora" then networking_redhat(fs, network_attrs)
+      when "hercules" then networking_hercules(fs, network_attrs)
+      end
+    end
+
+    def hostname_from_network_files(fs)
 
       ["/etc/hostname", "/etc/HOSTNAME"].each do |hnf|
         next unless fs.fileExists?(hnf)
         fs.fileOpen(hnf) { |fo| @hostname = fo.read.chomp } if fs.fileExists?(hnf)
       end
-
-      # return if @hostname
 
       ["/etc/conf.d/hostname", "/etc/sysconfig/network"].each do |hnf|
         next unless fs.fileExists?(hnf)
@@ -101,17 +118,6 @@ module MiqLinux
       end
 
       @hostname = "" unless @hostname
-
-      network_attrs = {:hostname => @hostname}
-      # Collect network settings
-      case @distribution.downcase
-      when "ubuntu" then networking_debian(fs, network_attrs)
-      when "redhat", "fedora" then networking_redhat(fs, network_attrs)
-      when "hercules" then networking_hercules(fs, network_attrs)
-      end
-
-      @os = {:type => "linux", :machine_name => @hostname, :product_type => @os_type, :distribution => @distribution, :product_name => @description}
-      $log.info "VM OS information: [#{@os.inspect}]" if $log
     end
 
     def networking_debian(fs, attrs)
@@ -126,21 +132,7 @@ module MiqLinux
         end
       end
 
-      if attrs[:dhcp_enabled] == 1
-        read_file(fs, File.join(DEBIANDHCLIENTFILE, "dhclient.eth0.leases")) do |line|
-          case line
-          when /^\s*fixed-address\s*(.*)\;$/                 then attrs[:ipaddress] = $1
-          when /^\s*option subnet-mask\s*(.*)\;$/            then attrs[:subnet_mask] = $1
-          when /^\s*option routers\s*(.*)\;$/                then attrs[:default_gateway] = $1
-          when /^\s*option domain-name-servers\s*(.*)\;$/    then attrs[:dns_server] = $1
-          when /^\s*option dhcp-server-identifier\s*(.*)\;$/ then attrs[:dhcp_server] = $1
-          when /^\s*option domain-name\s*"*(.*)"\;$/         then attrs[:domain] = $1
-          when /^\s*expire\s*[0-9]?\s*(.*)\;$/               then attrs[:lease_expires] = $1
-          when /^\s*renew\s*[0-9]?\s*(.*)\;$/                then attrs[:lease_obtained] = $1
-          end
-        end
-      end
-
+      attrs.merge!(parse_dh_client_file(DEBIANDHCLIENTFILE)) if attrs[:dhcp_enabled] == 1
       fix_attr_values(attrs)
       @networks << attrs
     end
@@ -161,21 +153,7 @@ module MiqLinux
         end
       end
 
-      if attrs[:dhcp_enabled] == 1
-        read_file(fs, File.join(DHCLIENTFILE, "dhclient-eth0.leases")) do |line|
-          case line
-          when /^\s*fixed-address\s*(.*)\;$/                 then attrs[:ipaddress] = $1
-          when /^\s*option subnet-mask\s*(.*)\;$/            then attrs[:subnet_mask] = $1
-          when /^\s*option routers\s*(.*)\;$/                then attrs[:default_gateway] = $1
-          when /^\s*option domain-name-servers\s*(.*)\;$/    then attrs[:dns_server] = $1
-          when /^\s*option dhcp-server-identifier\s*(.*)\;$/ then attrs[:dhcp_server] = $1
-          when /^\s*option domain-name\s*"*(.*)"\;$/         then attrs[:domain] = $1
-          when /^\s*expire\s*[0-9]?\s*(.*)\;$/               then attrs[:lease_expires] = $1
-          when /^\s*renew\s*[0-9]?\s*(.*)\;$/                then attrs[:lease_obtained] = $1
-          end
-        end
-      end
-
+      attrs.merge!(parse_dh_client_file(DHCLIENTFILE)) if attrs[:dhcp_enabled] == 1
       fix_attr_values(attrs)
       @networks << attrs
     end
@@ -232,6 +210,24 @@ module MiqLinux
       end
 
       attrs[:dns_server].gsub!(/(,)/) { (' ') } unless attrs[:dns_server].nil?
+    end
+    private
+
+    def parse_dh_client_file(client_file)
+      attribs = {}
+      read_file(fs, File.join(client_file, "dhclient-eth0.leases")) do |line|
+        case line
+        when /^\s*fixed-address\s*(.*)\;$/                 then attribs[:ipaddress] = $1
+        when /^\s*option subnet-mask\s*(.*)\;$/            then attribs[:subnet_mask] = $1
+        when /^\s*option routers\s*(.*)\;$/                then attribs[:default_gateway] = $1
+        when /^\s*option domain-name-servers\s*(.*)\;$/    then attribs[:dns_server] = $1
+        when /^\s*option dhcp-server-identifier\s*(.*)\;$/ then attribs[:dhcp_server] = $1
+        when /^\s*option domain-name\s*"*(.*)"\;$/         then attribs[:domain] = $1
+        when /^\s*expire\s*[0-9]?\s*(.*)\;$/               then attribs[:lease_expires] = $1
+        when /^\s*renew\s*[0-9]?\s*(.*)\;$/                then attribs[:lease_obtained] = $1
+        end
+      end
+      attribs
     end
   end # class OSInfo
 end # module MiqLinux
