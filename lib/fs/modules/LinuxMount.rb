@@ -9,116 +9,11 @@ module LinuxMount
     @rootFS = MiqFS.getFS(@rootVolume)
     raise "LinuxMount: could not mount root volume" unless @rootFS
 
-    #
-    # Assign device letters to all ide and scsi devices,
-    # even if they're not visible volumes. We need to do
-    # this to assign the proper device names to visible
-    # devices.
-    #
-    sdLetter  = 'a'
-    ideMap    = {"ide0:0" => "a", "ide0:1" => "b", "ide1:0" => "c", "ide1:1" => "d"}
-    @devHash = {}
-    @vmConfig.getAllDiskKeys.each do |dk|
-      if dk =~ /^ide.*$/
-        @devHash[dk] = "/dev/hd" + ideMap[dk]
-        $log.debug "LinuxMount: devHash[#{dk}] = /dev/hd#{ideMap[dk]}" if $log.debug?
-      elsif dk =~ /^scsi.*$/
-        @devHash[dk] = "/dev/sd" + sdLetter
-        $log.debug "LinuxMount: devHash[#{dk}] = /dev/sd#{sdLetter}" if $log.debug?
-        sdLetter.succ!
-      end
-    end
-
-    #
-    # Build hash for fstab fs_spec look up.
-    #
-    fsSpecHash = {}
-    @volumes.each do |v|
-      $log.debug "LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})" if $log.debug?
-      if v == @rootVolume
-        fs = @rootFS
-      else
-        unless (fs = MiqFS.getFS(v))
-          $log.debug "LinuxMount: No filesystem on Volume: #{v.dInfo.localDev}, partition = #{v.partNum}" if $log.debug?
-          next
-        end
-      end
-      @allFileSystems << fs
-
-      #
-      # Specific file systems can be identified by fs UUID
-      # or file system volume label.
-      #
-      unless fs.volName.empty?
-        $log.debug "LinuxMount: adding \"LABEL=#{fs.volName}\" to fsSpecHash" if $log.debug?
-        fsSpecHash["LABEL=#{fs.volName}"]  = fs
-        $log.debug "LinuxMount: adding \"LABEL=/#{fs.volName}\" to fsSpecHash" if $log.debug?
-        fsSpecHash["LABEL=/#{fs.volName}"] = fs
-      end
-      unless fs.fsId.empty?
-        $log.debug "LinuxMount: adding \"UUID=#{fs.fsId}\" to fsSpecHash" if $log.debug?
-        fsSpecHash["UUID=#{fs.fsId}"] = fs
-      end
-
-      #
-      # Logical volumes can be identified by their lv specific
-      # entries under /dev.
-      #
-      if v.dInfo.lvObj
-        lvName = v.dInfo.lvObj.lvName
-        vgName = v.dInfo.lvObj.vgObj.vgName
-        fsSpecHash["/dev/#{vgName}/#{lvName}"] = fs
-        fsSpecHash["/dev/mapper/#{vgName.gsub('-','--')}-#{lvName.gsub('-','--')}"] = fs
-        fsSpecHash["UUID=#{v.dInfo.lvObj.lvId}"] = fs
-        $log.debug "LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume" if $log.debug?
-        next
-      end
-
-      #
-      # Physical volumes are identified by entries under
-      # /dev based on OS hardware scan.
-      # TODO: support physical volume UUIDs
-      #
-      $log.debug "LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}" if $log.debug?
-      if v.partNum == 0
-        fsSpecHash[@devHash[v.dInfo.hardwareId]] = fs
-      else
-        fsSpecHash[@devHash[v.dInfo.hardwareId] + v.partNum.to_s] = fs
-      end
-    end
-
-    #
-    # Assign OS-specific names to all physical volumes.
-    #
-    @osNames = {}
-    @volMgr.allPhysicalVolumes.each do |v|
-      if $log.debug?
-        $log.debug "LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}"
-        $log.debug "LinuxMount: v.partNum.to_s = #{v.partNum}"
-        $log.debug "LinuxMount: @devHash[v.dInfo.hardwareId] = #{@devHash[v.dInfo.hardwareId]}"
-      end
-      @osNames[v.dInfo.hardwareId + ':' + v.partNum.to_s] = @devHash[v.dInfo.hardwareId] + v.partNum.to_s
-    end
-
-    #
-    # Build a tree of file systems and their associated mont points.
-    #
-    root_added = false
-    @mountPoints = {}
-    $log.debug "LinuxMount: processing #{FSTAB_FILE_NAME}" if $log.debug?
-    @rootFS.fileOpen(FSTAB_FILE_NAME, &:read).each_line do |fstl|
-      $log.debug "LinuxMount: fstab line: #{fstl}" if $log.debug?
-      next if fstl =~ /^#.*$/ || fstl =~ /^\s*$/
-      fsSpec, mtPoint = fstl.split(/\s+/)
-      $log.debug "LinuxMount: fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
-      next if fsSpec == "none" || mtPoint == "swap"
-      next unless (fs = fsSpecHash[fsSpec])
-      $log.debug "LinuxMount: Adding fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
-      addMountPoint(mtPoint, fs, fsSpec)
-      root_added = true if mtPoint == '/'
-    end
-    saveFs(@rootFS, "/", "ROOT") unless root_added
-  end # def fs_init
+    assign_device_letters
+    fs_spec_hash = build_fstab_spec
+    build_os_names
+    build_mount_point_tree(fs_spec_hash)
+  end
 
   #
   # Given a path to a file, return true if it's a symbolic link.
@@ -140,7 +35,7 @@ module LinuxMount
 
     # Get the file system where the target file resides, and it's local path.
     fs, lp = getFsPathBase(File.join(exp_dir, f))
-    (fs.fileSymLink?(lp))
+    fs.fileSymLink?(lp)
   end
 
   #
@@ -167,10 +62,149 @@ module LinuxMount
     sp = getSymLink(fs, lp)
     # Construct and return the full path to the link target.
     return(sp) if sp[0, 1] == '/'
-    (normalizePath(File.join(exp_dir, sp)))
+    normalizePath(File.join(exp_dir, sp))
   end
 
   private
+
+  def assign_device_letters
+    #
+    # Assign device letters to all ide and scsi devices,
+    # even if they're not visible volumes. We need to do
+    # this to assign the proper device names to visible
+    # devices.
+    #
+    sdLetter = 'a'
+    ideMap   = {"ide0:0" => "a", "ide0:1" => "b", "ide1:0" => "c", "ide1:1" => "d"}
+    @devHash = {}
+    @vmConfig.getAllDiskKeys.each do |dk|
+      if dk =~ /^ide.*$/
+        @devHash[dk] = "/dev/hd" + ideMap[dk]
+      elsif dk =~ /^scsi.*$/
+        @devHash[dk] = "/dev/sd" + sdLetter
+        sdLetter.succ!
+      end
+      $log.debug("LinuxMount: devHash[#{dk}] = #{devHash[dk]}") if $log.debug
+    end
+  end
+
+  def build_fstab_spec
+    #
+    # Build hash for fstab fs_spec look up.
+    #
+    fs_spec_hash = {}
+    @volumes.each do |v|
+      $log.debug("LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})") if $log.debug
+      if v == @rootVolume
+        fs = @rootFS
+      else 
+        (fs = MiqFS.getFS(v)) || next
+      end
+      @allFileSystems << fs
+
+      fs_spec_hash.merge!(add_fstab_entries(fs, v))
+    end
+    fs_spec_hash
+  end
+
+  def add_fstab_entries(fs, v)
+    fs_spec_hash = add_fstab_fs_entries(fs)
+
+    if v.dInfo.lvObj
+      fs_spec_hash.merge!(add_fstab_logical_entries(fs, v))
+    else
+      fs_spec_hash.merge!(add_fstab_physical_entry(fs, v))
+    end
+    fs_spec_hash
+  end
+
+  def add_fstab_fs_entries(fs)
+    #
+    # Specific file systems can be identified by fs UUID
+    # or file system volume label.
+    #
+    fs_spec_fs_hash = {}
+    unless fs.volName.empty?
+      $log.debug("LinuxMount: adding \"LABEL=#{fs.volName}\" & \"LABEL=/#{fs.volName}\" to hash") if $log.debug
+      fs_spec_fs_hash["LABEL=#{fs.volName}"]  = fs
+      fs_spec_fs_hash["LABEL=/#{fs.volName}"] = fs
+    end
+    unless fs.fsId.empty?
+      $log.debug("LinuxMount: adding \"UUID=#{fs.fsId}\" to fs_spec_hash") if $log.debug
+      fs_spec_fs_hash["UUID=#{fs.fsId}"] = fs
+    end
+    fs_spec_fs_hash
+  end
+
+  def add_fstab_logical_entries(fs, v)
+    #
+    # Logical volumes can be identified by their lv specific
+    # entries under /dev.
+    #
+    lv_name = v.dInfo.lvObj.lvName
+    vg_name = v.dInfo.lvObj.vgObj.vgName
+    fs_spec_logical_hash = {}
+    fs_spec_logical_hash["/dev/#{vg_name}/#{lv_name}"] = fs
+    fs_spec_logical_hash["/dev/mapper/#{vg_name.gsub('-', '--')}-#{lv_name.gsub('-', '--')}"] = fs
+    fs_spec_logical_hash["UUID=#{v.dInfo.lvObj.lvId}"] = fs
+    $log.debug("LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume") if $log.debug
+    fs_spec_logical_hash
+  end
+
+  def add_fstab_physical_entry(fs, v)
+    #
+    # Physical volumes are identified by entries under
+    # /dev based on OS hardware scan.
+    # TODO: support physical volume UUIDs
+    #
+    fs_spec_physical_hash = {}
+    $log.debug("LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}") if $log.debug
+    if v.partNum.zero?
+      fs_spec_physical_hash[@devHash[v.dInfo.hardwareId]] = fs
+    else
+      fs_spec_physical_hash[@devHash[v.dInfo.hardwareId] + v.partNum.to_s] = fs
+    end
+    fs_spec_physical_hash
+  end
+
+  def build_os_names
+    #
+    # Assign OS-specific names to all physical volumes.
+    #
+    @osNames = {}
+    @volMgr.allPhysicalVolumes.each do |v|
+      if $log.debug?
+        $log.debug "LinuxMount: v.dInfo.hardwareId = #{v.dInfo.hardwareId}"
+        $log.debug "LinuxMount: v.partNum.to_s = #{v.partNum}"
+        $log.debug "LinuxMount: @devHash[v.dInfo.hardwareId] = #{@devHash[v.dInfo.hardwareId]}"
+      end
+      @osNames[v.dInfo.hardwareId + ':' + v.partNum.to_s] = @devHash[v.dInfo.hardwareId] + v.partNum.to_s
+    end
+  end
+
+  def build_mount_point_tree(fs_spec_hash)
+    #
+    # Build a tree of file systems and their associated mont points.
+    #
+    root_added = false
+    @mountPoints = {}
+    $log.debug("LinuxMount: processing #{FSTAB_FILE_NAME}") if $log.debug
+    @rootFS.fileOpen(FSTAB_FILE_NAME, &:read).each_line do |fstl|
+      $log.debug("LinuxMount: fstab line: #{fstl}") if $log.debug
+      root_added = true if do_fstab_line(fstl, fs_spec_hash) == '/'
+    end
+    saveFs(@rootFS, "/", "ROOT") unless root_added
+  end
+
+  def do_fstab_line(fstab_line, fs_spec_hash)
+    return if fstab_line =~ /^#.*$/ || fstab_line =~ /^\s*$/
+    fs_spec, mt_point = fstab_line.split(/\s+/)
+    return if fs_spec == "none" || mt_point == "swap"
+    return unless (fs = fs_spec_hash[fs_spec])
+    $log.debug("LinuxMount: Adding fs_spec: #{fs_spec}, mt_point: #{mt_point}") if $log.debug
+    addMountPoint(mt_point, fs, fs_spec)
+    mt_point
+  end
 
   def normalizePath(p)
     # When running on windows, File.expand_path will add a drive letter.
@@ -221,7 +255,7 @@ module LinuxMount
       localPath = normalizePath(path)
     end
 
-    p = getFsPathBase(expandLinks(localPath))
+    getFsPathBase(expandLinks(localPath))
     # getFsPathBase(path)
   end
 
