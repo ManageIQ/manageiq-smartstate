@@ -80,11 +80,12 @@ module LinuxMount
     @vmConfig.getAllDiskKeys.each do |dk|
       if dk =~ /^ide.*$/
         @devHash[dk] = "/dev/hd" + ideMap[dk]
+        $log.debug("LinuxMount: devHash[#{dk}] = /dev/hd#{ideMap[dk]}") if $log.debug
       elsif dk =~ /^scsi.*$/
         @devHash[dk] = "/dev/sd" + sdLetter
         sdLetter.succ!
+        $log.debug("LinuxMount: devHash[#{dk}] = /dev/sd#{sdLetter}") if $log.debug
       end
-      $log.debug("LinuxMount: devHash[#{dk}] = #{devHash[dk]}") if $log.debug
     end
   end
 
@@ -97,22 +98,21 @@ module LinuxMount
       $log.debug("LinuxMount: Volume = #{v.dInfo.localDev} (#{v.dInfo.hardwareId}, partition = #{v.partNum})") if $log.debug
       if v == @rootVolume
         fs = @rootFS
-      else 
-        (fs = MiqFS.getFS(v)) || next
+      else
+        unless (fs = MiqFS.getFS(v))
+          $log.debug("LinuxMount: No filesystem on Volume: #{v.dInfo.localDev}, partition = #{v.partNum}") if $log.debug
+          next
+        end
       end
       @allFileSystems << fs
 
-      fs_spec_hash.merge!(add_fstab_entries(fs, v))
-    end
-    fs_spec_hash
-  end
+      fs_spec_hash = add_fstab_fs_entries(fs)
 
-  def add_fstab_entries(fs, v)
-    fs_spec_hash = add_fstab_fs_entries(fs)
+      if v.dInfo.lvObj
+        fs_spec_hash.merge!(add_fstab_logical_entries(fs, v))
+        next
+      end
 
-    if v.dInfo.lvObj
-      fs_spec_hash.merge!(add_fstab_logical_entries(fs, v))
-    else
       fs_spec_hash.merge!(add_fstab_physical_entry(fs, v))
     end
     fs_spec_hash
@@ -125,8 +125,9 @@ module LinuxMount
     #
     fs_spec_fs_hash = {}
     unless fs.volName.empty?
-      $log.debug("LinuxMount: adding \"LABEL=#{fs.volName}\" & \"LABEL=/#{fs.volName}\" to hash") if $log.debug
-      fs_spec_fs_hash["LABEL=#{fs.volName}"]  = fs
+      $log.debug("LinuxMount: adding \"LABEL=#{fs.volName}\" to fs_spec_hash") if $log.debug
+      fs_spec_fs_hash["LABEL=#{fs.volName}"] = fs
+      $log.debug("LinuxMount: adding \"LABEL=/#{fs.volName}\" to fs_spec_hash") if $log.debug
       fs_spec_fs_hash["LABEL=/#{fs.volName}"] = fs
     end
     unless fs.fsId.empty?
