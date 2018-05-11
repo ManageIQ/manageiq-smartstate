@@ -199,7 +199,7 @@ module LinuxMount
 
   def do_fstab_line(fstab_line, fs_spec_hash)
     return if fstab_line =~ /^#.*$/ || fstab_line =~ /^\s*$/
-    fs_spec, mt_point = fstab_line.strip.split(/\s+/)
+    fs_spec, mt_point = fstab_line.split(/\s+/)
     return if fs_spec == "none" || mt_point == "swap"
     return unless (fs = fs_spec_hash[fs_spec])
     $log.debug("LinuxMount: Adding fs_spec: #{fs_spec}, mt_point: #{mt_point}") if $log.debug
