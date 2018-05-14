@@ -269,7 +269,7 @@ module Ext3
     names.shift
 
     dir = ifs_getDirR(names, miqfs)
-    $log.info "Directory '#{p}' not found" if dir.nil?
+    $log.info("Directory '#{p}' not found") if dir.nil?
     dir
   end
 
