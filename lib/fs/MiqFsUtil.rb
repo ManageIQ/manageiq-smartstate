@@ -208,8 +208,8 @@ class MiqFsUtil
           toFile = File.join(destDir, i)
           makePath(File.dirname(toFile))
 
-          check_encrypt(cs, i, toFile)
-          check_compress(cs, i, toFile)
+          next if check_encrypt(cs, i, toFile)
+          next if check_compress(cs, i, toFile)
           copyFile(i, toFile)
           next
         end
@@ -233,8 +233,8 @@ class MiqFsUtil
           toFile = File.join(destDir, path)
           makePath(File.dirname(toFile))
 
-          check_encrypt(cs, i, toFile)
-          check_compress(cs, i, toFile)
+          next if check_encrypt(cs, i, toFile)
+          next if check_compress(cs, i, toFile)
 
           copyFile(path, toFile)
         end
@@ -294,9 +294,10 @@ class MiqFsUtil
     if cs.encrypt && cs.encrypt.detect { |e| i =~ e }
       if !cs.noencrypt || !cs.noencrypt.detect { |ne| i =~ ne }
         compressFile(i, toFile)
-        next
+        return true
       end
     end
+    false
   end
 
   def check_compress(cs, i, toFile)
@@ -308,9 +309,10 @@ class MiqFsUtil
     if cs.compress && cs.compress.detect { |e| i =~ e }
       if !cs.nocompress || !cs.nocompress.detect { |ne| i =~ ne }
         compressFile(i, toFile)
-        next
+        return true
       end
     end
+    false
   end
 
   def makePath(path)

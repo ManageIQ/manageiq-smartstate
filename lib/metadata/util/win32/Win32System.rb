@@ -163,7 +163,7 @@ module MiqWin32
       # @debug_str = ''
 
       # Force memory cleanup
-      GC.start
+      software_doc = nil; sys_doc = nil; GC.start
 
       regHnd = RemoteRegistry.new(fs, true)
       sam_doc = regHnd.loadHive("sam", [{:key => "SAM/Domains/Account", :depth => 1, :value => ['F']}])

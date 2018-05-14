@@ -91,12 +91,14 @@ module NTFS
       if @indexNodeHeader.hasChildren? && indexAllocations
         indexAllocations.each { |alloc| @indexAllocRuns << [alloc.header, alloc.data_run] }
       end
+      @indexAllocRuns
     end
 
     def bitmap=(bmp)
       if @indexNodeHeader.hasChildren?
         @bitmap = bmp.data.unpack("b#{bmp.length * 8}") unless bmp.nil?
       end
+      @bitmap
     end
 
     # Find a name in this index.
