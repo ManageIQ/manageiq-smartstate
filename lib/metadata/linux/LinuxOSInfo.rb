@@ -16,7 +16,7 @@ module MiqLinux
       @os_type = "Linux"
       @distribution = ""
       @description  = ""
-      @hostname     = nil
+      @hostname     = ""
 
       @networks = []
       @os = {}
@@ -25,12 +25,11 @@ module MiqLinux
       process_networking(fs)
 
       @os = {:type => "linux", :machine_name => @hostname, :product_type => @os_type, :distribution => @distribution, :product_name => @description}
-      $log.info "VM OS information: [#{@os.inspect}]" if $log
+      $log.info("VM OS information: [#{@os.inspect}]") if $log
     end
 
     def process_distributions
       release_file = nil
-      version_file = nil
       saved_distribution = nil
       DISTRIBUTIONS.each do |dist|
         release_file = File.join(ETC, dist + "-release")
@@ -41,37 +40,42 @@ module MiqLinux
       end
 
       if @distribution == "lsb"
-        process_lsb_distribution(fs)
+        process_lsb_distribution(fs, release_file)
       elsif !@distribution.empty?
-        fs.fileOpen(release_file) { |fo| @description = fo.read.to_s.chomp }
-        @distribution = "CentOS" if @distribution == "redhat" && @description.include?("CentOS")
-        @distribution = "rPath"  if @distribution == "distro"
-      elsif @distribution.empty?
-        if (@distribution = saved_distribution).empty?
-          process_hercules_distribution(fs)
-        else
-          fs.fileOpen(version_file) { |fo| @description = fo.read.chomp }
-        end
+        process_redhat_distribution(fs, release_file)
+      elsif (@distribution = saved_distribution).empty?
+        process_hercules_distribution(fs)
+      else
+        fs.fileOpen(release_file) { |fo| @description = fo.read.chomp }
       end
 
       @description  = @description.gsub(/^"/, "").gsub(/"$/, "")
     end
 
-    def process_lsb_distribution(fs)
+    def process_redhat_distribution(fs, release_file)
+      fs.fileOpen(release_file) { |fo| @description = fo.read.to_s.chomp }
+      @distribution = "CentOS" if @distribution == "redhat" && @description.include?("CentOS")
+      @distribution = "rPath"  if @distribution == "distro"
+    end
+
+    def process_lsb_distribution(fs, release_file)
       lsbd = ""
       fs.fileOpen(release_file) { |fo| lsbd = fo.read }
 
       dist = desc = chrome_dist = chrome_desc = nil
       lsbd.each_line do |lsbl|
-        dist = $1 if lsbl =~ /^\s*DISTRIB_ID\s*=\s*(.*)$/
-        desc = $1 if lsbl =~ /^\s*DISTRIB_DESCRIPTION\s*=\s*(.*)$/
-        chrome_dist = $1 if lsbl =~ /^\s*CHROMEOS_RELEASE_NAME\s*=\s*(.*)$/
-        chrome_desc = $1 if lsbl =~ /^\s*CHROMEOS_RELEASE_DESCRIPTION\s*=\s*(.*)$/
+        case lsbl
+        when /^\s*DISTRIB_ID\s*=\s*(.*)$/
+          @distribution = dist = $1
+        when /^\s*DISTRIB_DESCRIPTION\s*=\s*(.*)$/
+          @description = desc = $1
+        when /^\s*CHROMEOS_RELEASE_NAME\s*=\s*(.*)$/
+          @distribution = chrome_dist = $1
+        when /^\s*CHROMEOS_RELEASE_DESCRIPTION\s*=\s*(.*)$/
+          @description = chrome_desc = $1
+        end
       end
-      chrome_desc = "#{chrome_dist} #{chrome_desc}" if chrome_dist && chrome_desc
-
-      @distribution = chrome_dist || dist if chrome_dist || dist
-      @description  = chrome_desc || desc if chrome_desc || desc
+      @description = "#{chrome_dist} #{chrome_desc}" if chrome_dist && chrome_desc
     end
 
     def process_hercules_distribution(fs)
@@ -86,8 +90,7 @@ module MiqLinux
     end
 
     def process_networking(fs)
-
-      hostname_from_network_files(fs)
+      hostname_from_files(fs)
       network_attrs = {:hostname => @hostname}
       # Collect network settings
       case @distribution.downcase
@@ -97,27 +100,34 @@ module MiqLinux
       end
     end
 
-    def hostname_from_network_files(fs)
+    def hostname_from_files(fs)
+      hostname_from_hostname_files(fs)
+      hostname_from_network_files(fs)
+    end
 
+    def hostname_from_hostname_files(fs)
       ["/etc/hostname", "/etc/HOSTNAME"].each do |hnf|
         next unless fs.fileExists?(hnf)
-        fs.fileOpen(hnf) { |fo| @hostname = fo.read.chomp } if fs.fileExists?(hnf)
+        fs.fileOpen(hnf) { |fo| @hostname = fo.read.chomp }
       end
+    end
 
+    def hostname_from_network_files(fs)
       ["/etc/conf.d/hostname", "/etc/sysconfig/network"].each do |hnf|
         next unless fs.fileExists?(hnf)
         next if fs.fileDirectory?(hnf)
-        hnfd = ""
-        fs.fileOpen(hnf) { |fo| hnfd = fo.read }
-        hnfd.each_line do |hnfl|
-          if hnfl =~ /^\s*HOSTNAME\s*=\s*(.*)$/
-            @hostname = $1
-            break
-          end
+        process_network_file(fs, hnf)
+      end
+    end
+
+    def process_network_file(fs, hostname_file)
+      read_file(fs, hostname_file) do |hnfl|
+        case hnfl
+        when /^\s*HOSTNAME\s*=\s*(.*)$/
+          @hostname = $1
+          break
         end
       end
-
-      @hostname = "" unless @hostname
     end
 
     def networking_debian(fs, attrs)
@@ -211,6 +221,7 @@ module MiqLinux
 
       attrs[:dns_server].gsub!(/(,)/) { (' ') } unless attrs[:dns_server].nil?
     end
+
     private
 
     def parse_dh_client_file(client_file)
