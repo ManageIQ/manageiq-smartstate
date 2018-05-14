@@ -142,8 +142,8 @@ module Ext4
 
     # /////////////////////////////////////////////////////////////////////////
     # // initialize
-    attr_reader :numGroups, :fsId, :stream, :numBlocks, :numInodes, :fsId, :volName
-    attr_reader :sectorSize, :blockSize, :groupDescriptorSize
+    attr_reader :numGroups, :fsId, :stream, :numBlocks, :numInodes, :volName
+    attr_reader :sectorSize, :blockSize
 
     @@track_inodes = false
 
@@ -157,11 +157,10 @@ module Ext4
 
       # Grab some quick facts & make sure there's nothing wrong. Tight qualification.
       raise "Ext4::Superblock.initialize: Invalid signature=[#{@sb['signature']}]" if @sb['signature'] != SUPERBLOCK_SIG
-      state = @sb['fs_state']
-      raise "Ext4::Superblock.initialize: Invalid file system state" if state > FSS_END
-      if state != FSS_CLEAN
-        $log.warn("Ext4 file system has errors")        if $log && gotBit?(state, FSS_ERR)
-        $log.warn("Ext4 orphan inodes being recovered") if $log && gotBit?(state, FSS_ORPHAN_REC)
+      raise "Ext4::Superblock.initialize: Invalid file system state" if @sb['fs_state'] > FSS_END
+      if @sb['fs_state'] != FSS_CLEAN
+        $log.warn("Ext4 file system has errors")        if $log && gotBit?(@sb['fs_state'], FSS_ERR)
+        $log.warn("Ext4 orphan inodes being recovered") if $log && gotBit?(@sb['fs_state'], FSS_ORPHAN_REC)
       end
       raise "Ext4::Superblock.initialize: Invalid error handling method=[#{@sb['err_method']}]" if @sb['err_method'] > EHM_PANIC
 
@@ -185,7 +184,6 @@ module Ext4
       @numGroups += 1 if @lastGroupBlocks > 0
       @fsId = UUIDTools::UUID.parse_raw(@sb['fs_id'])
       @volName = @sb['vol_name']
-      @jrnlId = UUIDTools::UUID.parse_raw(@sb['jrnl_id'])
     end
 
     # ////////////////////////////////////////////////////////////////////////////
@@ -293,8 +291,6 @@ module Ext4
         if block == 0
           @block_cache[block] = MemoryBuffer.create(@blockSize)
         else
-          group, offset = blockNumToGroupNum(block)
-          gde = gdt[group]
           # raise "Block #{block} is not allocated" if (not gde.blockAllocBmp[offset] and not ignore_alloc)
 
           address = blockToAddress(block)  # This function will read the block into our cache
@@ -306,49 +302,6 @@ module Ext4
       @block_cache[block]
     end
 
-    def getFeatureStrings
-      out = "Compatible Feature Flags:\n"
-      cff = @sb['compat_flags']
-      out << "  CFF_PREALLOC_DIR_BLKS\n"  if gotBit?(cff, CFF_PREALLOC_DIR_BLKS)
-      out << "  CFF_AFS_SERVER_INODE\n"   if gotBit?(cff, CFF_AFS_SERVER_INODES)
-      out << "  CFF_JOURNAL\n"            if gotBit?(cff, CFF_JOURNAL)
-      out << "  CFF_EXTENDED_ATTRIBS\n"   if gotBit?(cff, CFF_EXTENDED_ATTRIBS)
-      out << "  CFF_BIG_PART\n"           if gotBit?(cff, CFF_BIG_PART)
-      out << "  CFF_HASH_INDEX\n"         if gotBit?(cff, CFF_HASH_INDEX)
-      extra = cff - (cff & CFF_FLAGS)
-      out << "  Extra Flags: 0x%08X\n" % extra if extra != 0
-
-      out << "Incompatible Feature Flags:\n"
-      icf = @sb['incompat_flags']
-      out << "  ICF_COMPRESSION\n"        if gotBit?(icf, ICF_COMPRESSION)
-      out << "  ICF_FILE_TYPE\n"          if gotBit?(icf, ICF_FILE_TYPE)
-      out << "  ICF_RECOVER_FS\n"         if gotBit?(icf, ICF_RECOVER_FS)
-      out << "  ICF_JOURNAL\n"            if gotBit?(icf, ICF_JOURNAL)
-      out << "  ICF_META_BG\n"            if gotBit?(icf, ICF_META_BG)
-      out << "  ICF_EXTENTS\n"            if gotBit?(icf, ICF_EXTENTS)
-      out << "  ICF_64BIT\n"              if gotBit?(icf, ICF_64BIT)
-      out << "  ICF_MMP\n"                if gotBit?(icf, ICF_MMP)
-      out << "  ICF_FLEX_BG\n"            if gotBit?(icf, ICF_FLEX_BG)
-      out << "  ICF_EA_INODE\n"           if gotBit?(icf, ICF_EA_INODE)
-      out << "  ICF_DIRDATA\n"            if gotBit?(icf, ICF_DIRDATA)
-      extra = icf - (icf & ICF_FLAGS)
-      out << "  Extra Flags: 0x%08X\n" % extra if extra != 0
-
-      out << "Read Only Feature Flags:\n"
-      rof = @sb['ro_flags']
-      out << "  ROF_SPARSE\n"             if gotBit?(rof, ROF_SPARSE)
-      out << "  ROF_LARGE_FILES\n"        if gotBit?(rof, ROF_LARGE_FILES)
-      out << "  ROF_BTREES\n"             if gotBit?(rof, ROF_BTREES)
-      out << "  ROF_HUGE_FILE\n"          if gotBit?(rof, ROF_HUGE_FILE)
-      out << "  ROF_GDT_CSUM\n"           if gotBit?(rof, ROF_GDT_CSUM)
-      out << "  ROF_DIR_NLINK\n"          if gotBit?(rof, ROF_DIR_NLINK)
-      out << "  ROF_EXTRA_ISIZE\n"        if gotBit?(rof, ROF_EXTRA_ISIZE)
-      extra = rof - (rof & ROF_FLAGS)
-      out << "  Extra Flags: 0x%08X\n" % extra if extra != 0
-
-      out
-    end
-
     # ////////////////////////////////////////////////////////////////////////////
     # // Utility functions.
 
@@ -357,56 +310,5 @@ module Ext4
     end
 
     # Dump object.
-    def dump
-      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
-      out << "Number of inodes      : #{@sb['num_inodes']}\n"
-      out << "Number of blocks      : #{@sb['num_blocks']}\n"
-      out << "Reserved blocks       : #{@sb['reserved_blocks']}\n"
-      out << "Unallocated blocks    : #{@sb['unallocated_blocks']}\n"
-      out << "Unallocated inodes    : #{@sb['unallocated_inodes']}\n"
-      out << "Block group 0         : #{@sb['block_group_zero']}\n"
-      out << "Block size            : #{@sb['block_size']} (#{@blockSize} bytes)\n"
-      out << "Fragment size         : #{@sb['fragment_size']} (#{fragmentSize} bytes)\n"
-      out << "Blocks per group      : #{@sb['blocks_in_group']} (#{blocksPerGroup} blocks per group)\n"
-      out << "Fragments per group   : #{@sb['fragments_in_group']} (#{fragmentsPerGroup} fragments per group)\n"
-      out << "Inodes per group      : #{@sb['inodes_in_group']} (#{inodesPerGroup} inodes per group)\n"
-      out << "Last mount time       : #{Time.at(@sb['last_mount_time'])}\n"
-      out << "Last write time       : #{Time.at(@sb['last_write_time'])}\n"
-      out << "Current mount count   : #{@sb['mount_count']}\n"
-      out << "Maximum mount count   : #{@sb['max_mount_count']}\n"
-      out << "Signature             : #{@sb['signature']}\n"
-      out << "File system state     : #{@sb['fs_state']}\n"
-      out << "Error hndling methd   : #{@sb['err_method']}\n"
-      out << "Minor version         : #{@sb['ver_minor']}\n"
-      out << "Last consistency check: #{Time.at(@sb['last_check_time'])}\n"
-      out << "Forced check interval : #{@sb['forced_check_int']} sec\n"
-      out << "Creator OS            : #{@sb['creator_os']}\n"
-      out << "Major version         : #{@sb['ver_major']}\n"
-      out << "UID can use res blocks: #{@sb['uid_res_blocks']}\n"
-      out << "GID can use res blocks: #{@sb['gid_res_blocks']}\n"
-      out << "Group descriptor size : #{@sb['group_desc_size']}\n"
-      if isDynamic?
-        out << "First non-res inode   : #{@sb['first_inode']}\n"
-        out << "Size of inode         : #{@sb['inode_size']}\n"
-        out << "Block group of this SB: #{@sb['block_group']}\n"
-        out << "Compatible features   : 0x#{'%08x' % @sb['compat_flags']}\n"
-        out << "Incompatible features : 0x#{'%08x' % @sb['incompat_flags']}\n"
-        out << "Read Only features    : 0x#{'%08x' % @sb['ro_flags']}\n"
-        out << "File system id        : #{@fsId}\n"
-        out << "Volume name           : #{@sb['vol_name']}\n"
-        out << "Last mount path       : #{@sb['last_mnt_path']}\n"
-        out << "Algorithm usage bitmap: 0x#{'%08x' % @sb['algo_use_bmp']}\n"
-        out << "Blocks prealloc files : #{@sb['file_prealloc_blks']}\n"
-        out << "Blocks prealloc dirs  : #{@sb['dir_prealloc_blks']}\n"
-        out << "Journal id            : #{@jrnlId}\n"
-        out << "Journal inode         : #{@sb['jrnl_inode']}\n"
-        out << "Journal device        : #{@sb['jrnl_device']}\n"
-        out << "Orphan inode head     : #{@sb['orphan_head']}\n"
-      end
-      out << "Number of groups      : #{numGroups}\n"
-      out << "Free bytes            : #{freeBytes}\n"
-      out << getFeatureStrings
-      out
-    end
   end
 end # moule Ext4
