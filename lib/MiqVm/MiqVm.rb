@@ -99,22 +99,26 @@ class MiqVm
 
   def init_disk_info(d_info, disk_tag, disk_file)
     if @ost.miqVim
-      d_info.vixDiskInfo            = {}
-      d_info.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(df)
-      @vdlConnection ||=
-        if @ost.miqVimVm
-          @ost.miqVimVm.vdlVcConnection
-        else
-          @ost.miqVim.vdlConnection
-        end
-      $log.debug("init_disk_info: using disk file path: #{d_info.vixDiskInfo[:fileName]}")
-      d_info.vixDiskInfo[:connection] = @vdlConnection
+      vim_disk_info(d_info, disk_file)
     else
       d_info.fileName = disk_file
       disk_format     = @vmConfig.getHash["#{disk_tag}.format"]  # Set by rhevm for iscsi and fcp disks
       d_info.format   = disk_format if disk_format.present?
     end
     common_disk_info(d_info, disk_tag)
+  end
+
+  def vim_disk_info(d_info, disk_file)
+    d_info.vixDiskInfo            = {}
+    d_info.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(disk_file)
+    @vdlConnection ||=
+      if @ost.miqVimVm
+        @ost.miqVimVm.vdlVcConnection
+      else
+        @ost.miqVim.vdlConnection
+      end
+    $log.debug("init_disk_info: using disk file path: #{d_info.vixDiskInfo[:fileName]}")
+    d_info.vixDiskInfo[:connection] = @vdlConnection
   end
 
   def common_disk_info(d_info, disk_tag)
