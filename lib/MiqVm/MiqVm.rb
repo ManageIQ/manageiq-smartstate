@@ -25,39 +25,25 @@ class MiqVm
 
     $log.debug "MiqVm::initialize: @ost.openParent = #{@ost.openParent}" if $log
 
+    get_vmconfig(vmCfg)
+  end # def initialize
+
+  def get_vmconfig(vm_config)
     #
     # If we're passed an MiqVim object, then use VIM to obtain the Vm's
     # configuration through the instantiated server.
-    # If we're passed a snapshot ID, then obtain the configration of the
-    # VM when the snapshot was taken.
     #
-    # TODO: move to MiqVmwareVm
     if (@vim = @ost.miqVim)
       $log.debug "MiqVm::initialize: accessing VM through server: #{@vim.server}" if $log.debug?
-      @vimVm = @vim.getVimVm(vmCfg)
+      @vimVm = @vim.getVimVm(vm_config)
       $log.debug "MiqVm::initialize: setting @ost.miqVimVm = #{@vimVm.class}" if $log.debug?
       @ost.miqVimVm = @vimVm
       @vmConfig = VmConfig.new(@vimVm.getCfg(@ost.snapId))
-    # TODO: move this to MiqRhevmVm.
-    elsif (@rhevm = @ost.miqRhevm)
-      $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
-      $log.debug "MiqVm::initialize: vmCfg = #{vmCfg}"
-      @rhevmVm = @rhevm.get_vm(vmCfg)
-      $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
-      @ost.miqRhevmVm = @rhevmVm
-      @vmConfig = VmConfig.new(getCfg(@ost.snapId))
-      $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
-      $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
-    # TODO: move this to miq_scvmm_vm
-    elsif (@scvmm = @ost.miq_scvmm)
-      $log.debug "MiqVm::initialize: accessing VM through HyperV server" if $log.debug?
-      @vmConfig = VmConfig.new(getCfg(@ost.snapId))
-      $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
     else
       @vimVm = nil
-      @vmConfig = VmConfig.new(vmCfg)
+      @vmConfig = VmConfig.new(vm_config)
     end
-  end # def initialize
+  end
 
   def vmDisks
     @vmDisks ||= begin
@@ -70,63 +56,20 @@ class MiqVm
 
   def openDisks(diskFiles)
     pVolumes = []
-
     $log.debug "openDisks: no disk files supplied." unless diskFiles
-
     #
     # Build a list of the VM's physical volumes.
     #
     diskFiles.each do |dtag, df|
       $log.debug "openDisks: processing disk file (#{dtag}): #{df}"
       dInfo = OpenStruct.new
-
-      if @ost.miqVim
-        dInfo.vixDiskInfo            = {}
-        dInfo.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(df)
-        if @ost.miqVimVm
-          @vdlConnection = @ost.miqVimVm.vdlVcConnection unless @vdlConnection
-        else
-          @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection
-        end
-        $log.debug "openDisks: using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
-        dInfo.vixDiskInfo[:connection]  = @vdlConnection
-      elsif @ost.miq_hyperv
-        init_disk_info(dInfo, df)
-      else
-        dInfo.fileName = df
-        disk_format = @vmConfig.getHash["#{dtag}.format"]  # Set by rhevm for iscsi and fcp disks
-        dInfo.format = disk_format unless disk_format.blank?
-      end
-
-      mode = @vmConfig.getHash["#{dtag}.mode"]
-
-      dInfo.hardwareId = dtag
-      dInfo.baseOnly = @ost.openParent unless mode && mode["independent"]
-      dInfo.rawDisk = @ost.rawDisk
-      $log.debug "MiqVm::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
+      init_disk_info(dInfo, dtag, df)
 
       begin
-        d = applianceVolumeManager && applianceVolumeManager.lvHash[dInfo.fileName] if @rhevm
-        if d
-          $log.debug "MiqVm::openDisks: using applianceVolumeManager for #{dInfo.fileName}" if $log.debug?
-          d.dInfo.fileName = dInfo.fileName
-          d.dInfo.hardwareId = dInfo.hardwareId
-          d.dInfo.baseOnly = dInfo.baseOnly
-          d.dInfo.format = dInfo.format if dInfo.format
-          d.dInfo.applianceVolumeManager = applianceVolumeManager
-          #
-          # Here, we need to probe the disk to determine its data format,
-          # QCOW for example. If the disk format is not flat, push a disk
-          # supporting the format on top of this disk. Then set d to point
-          # to the new top disk.
-          #
-          d = d.pushFormatSupport
-        else
-          d = MiqDisk.getDisk(dInfo)
-          # I am not sure if getting a nil handle back should throw an error or not.
-          # For now I am just skipping to the next disk.  (GMM)
-          next if d.nil?
-        end
+        d = init_disk(dInfo)
+        # I am not sure if getting a nil handle back should throw an error or not.
+        # For now I am just skipping to the next disk.  (GMM)
+        next if d.nil?
       rescue => err
         $log.error "Couldn't open disk file: #{df}"
         $log.error err.to_s
@@ -154,10 +97,41 @@ class MiqVm
     pVolumes
   end # def openDisks
 
+  def init_disk_info(d_info, disk_tag, disk_file)
+    if @ost.miqVim
+      d_info.vixDiskInfo            = {}
+      d_info.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(df)
+      if @ost.miqVimVm
+        @vdlConnection ||= @ost.miqVimVm.vdlVcConnection
+      else
+        @vdlConnection ||= @ost.miqVim.vdlConnection
+      end
+      $log.debug "init_disk_info: using disk file path: #{d_info.vixDiskInfo[:fileName]}"
+      d_info.vixDiskInfo[:connection] = @vdlConnection
+    else
+      d_info.fileName = disk_file
+      disk_format     = @vmConfig.getHash["#{disk_tag}.format"]  # Set by rhevm for iscsi and fcp disks
+      d_info.format   = disk_format unless disk_format.blank?
+    end
+    common_disk_info(d_info, disk_tag)
+  end
+
+  def common_disk_info(d_info, disk_tag)
+    mode              = @vmConfig.getHash["#{disk_tag}.mode"]
+    d_info.hardwareId = disk_tag
+    d_info.baseOnly   = @ost.openParent unless mode && mode["independent"]
+    d_info.rawDisk    = @ost.rawDisk
+    $log.debug "MiqVm::init_disk_info: d_info.baseOnly = #{d_info.baseOnly}"
+  end
+
+  def init_disk(d_info)
+    MiqDisk.getDisk(d_info)
+  end
+
   def rootTrees
     return @rootTrees if @rootTrees
     @rootTrees = MiqMountManager.mountVolumes(volumeManager, @vmConfig, @ost)
-    volumeManager.rootTrees = @rootTrees
+	volumeManager.rootTrees = @rootTrees
     @rootTrees
   end
 

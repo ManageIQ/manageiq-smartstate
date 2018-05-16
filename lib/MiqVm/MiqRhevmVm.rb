@@ -18,10 +18,43 @@ class MiqRhevmVm < MiqVm
     rv
   end
 
+  def get_vmconfig(vm_config)
+    @rhevm = @ost.miqRhevm
+    $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
+    $log.debug "MiqVm::initialize: vmCfg = #{vmCfg}"
+    @rhevmVm = @rhevm.get_vm(vm_config)
+    $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
+    @ost.miqRhevmVm = @rhevmVm
+    #
+    # If we're passed a snapshot ID, then obtain the configuration of the
+    # VM when the snapshot was taken.
+    #
+    @vmConfig = VmConfig.new(getCfg(@ost.snapId))
+    $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
+    $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
+  end
+
   def unmount
     super
   ensure
     unmount_storage
+  end
+
+  def init_disk(d_info)
+    d = applianceVolumeManager.lvHash[d_info.fileName] if applianceVolumeManager
+    $log.debug "MiqVm::openDisks: using applianceVolumeManager for #{dInfo.fileName}" if $log.debug?
+    d.dInfo.fileName               = d_info.fileName
+    d.dInfo.hardwareId             = d_info.hardwareId
+    d.dInfo.baseOnly               = d_info.baseOnly
+    d.dInfo.format                 = d_info.format if d_info.format
+    d.dInfo.applianceVolumeManager = applianceVolumeManager
+    #
+    # Here, we need to probe the disk to determine its data format,
+    # QCOW for example. If the disk format is not flat, push a disk
+    # supporting the format on top of this disk. Then set d to point
+    # to the new top disk.
+    #
+    d.pushFormatSupport
   end
 
   def getCfg(_snap = nil)
