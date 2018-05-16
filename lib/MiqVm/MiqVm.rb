@@ -26,7 +26,7 @@ class MiqVm
     $log.debug "MiqVm::initialize: @ost.openParent = #{@ost.openParent}" if $log
 
     get_vmconfig(vmCfg)
-  end # def initialize
+  end
 
   def get_vmconfig(vm_config)
     #
@@ -101,17 +101,18 @@ class MiqVm
     if @ost.miqVim
       d_info.vixDiskInfo            = {}
       d_info.vixDiskInfo[:fileName] = @ost.miqVim.datastorePath(df)
-      if @ost.miqVimVm
-        @vdlConnection ||= @ost.miqVimVm.vdlVcConnection
-      else
-        @vdlConnection ||= @ost.miqVim.vdlConnection
-      end
-      $log.debug "init_disk_info: using disk file path: #{d_info.vixDiskInfo[:fileName]}"
+      @vdlConnection ||=
+        if @ost.miqVimVm
+          @ost.miqVimVm.vdlVcConnection
+        else
+          @ost.miqVim.vdlConnection
+        end
+      $log.debug("init_disk_info: using disk file path: #{d_info.vixDiskInfo[:fileName]}")
       d_info.vixDiskInfo[:connection] = @vdlConnection
     else
       d_info.fileName = disk_file
       disk_format     = @vmConfig.getHash["#{disk_tag}.format"]  # Set by rhevm for iscsi and fcp disks
-      d_info.format   = disk_format unless disk_format.blank?
+      d_info.format   = disk_format if disk_format.present?
     end
     common_disk_info(d_info, disk_tag)
   end
@@ -121,7 +122,7 @@ class MiqVm
     d_info.hardwareId = disk_tag
     d_info.baseOnly   = @ost.openParent unless mode && mode["independent"]
     d_info.rawDisk    = @ost.rawDisk
-    $log.debug "MiqVm::init_disk_info: d_info.baseOnly = #{d_info.baseOnly}"
+    $log.debug("MiqVm::init_disk_info: d_info.baseOnly = #{d_info.baseOnly}")
   end
 
   def init_disk(d_info)
@@ -131,7 +132,7 @@ class MiqVm
   def rootTrees
     return @rootTrees if @rootTrees
     @rootTrees = MiqMountManager.mountVolumes(volumeManager, @vmConfig, @ost)
-	volumeManager.rootTrees = @rootTrees
+    volumeManager.rootTrees = @rootTrees
     @rootTrees
   end
 

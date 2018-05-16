@@ -20,18 +20,18 @@ class MiqRhevmVm < MiqVm
 
   def get_vmconfig(vm_config)
     @rhevm = @ost.miqRhevm
-    $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
-    $log.debug "MiqVm::initialize: vmCfg = #{vmCfg}"
+    $log.debug("MiqVm::initialize: accessing VM through RHEVM server") if $log.debug?
+    $log.debug("MiqVm::initialize: vmCfg = #{vmCfg}")
     @rhevmVm = @rhevm.get_vm(vm_config)
-    $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
+    $log.debug("MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}") if $log.debug?
     @ost.miqRhevmVm = @rhevmVm
     #
     # If we're passed a snapshot ID, then obtain the configuration of the
     # VM when the snapshot was taken.
     #
     @vmConfig = VmConfig.new(getCfg(@ost.snapId))
-    $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
-    $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
+    $log.debug("MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}")
+    $log.debug("MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}")
   end
 
   def unmount
@@ -42,7 +42,7 @@ class MiqRhevmVm < MiqVm
 
   def init_disk(d_info)
     d = applianceVolumeManager.lvHash[d_info.fileName] if applianceVolumeManager
-    $log.debug "MiqVm::openDisks: using applianceVolumeManager for #{dInfo.fileName}" if $log.debug?
+    $log.debug("MiqVm::openDisks: using applianceVolumeManager for #{dInfo.fileName}") if $log.debug?
     d.dInfo.fileName               = d_info.fileName
     d.dInfo.hardwareId             = d_info.hardwareId
     d.dInfo.baseOnly               = d_info.baseOnly
