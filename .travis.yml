@@ -2,8 +2,8 @@ sudo: false
 cache: bundler
 language: ruby
 rvm:
-  - 2.3.1
-  - 2.4.2
+- 2.4.4
+- 2.3.1
 after_script: bundle exec codeclimate-test-reporter
 notifications:
   webhooks:
