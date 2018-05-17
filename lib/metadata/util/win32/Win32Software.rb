@@ -67,7 +67,6 @@ module MiqWin32
 
       registry_applications(reg_doc)
       registry_patches(reg_doc)
-
     end
 
     #     # Process application images
@@ -116,13 +115,12 @@ module MiqWin32
       reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData", registry_doc.root)
       reg_node&.each_element_with_attribute(:keyname) do |users|
         users.each_element_with_attribute(:keyname) do |components|
-          if components.attributes[:keyname].downcase == "products"
-            components.each_element_with_attribute(:keyname) do |products|
-              attrs = XmlFind.decode(products, PRODUCTS_MAPPING)
-              attrs.merge!(:typename => "win32_product", :product_key => @product_keys[attrs[:name]])
-              clean_up_path(attrs)
-              @applications << attrs
-            end
+          next unless components.attributes[:keyname].downcase == "products"
+          components.each_element_with_attribute(:keyname) do |products|
+            attrs = XmlFind.decode(products, PRODUCTS_MAPPING)
+            attrs[:typename] = "win32_product"; attrs[:product_key] = @product_keys[attrs[:name]]
+            clean_up_path(attrs)
+            @applications << attrs
           end
         end
       end
@@ -137,7 +135,7 @@ module MiqWin32
         reg_node.each_element_with_attribute(:keyname) do |e|
           attrs = XmlFind.decode(e, APP_PATHS_MAPPING)
           next if attrs[:name].nil?
-          attrs.merge!(:typename => "app_path", :product_key => @product_keys[attrs[:name]])
+          attrs[:typename] = "app_path"; attrs[:product_key] = @product_keys[attrs[:name]]
           clean_up_path(attrs)
           @applications << attrs unless isDupApp?(attrs)
         end
@@ -152,12 +150,12 @@ module MiqWin32
           attrs = XmlFind.decode(e, UNINSTALL_MAPPING)
           next if attrs[:name].nil?
           if ["security update", "update"].include?(attrs.delete(:release_type).to_s.downcase)
-            @patch_install_dates[e.attributes[:keyname]] = Time.parse(attrs[:installed_on]) unless attrs[:installed_on].nil?
+            @patch_install_dates[e.attributes[:keyname]] = Time.parse.getlocal(attrs[:installed_on]) unless attrs[:installed_on].nil?
             next
           else
             attrs.delete(:installed_on)
           end
-          attrs.merge!(:typename => "uninstall", :product_key => @product_keys[attrs[:name]])
+          attrs[:typename] = "uninstall"; attrs[:product_key] = @product_keys[attrs[:name]]
           @applications << attrs unless isDupApp?(attrs)
         end
       end
@@ -196,7 +194,7 @@ module MiqWin32
           # If the package identifier starts with KB, use this
           # otherwise grab the ID from the end of the string (if it's long enough)
           hotfix_id = nil
-          if (package[2][0, 2] == 'KB')
+          if package[2][0, 2] == 'KB'
             hotfix_id = package[2]
           elsif package.size >= 4
             hotfix_id = package[3]
@@ -204,7 +202,7 @@ module MiqWin32
             # Unknown package ID pattern, print this out
             str = ''
             e.write(str)
-            $log.warn "Win32Software::initialize - Can't determine patch element's hotfix id: #{str}"
+            $log.warn("Win32Software::initialize - Can't determine patch element's hotfix id: #{str}")
           end
           # don't add this package if the ID is nil
           next if hotfix_id.nil?
@@ -212,10 +210,12 @@ module MiqWin32
           hotfix_id = hotfix_id.split('~')[0]
 
           hotfix[hotfix_id] ||=
-            ( attrs = XmlFind.decode(e, HOTFIX_MAPPING_VISTA)
+          begin
+            attrs = XmlFind.decode(e, HOTFIX_MAPPING_VISTA)
             install_time = wtime2time(attrs[:install_time_high], attrs[:install_time_low])
             @patches << {:name => hotfix_id, :vendor => "Microsoft Corporation", :installed_on => install_time, :installed => 1}
-            true )
+            true
+          end
         end
       end
     end
