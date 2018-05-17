@@ -188,26 +188,8 @@ module MiqWin32
       reg_node&.each_element do |e|
         next if e.attributes.nil? || e.attributes[:keyname].nil?
         if e.attributes[:keyname][0, 8] == 'Package_'
-          # Expected pattern: Package_for_KBxxx_RTM~xxxx
-          # Get the hotfix id (KB #) out of the keyname
-          package = e.attributes[:keyname].split("_")
-          # If the package identifier starts with KB, use this
-          # otherwise grab the ID from the end of the string (if it's long enough)
-          hotfix_id = nil
-          if package[2][0, 2] == 'KB'
-            hotfix_id = package[2]
-          elsif package.size >= 4
-            hotfix_id = package[3]
-          else
-            # Unknown package ID pattern, print this out
-            str = ''
-            e.write(str)
-            $log.warn("Win32Software::initialize - Can't determine patch element's hotfix id: #{str}")
-          end
           # don't add this package if the ID is nil
-          next if hotfix_id.nil?
-
-          hotfix_id = hotfix_id.split('~')[0]
+          next if (hotfix_id = hotfix_id(package, e)).nil?
 
           hotfix[hotfix_id] ||=
           begin
@@ -218,6 +200,26 @@ module MiqWin32
           end
         end
       end
+    end
+
+    def hotfix_id(package, element)
+      # Expected pattern: Package_for_KBxxx_RTM~xxxx
+      # Get the hotfix id (KB #) out of the keyname
+      package = element.attributes[:keyname].split("_")
+      # If the package identifier starts with KB, use this
+      # otherwise grab the ID from the end of the string (if it's long enough)
+      hotfix_id = nil
+      if package[2][0, 2] == 'KB'
+        hotfix_id = package[2]
+      elsif package.size >= 4
+        hotfix_id = package[3]
+      else
+        # Unknown package ID pattern, print this out
+        str = ''
+        element.write(str)
+        $log.warn("Win32Software::initialize - Can't determine patch element's hotfix id: #{str}")
+      end
+      hotfix_id = hotfix_id&.split('~')[0]
     end
 
     def to_xml(doc = nil)
