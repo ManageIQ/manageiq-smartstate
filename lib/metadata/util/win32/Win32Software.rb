@@ -63,6 +63,28 @@ module MiqWin32
       @product_keys = {}
       @patch_install_dates = {}
 
+      reg_doc = initialize_registry_doc(fs)
+
+      registry_applications(reg_doc)
+      registry_patches(reg_doc)
+
+    end
+
+    #     # Process application images
+    #     e.find_each("./descendant::image") { |i| nh[:image_md5] = i.attributes['md5']; validate_image(i, nh)}
+    #
+    #     def self.validate_image(imageNode, nh)
+    #       #logger.warn("MIQ(applications-add_elements): Checking application image [#{nh.inspect}] -- [#{imageNode.to_s}]")
+    #       x = ApplicationImage.find_by_md5(imageNode.attributes['md5'])
+    #       if x
+    #         #logger.warn("MIQ(applications-add_elements): Application image     found [#{imageNode.attributes['md5']}]")
+    #       else
+    #         #logger.warn("MIQ(applications-add_elements): Application image NOT found [#{imageNode.attributes['md5']}]")
+    #         ApplicationImage.create({:md5=>imageNode.attributes['md5'], :name=>nh['name'], :vendor=>nh['vendor'], :version=>nh['version']})
+    #       end
+    #     end
+
+    def initialize_registry_doc(fs)
       regHnd = RemoteRegistry.new(fs, true)
       #     reg_doc = regHnd.loadHive("software", ["Microsoft"])
       reg_doc = regHnd.loadHive('software',
@@ -80,60 +102,75 @@ module MiqWin32
       regHnd.close
 
       @product_keys = collectProductKeys(@digital_product_keys)
+      reg_doc
+    end
 
+    def registry_applications(registry_doc)
       # Get the applications
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData", reg_doc.root)
-      if reg_node
-        reg_node.each_element_with_attribute(:keyname) do |users|
-          users.each_element_with_attribute(:keyname) do |components|
-            if components.attributes[:keyname].downcase == "products"
-              components.each_element_with_attribute(:keyname) do |products|
-                attrs = XmlFind.decode(products, PRODUCTS_MAPPING)
-                attrs.merge!(:typename => "win32_product", :product_key => @product_keys[attrs[:name]])
-                clean_up_path(attrs)
-                @applications << attrs
-              end
+      registry_applications_user_data(registry_doc)
+      registry_applications_app_paths(registry_doc)
+      registry_applications_uninstall(registry_doc)
+    end
+
+    def registry_applications_user_data(registry_doc)
+      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData", registry_doc.root)
+      reg_node&.each_element_with_attribute(:keyname) do |users|
+        users.each_element_with_attribute(:keyname) do |components|
+          if components.attributes[:keyname].downcase == "products"
+            components.each_element_with_attribute(:keyname) do |products|
+              attrs = XmlFind.decode(products, PRODUCTS_MAPPING)
+              attrs.merge!(:typename => "win32_product", :product_key => @product_keys[attrs[:name]])
+              clean_up_path(attrs)
+              @applications << attrs
             end
           end
         end
       end
+    end
 
+    def registry_applications_app_paths(registry_doc)
       ["HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths",
        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths"].each do |reg_path|
-        reg_node = MIQRexml.findRegElement(reg_path, reg_doc.root)
-        if reg_node
-          postProcessApps(reg_node, fs)
-          reg_node.each_element_with_attribute(:keyname) do |e|
-            attrs = XmlFind.decode(e, APP_PATHS_MAPPING)
-            next if attrs[:name].nil?
-            attrs.merge!(:typename => "app_path", :product_key => @product_keys[attrs[:name]])
-            clean_up_path(attrs)
-            @applications << attrs unless isDupApp?(attrs)
-          end
+        reg_node = MIQRexml.findRegElement(reg_path, registry_doc.root)
+        next unless reg_node
+        postProcessApps(reg_node, fs)
+        reg_node.each_element_with_attribute(:keyname) do |e|
+          attrs = XmlFind.decode(e, APP_PATHS_MAPPING)
+          next if attrs[:name].nil?
+          attrs.merge!(:typename => "app_path", :product_key => @product_keys[attrs[:name]])
+          clean_up_path(attrs)
+          @applications << attrs unless isDupApp?(attrs)
         end
       end
+    end
 
+    def registry_applications_uninstall(registry_doc)
       ["HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"].each do |reg_path|
-        reg_node = MIQRexml.findRegElement(reg_path, reg_doc.root)
-        if reg_node
-          reg_node.each_element_with_attribute(:keyname) do |e|
-            attrs = XmlFind.decode(e, UNINSTALL_MAPPING)
-            next if attrs[:name].nil?
-            if ["security update", "update"].include?(attrs.delete(:release_type).to_s.downcase)
-              @patch_install_dates[e.attributes[:keyname]] = Time.parse(attrs[:installed_on]) unless attrs[:installed_on].nil?
-              next
-            else
-              attrs.delete(:installed_on)
-            end
-            attrs.merge!(:typename => "uninstall", :product_key => @product_keys[attrs[:name]])
-            @applications << attrs unless isDupApp?(attrs)
+        reg_node = MIQRexml.findRegElement(reg_path, registry_doc.root)
+        reg_node&.each_element_with_attribute(:keyname) do |e|
+          attrs = XmlFind.decode(e, UNINSTALL_MAPPING)
+          next if attrs[:name].nil?
+          if ["security update", "update"].include?(attrs.delete(:release_type).to_s.downcase)
+            @patch_install_dates[e.attributes[:keyname]] = Time.parse(attrs[:installed_on]) unless attrs[:installed_on].nil?
+            next
+          else
+            attrs.delete(:installed_on)
           end
+          attrs.merge!(:typename => "uninstall", :product_key => @product_keys[attrs[:name]])
+          @applications << attrs unless isDupApp?(attrs)
         end
       end
+    end
 
+    def registry_patches(registry_doc)
       # Get the patches (Win2000, Win2003, WinXP)
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Hotfix", reg_doc.root)
+      registry_patches_hotfixes(registry_doc)
+      registry_patches_packages(registry_doc)
+    end
+
+    def registry_patches_hotfixes(registry_doc)
+      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Hotfix", registry_doc.root)
       reg_node&.each_element_with_attribute(:keyname) do |e|
         attrs = XmlFind.decode(e, HOTFIX_MAPPING)
 
@@ -144,61 +181,44 @@ module MiqWin32
         attrs.merge!(:name => e.attributes[:keyname], :vendor => "Microsoft Corporation", :installed_on => @patch_install_dates[e.attributes[:keyname]]) unless e.attributes.nil? || e.attributes[:keyname].nil?
         @patches << attrs
       end
+    end
 
+    def registry_patches_packages(registry_doc)
       # Get the patches (Vista, Win2008, Windows 7)
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\Packages", reg_doc.root)
-      if reg_node
-        hotfix = {}
-        reg_node.each_element do |e|
-          next if e.attributes.nil? || e.attributes[:keyname].nil?
-          if e.attributes[:keyname][0, 8] == 'Package_'
-            # Expected pattern: Package_for_KBxxx_RTM~xxxx
-            
-            # Get the hotfix id (KB #) out of the keyname
-            package = e.attributes[:keyname].split("_")
-            
-            # If the package identifier starts with KB, use this
-            # otherwise grab the ID from the end of the string (if it's long enough)
-            hotfix_id = nil
-            if (package[2][0, 2] == 'KB')
-              hotfix_id = package[2]
-            elsif package.size >= 4
-              hotfix_id = package[3]
-            else
-              # Unknown package ID pattern, print this out
-              str = ''
-              e.write(str)
-              $log.warn "Win32Software::initialize - Can't determine patch element's hotfix id: #{str}"
-            end
-            # don't add this package if the ID is nil
-            next if hotfix_id.nil?
-            
-            hotfix_id = hotfix_id.split('~')[0]
-
-            unless hotfix.key?(hotfix_id)
-              attrs = XmlFind.decode(e, HOTFIX_MAPPING_VISTA)
-              install_time = wtime2time(attrs[:install_time_high], attrs[:install_time_low])
-              @patches << {:name => hotfix_id, :vendor => "Microsoft Corporation", :installed_on => install_time, :installed => 1}
-              hotfix[hotfix_id] = true
-            end
+      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\Packages", registry_doc.root)
+      hotfix = {}
+      reg_node&.each_element do |e|
+        next if e.attributes.nil? || e.attributes[:keyname].nil?
+        if e.attributes[:keyname][0, 8] == 'Package_'
+          # Expected pattern: Package_for_KBxxx_RTM~xxxx
+          # Get the hotfix id (KB #) out of the keyname
+          package = e.attributes[:keyname].split("_")
+          # If the package identifier starts with KB, use this
+          # otherwise grab the ID from the end of the string (if it's long enough)
+          hotfix_id = nil
+          if (package[2][0, 2] == 'KB')
+            hotfix_id = package[2]
+          elsif package.size >= 4
+            hotfix_id = package[3]
+          else
+            # Unknown package ID pattern, print this out
+            str = ''
+            e.write(str)
+            $log.warn "Win32Software::initialize - Can't determine patch element's hotfix id: #{str}"
           end
+          # don't add this package if the ID is nil
+          next if hotfix_id.nil?
+
+          hotfix_id = hotfix_id.split('~')[0]
+
+          hotfix[hotfix_id] ||=
+            ( attrs = XmlFind.decode(e, HOTFIX_MAPPING_VISTA)
+            install_time = wtime2time(attrs[:install_time_high], attrs[:install_time_low])
+            @patches << {:name => hotfix_id, :vendor => "Microsoft Corporation", :installed_on => install_time, :installed => 1}
+            true )
         end
       end
     end
-
-    #     # Process application images
-    #     e.find_each("./descendant::image") { |i| nh[:image_md5] = i.attributes['md5']; validate_image(i, nh)}
-    #
-    #     def self.validate_image(imageNode, nh)
-    #       #logger.warn("MIQ(applications-add_elements): Checking application image [#{nh.inspect}] -- [#{imageNode.to_s}]")
-    #       x = ApplicationImage.find_by_md5(imageNode.attributes['md5'])
-    #       if x
-    #         #logger.warn("MIQ(applications-add_elements): Application image     found [#{imageNode.attributes['md5']}]")
-    #       else
-    #         #logger.warn("MIQ(applications-add_elements): Application image NOT found [#{imageNode.attributes['md5']}]")
-    #         ApplicationImage.create({:md5=>imageNode.attributes['md5'], :name=>nh['name'], :vendor=>nh['vendor'], :version=>nh['version']})
-    #       end
-    #     end
 
     def to_xml(doc = nil)
       doc = MiqXml.createDoc(nil) unless doc
