@@ -189,20 +189,20 @@ module MiqWin32
         next if e.attributes.nil? || e.attributes[:keyname].nil?
         if e.attributes[:keyname][0, 8] == 'Package_'
           # don't add this package if the ID is nil
-          next if (hotfix_id = hotfix_id(package, e)).nil?
+          next if (hotfix_id = hotfix_id(e)).nil?
 
           hotfix[hotfix_id] ||=
-          begin
-            attrs = XmlFind.decode(e, HOTFIX_MAPPING_VISTA)
-            install_time = wtime2time(attrs[:install_time_high], attrs[:install_time_low])
-            @patches << {:name => hotfix_id, :vendor => "Microsoft Corporation", :installed_on => install_time, :installed => 1}
-            true
-          end
+            begin
+              attrs = XmlFind.decode(e, HOTFIX_MAPPING_VISTA)
+              install_time = wtime2time(attrs[:install_time_high], attrs[:install_time_low])
+              @patches << {:name => hotfix_id, :vendor => "Microsoft Corporation", :installed_on => install_time, :installed => 1}
+              true
+            end
         end
       end
     end
 
-    def hotfix_id(package, element)
+    def hotfix_id(element)
       # Expected pattern: Package_for_KBxxx_RTM~xxxx
       # Get the hotfix id (KB #) out of the keyname
       package = element.attributes[:keyname].split("_")
@@ -219,7 +219,7 @@ module MiqWin32
         element.write(str)
         $log.warn("Win32Software::initialize - Can't determine patch element's hotfix id: #{str}")
       end
-      hotfix_id = hotfix_id&.split('~')[0]
+      hotfix_id.split('~')[0] unless hotfix_id.nil?
     end
 
     def to_xml(doc = nil)
