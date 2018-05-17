@@ -55,6 +55,11 @@ module MiqLinux
     def parse_service(file)
       debug "Parsing service unit: #{file}"
 
+      if @fs.fileSymLink?(file)
+        debug "#{file} is a soft link, skip to parse."
+        return nil
+      end
+
       unit        = @fs.fileBasename(file)
       name        = unit.gsub(".service", "")
       inif        = ini(file)
@@ -91,6 +96,11 @@ module MiqLinux
 
     def parse_target(file)
       debug "Parsing target unit: #{file}"
+
+      if @fs.fileSymLink?(file)
+        debug "#{file} is a soft link, skip to parse."
+        return nil
+      end
 
       unit = @fs.fileBasename(file)
       name = unit.gsub(".target", "")
