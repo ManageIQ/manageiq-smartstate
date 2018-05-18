@@ -98,7 +98,8 @@ module MiqWin32
 
     def registry_applications(registry_doc)
       # Get the applications
-      registry_applications_user_data(registry_doc)
+      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData", registry_doc.root)
+      registry_applications_user_data(reg_node) if reg_node
       ["HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths",
        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths"].each do |reg_path|
         registry_applications_app_paths(registry_doc, reg_path)
@@ -112,16 +113,14 @@ module MiqWin32
       end
     end
 
-    def registry_applications_user_data(registry_doc)
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData", registry_doc.root)
-      reg_node&.each_element_with_attribute(:keyname) do |users|
+    def registry_applications_user_data(reg_node)
+      reg_node.each_element_with_attribute(:keyname) do |users|
         users.each_element_with_attribute(:keyname) do |components|
           next unless components.attributes[:keyname].downcase == "products"
           components.each_element_with_attribute(:keyname) do |products|
             attrs = XmlFind.decode(products, PRODUCTS_MAPPING)
             attrs[:typename] = "win32_product"; attrs[:product_key] = @product_keys[attrs[:name]]
-            clean_up_path(attrs)
-            @applications << attrs
+            @applications << attrs unless isDupApp?(clean_up_path(attrs))
           end
         end
       end
