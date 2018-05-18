@@ -212,24 +212,16 @@ module MiqWin32
 
     def to_xml(doc = nil)
       doc ||= MiqXml.createDoc(nil)
-      applicationsToXml(doc)
-      patchesToXml(doc)
+      element_to_xml(doc, @applications, "applications", "application")
+      element_to_xml(doc, @patches, "patches", "patch")
       doc
     end
 
-    def applicationsToXml(doc = nil)
+    def element_to_xml(doc = nil, software_type, doc_element, node_element)
       doc ||= MiqXml.createDoc(nil)
-      return doc if @applications.empty?
-      node = doc.add_element("applications")
-      @applications.each { |a| node.add_element("application", XmlHelpers.stringify_keys(a)) }
-      doc
-    end
-
-    def patchesToXml(doc = nil)
-      doc ||= MiqXml.createDoc(nil)
-      return doc if @patches.empty?
-      node = doc.add_element("patches")
-      @patches.each { |p| node.add_element("patch", XmlHelpers.stringify_keys(p)) }
+      return doc if software_type.empty?
+      node = doc.add_element(doc_element)
+      software_type.each { |a| node.add_element(node_element, XmlHelpers.stringify_keys(a)) }
       doc
     end
 
