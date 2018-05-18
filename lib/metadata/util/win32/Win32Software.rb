@@ -118,7 +118,7 @@ module MiqWin32
         users.each_element_with_attribute(:keyname) do |components|
           next unless components.attributes[:keyname].downcase == "products"
           components.each_element_with_attribute(:keyname) do |products|
-            add_applications(PRODUCTS_MAPPING, "win32_product")
+            add_applications(PRODUCTS_MAPPING, "win32_product", products)
           end
         end
       end
@@ -128,12 +128,12 @@ module MiqWin32
       return unless (reg_node = MIQRexml.findRegElement(registry_path, registry_doc.root))
       postProcessApps(reg_node, fs)
       reg_node.each_element_with_attribute(:keyname) do |e|
-        add_applications(APP_PATHS_MAPPING, "app_path")
+        add_applications(APP_PATHS_MAPPING, "app_path", e)
       end
     end
 
-    def add_applications(mapping, type_name)
-      return if (attrs = XmlFind.decode(e, mapping))[:name].nil?
+    def add_applications(mapping, type_name, element)
+      return if (attrs = XmlFind.decode(element, mapping))[:name].nil?
       attrs[:typename] = type_name; attrs[:product_key] = @product_keys[attrs[:name]]
       clean_up_path(attrs)
       @applications << attrs unless isDupApp?(attrs)
