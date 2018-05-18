@@ -118,9 +118,7 @@ module MiqWin32
         users.each_element_with_attribute(:keyname) do |components|
           next unless components.attributes[:keyname].downcase == "products"
           components.each_element_with_attribute(:keyname) do |products|
-            attrs = XmlFind.decode(products, PRODUCTS_MAPPING)
-            attrs[:typename] = "win32_product"; attrs[:product_key] = @product_keys[attrs[:name]]
-            @applications << attrs unless isDupApp?(clean_up_path(attrs))
+            add_applications(PRODUCTS_MAPPING, "win32_product")
           end
         end
       end
@@ -130,11 +128,15 @@ module MiqWin32
       return unless (reg_node = MIQRexml.findRegElement(registry_path, registry_doc.root))
       postProcessApps(reg_node, fs)
       reg_node.each_element_with_attribute(:keyname) do |e|
-        next if (attrs = XmlFind.decode(e, APP_PATHS_MAPPING))[:name].nil?
-        attrs[:typename] = "app_path"; attrs[:product_key] = @product_keys[attrs[:name]]
-        clean_up_path(attrs)
-        @applications << attrs unless isDupApp?(attrs)
+        add_applications(APP_PATHS_MAPPING, "app_path")
       end
+    end
+
+    def add_applications(mapping, type_name)
+      return if (attrs = XmlFind.decode(e, mapping))[:name].nil?
+      attrs[:typename] = type_name; attrs[:product_key] = @product_keys[attrs[:name]]
+      clean_up_path(attrs)
+      @applications << attrs unless isDupApp?(attrs)
     end
 
     def registry_applications_uninstall(element)
@@ -232,6 +234,7 @@ module MiqWin32
     end
 
     def isDupApp?(attrs)
+      clean_up_path(attrs)
       @applications.each do |app|
         return true if app[:name] == attrs[:name]
       end
@@ -317,8 +320,7 @@ module MiqWin32
     def wtime2time(high_time, low_time)
       th = [high_time.to_i].pack('L').unpack('L')[0] << 32
       tl = [low_time.to_i].pack('L').unpack('L')[0]
-      time_int = ((th + tl) - 116444736000000000) / 10000000
-      return nil if time_int < 0
+      return nil if (time_int = ((th + tl) - 116444736000000000) / 10000000) < 0
       Time.at(time_int).getutc rescue nil
     end
   end # Class Software
