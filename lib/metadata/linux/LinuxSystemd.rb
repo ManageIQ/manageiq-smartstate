@@ -55,6 +55,11 @@ module MiqLinux
     def parse_service(file)
       debug "Parsing service unit: #{file}"
 
+      if duplicated_link?(file)
+        debug("#{file} is a soft link, skip to parse.")
+        return nil
+      end
+
       unit        = @fs.fileBasename(file)
       name        = unit.gsub(".service", "")
       inif        = ini(file)
@@ -92,6 +97,11 @@ module MiqLinux
     def parse_target(file)
       debug "Parsing target unit: #{file}"
 
+      if duplicated_link?(file)
+        debug("#{file} is a soft link, skip to parse.")
+        return nil
+      end
+
       unit = @fs.fileBasename(file)
       name = unit.gsub(".target", "")
       inif = ini(file)
@@ -117,6 +127,10 @@ module MiqLinux
       (service[:required_by] + service[:wanted_by]).collect do |tgt|
         {"value" => tgt.gsub(".target", "")}
       end
+    end
+
+    def duplicated_link?(file)
+      existing_dirs.any? { |dir| @fs.getLinkPath(file).start_with?("#{dir}/") } if @fs.fileSymLink?(file)
     end
 
     def debug(msg)
