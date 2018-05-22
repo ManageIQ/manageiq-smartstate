@@ -130,11 +130,7 @@ module MiqLinux
     end
 
     def duplicated_link?(file)
-      existing_dirs.any? do |dir|
-        link_levels = @fs.getLinkPath(file).split('/')
-        levels = dir.split('/')
-        link_levels.take(levels.length).eql?(levels)
-      end if @fs.fileSymLink?(file)
+      existing_dirs.any? { |dir| @fs.getLinkPath(file).start_with?("#{dir}/") } if @fs.fileSymLink?(file)
     end
 
     def debug(msg)
