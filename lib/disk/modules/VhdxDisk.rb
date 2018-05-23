@@ -519,6 +519,7 @@ module VhdxDisk
   def parent_disk(path)
     @parent_ostruct                   = OpenStruct.new
     @parent_ostruct.fileName          = path
+    @parent_ostruct.scvmm             = @scvmm
     @parent_ostruct.driveType         = @scvmm.get_drivetype(path)
     @parent_ostruct.hyperv_connection = @hyperv_connection if @hyperv_connection
     parent                            = MiqDisk.getDisk(@parent_ostruct)
