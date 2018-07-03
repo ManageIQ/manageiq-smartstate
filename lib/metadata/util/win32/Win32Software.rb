@@ -52,12 +52,13 @@ module MiqWin32
     ]
 
     def initialize(_c, fs)
-      @patches = @applications = []
-      @patch_install_dates = @product_keys = {}
+      @patches = []
+      @applications = []
+      @patch_install_dates = {}
+      @product_keys = {}
 
       reg_doc = initialize_registry_doc(fs)
-
-      registry_applications(reg_doc)
+      registry_applications(reg_doc, fs)
       registry_patches(reg_doc)
     end
 
@@ -96,13 +97,13 @@ module MiqWin32
       reg_doc
     end
 
-    def registry_applications(registry_doc)
+    def registry_applications(registry_doc, fs)
       # Get the applications
       reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData", registry_doc.root)
       registry_applications_user_data(reg_node) if reg_node
       ["HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths",
        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths"].each do |reg_path|
-        registry_applications_app_paths(registry_doc, reg_path)
+        registry_applications_app_paths(registry_doc, reg_path, fs)
       end
       ["HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"].each do |reg_path|
@@ -124,7 +125,7 @@ module MiqWin32
       end
     end
 
-    def registry_applications_app_paths(registry_doc, registry_path)
+    def registry_applications_app_paths(registry_doc, registry_path, fs)
       return unless (reg_node = MIQRexml.findRegElement(registry_path, registry_doc.root))
       postProcessApps(reg_node, fs)
       reg_node.each_element_with_attribute(:keyname) do |e|
@@ -179,7 +180,7 @@ module MiqWin32
       return if element.attributes.nil? || element.attributes[:keyname].nil?
       if element.attributes[:keyname][0, 8] == 'Package_'
         # don't add this package if the ID is nil
-        return if (hotfix_id = hotfix_id(e)).nil?
+        return if (hotfix_id = hotfix_id(element)).nil?
 
         hotfix[hotfix_id] ||=
           begin
