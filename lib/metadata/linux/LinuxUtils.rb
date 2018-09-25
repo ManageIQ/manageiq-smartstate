@@ -141,6 +141,27 @@ module MiqLinux
       end.compact
     end
 
+    def self.parse_docker_ps_list(lines)
+      return [] if lines.nil? || lines.empty?
+
+      lines.each_line.map do |line|
+        line = line.chomp
+        parts = line.split(/^(\S+)\s/)
+
+        name, = parts[1]
+
+        {:name              => name,
+         :systemd_load      => 'container',
+         :systemd_active    => parts[2].strip.start_with?('Up')? 'active' : 'failed',
+         :systemd_sub       => parts[2].strip.start_with?('Up')? 'running' : 'failed',
+         :typename          => 'docker_container',
+         :description       => parts[1] + ' ' + parts[2].strip,
+         :enable_run_level  => nil,
+         :disable_run_level => nil,
+         :running           => parts[2].strip.start_with?('Up')}
+      end.compact
+    end
+
     def self.collect_interface(interfaces, interface)
       mac_addr = interface[:mac_address]
       return if mac_addr.blank?
