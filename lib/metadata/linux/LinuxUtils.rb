@@ -117,7 +117,7 @@ module MiqLinux
     end
 
     def self.parse_systemctl_list(lines)
-      return [] if lines.nil? || lines.empty?
+      return [] if lines.blank?
 
       lines.each_line.map do |line|
         line = line.chomp
@@ -138,6 +138,27 @@ module MiqLinux
          :enable_run_level  => nil,
          :disable_run_level => nil,
          :running           => parts[3] == 'running'}
+      end.compact
+    end
+
+    def self.parse_docker_ps_list(lines)
+      return [] if lines.blank?
+
+      lines.each_line.map do |line|
+        line = line.chomp
+        parts = line.split(/^(\S+)\s/)
+
+        name, = parts[1]
+
+        {:name              => name,
+         :systemd_load      => 'container',
+         :systemd_active    => parts[2]&.strip&.start_with?('Up') ? 'active' : 'failed',
+         :systemd_sub       => parts[2]&.strip&.start_with?('Up') ? 'running' : 'failed',
+         :typename          => 'docker_container',
+         :description       => parts[1] + ' ' + parts[2].strip,
+         :enable_run_level  => nil,
+         :disable_run_level => nil,
+         :running           => parts[2]&.strip&.start_with?('Up')}
       end.compact
     end
 
@@ -177,21 +198,79 @@ module MiqLinux
     end
 
     def self.parse_openstack_status(lines)
-      lines.to_s.split("\n").reject{|t| t.include? "="}.group_by{|t| t.gsub(/openstack\-([a-z]+).*/i, '\1')}.map do |title, services|
+      lines = lines.to_s.split("\n").reject { |t| t.include?("=") }.group_by { |t| t.gsub(/openstack\-([a-z]+).*/i, '\1') }
+      lines.map do |title, services|
+        services = services.map { |service_line| service_line.split(/[:\(\)]/).map(&:strip) } # split service line by :, ( and ) and strip white space from results
+
+        services = services.map do |service|
+          {
+            'name'    => service.first,
+            'active'  => service[1] == 'active',
+            'enabled' => service[2] !~ /disabled/
+          }
+        end
+
         {
           'name'     => title.capitalize,
-          'services' => services.map do |service_line|
-            # split service line by :, ( and ) and strip white space from results
-            service_line.split(/[:\(\)]/).map(&:strip)
-          end.map do |service|
-            {
-              'name'    => service.first,
-              'active'  => service[1] == 'active',
-              'enabled' => !(service[2] =~ /disabled/)
-            }
-          end
+          'services' => services
         }
       end
+    end
+
+    def self.parse_openstack_container_status(lines)
+      containers = lines.to_s.split("\n").group_by do |t|
+        if t.include?('_')
+          t.split("_")[0]
+        elsif t.start_with?('openstack')
+          t.split("-")[1]
+        elsif t.include?('-')
+          t.split("-")[0]
+        else
+          t.split(" ")[0]
+        end
+      end
+
+      containers.map do |title, services|
+        services = services.map { |service_line| service_line.split(/^(\S+)\s/) } # split service line by first space and strip white space from results
+
+        services = services.map do |service|
+          {
+            'name'    => service[1],
+            'active'  => service[2].strip.start_with?('Up'),
+            'enabled' => true
+          }
+        end
+
+        {
+          'name'     => title.capitalize,
+          'services' => services
+        }
+      end
+    end
+
+    def self.merge_openstack_services(systemctl_services, containerized_services)
+      # Merge outputs 2 arrays with systemctl and containerized services, example:
+      # systemctl_services = [{"name"=>"Swift", "services"=> [{"name"=>"openstack-swift-proxy", "active"=>true, "enabled"=>true}]
+      # containerized_services = [{"name"=>"Swift", "services"=> [{"name"=>"swift_container_auditor", "active"=>true, "enabled"=>true}]
+      # result is [{"name"=>"Swift", "services"=> [{"name"=>"openstack-swift-proxy", "active"=>true, "enabled"=>true},
+      #                                            {"name"=>"swift_container_auditor", "active"=>true, "enabled"=>true}]
+
+      all_services = systemctl_services + containerized_services
+
+      service_names = all_services.map { |service| service['name'] }.uniq
+
+      service_names.each do |name|
+        merged_service = { "name" => name, "services" => [] }
+        common_services = all_services.select { |service| service['name'] == name }
+
+        common_services.each do |common_service|
+          merged_service["services"].concat(common_service["services"])
+          all_services.delete(common_service)
+        end
+        all_services << merged_service
+      end
+
+      all_services
     end
   end
 end
