@@ -408,7 +408,7 @@ class VmConfig
 
       require 'VMwareWebService/miq_fault_tolerant_vim'
 
-      password_decrypt = MiqPassword.decrypt(ems_host['password'])
+      password_decrypt = ManageIQ::Password.decrypt(ems_host['password'])
       hostVim = MiqFaultTolerantVim.new(:ip => ems_host['host'], :user => ems_host['user'], :pass => password_decrypt, :use_broker => ems_host['use_vim_broker'], :vim_broker_drb_uri => ems_host['vim_broker_drb_uri'])
       $log.info "#{conn_reason}: Connection to [#{ems_display_text}] completed for VM:[#{vmCfgFile}] in [#{Time.now - st}] seconds"
       return hostVim
@@ -425,7 +425,7 @@ class VmConfig
     ems = host_vim_credentials
     return (filename) if ems.nil?
 
-    password_decrypt = MiqPassword.decrypt(ems['password'])
+    password_decrypt = ManageIQ::Password.decrypt(ems['password'])
     $log.debug "resolve_path_names: emsHost = #{ems['host']}, emsUser = #{ems['user']}" if $log
     vi = MiqVimInventory.new(ems['host'], ems['user'], password_decrypt)
     return getDsName(filename, vi)
