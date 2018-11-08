@@ -32,7 +32,7 @@ module VMPlatformMountLinux
     # TODO: passing the user name and password on the command line is BAD.
     #       Change this to use web-services.
     #
-    @cs = MiqPassword::Key.new
+    @cs = ManageIQ::Password::Key.new
     cmd = "#{VCBNAME} -h #{@ems['host']} -u #{@ems['user']} -p #{@cs.decrypt64(@ems['password'])} -s \"Name:#{@vmName}\" | grep \"moref:\""
     #
     # XXX Don't forget to remove this. We're logging the username and password, not good.
