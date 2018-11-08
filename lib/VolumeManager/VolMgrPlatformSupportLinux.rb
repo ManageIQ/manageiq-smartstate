@@ -1,4 +1,4 @@
-require 'manageiq/password'
+require 'util/miq-password'
 require 'VMwareWebService/MiqVim'
 
 module VolMgrPlatformSupportLinux

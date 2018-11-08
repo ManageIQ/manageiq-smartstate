@@ -16,7 +16,7 @@ require 'metadata/ScanProfile/VmScanProfiles'
 require 'VMwareWebService/MiqVim'
 require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
 require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance'
-require 'manageiq/password'
+require 'util/miq-password'
 require 'VMwareWebService/MiqVimBroker'
 
 class MIQExtract

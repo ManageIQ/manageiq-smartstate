@@ -1,4 +1,4 @@
-require 'manageiq/password'
+require 'util/miq-password'
 
 module VMPlatformMountLinux
   VCBNAME     = '/usr/sbin/vcbVmName'
