@@ -137,6 +137,9 @@ class MiqOpenStackInstance
           $log.warn "#{log_prefix}: pointer from instance doesn't match #{snapshot_image_id}"
         end
         $log.info "#{log_prefix}: deleting snapshot image"
+        if (volume_snapshot_id = get_image_metadata_snapshot_id(compute_service.images.get(image_id)))
+          delete_volume_snapshot(volume_snapshot_id)
+        end
         snapshot.destroy
         snapshot_metadata.destroy
       rescue => err
@@ -168,6 +171,26 @@ class MiqOpenStackInstance
 
   def get_image_file(image_id)
     get_image_file_common(image_id)
+  end
+
+  def delete_volume_snapshot(volume_snapshot_id)
+    log_prefix = "MIQ(#{self.class.name}##{__method__}) volume snapshot=[#{volume_snapshot_id}]"
+    volume_snapshot = begin
+      volume_service.snapshots.get(volume_snapshot_id)
+    rescue => err
+      $log.info "#{log_prefix}: (error getting snapshot id) #{err}"
+      $log.debug err.backtrace.join("\n")
+      nil
+    end
+    if volume_snapshot
+      begin
+        $log.info "#{log_prefix}: deleting volume snapshot"
+        volume_snapshot.destroy
+      rescue => err
+        $log.info "#{log_prefix}: #{err}"
+        $log.debug err.backtrace.join("\n")
+      end
+    end
   end
 
   def method_missing(sym, *args)
