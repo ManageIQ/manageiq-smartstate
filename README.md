@@ -1,7 +1,7 @@
 # ManageIQ::Smartstate
 
 [![Gem Version](https://badge.fury.io/rb/manageiq-smartstate.svg)](http://badge.fury.io/rb/manageiq-smartstate)
-[![Build Status](https://travis-ci.org/ManageIQ/manageiq-smartstate.svg)](https://travis-ci.org/ManageIQ/manageiq-smartstate)
+[![Build Status](https://travis-ci.org/ManageIQ/manageiq-smartstate.svg?branch=master)](https://travis-ci.org/ManageIQ/manageiq-smartstate)
 [![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq-smartstate.svg)](https://codeclimate.com/github/ManageIQ/manageiq-smartstate)
 [![Test Coverage](https://codeclimate.com/github/ManageIQ/manageiq-smartstate/badges/coverage.svg)](https://codeclimate.com/github/ManageIQ/manageiq-smartstate/coverage)
 [![Dependency Status](https://gemnasium.com/ManageIQ/manageiq-smartstate.svg)](https://gemnasium.com/ManageIQ/manageiq-smartstate)
