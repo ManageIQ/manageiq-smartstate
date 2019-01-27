@@ -390,7 +390,10 @@ class VmConfig
         creds = $miqHostCfg.ems[$miqHostCfg.emsLocal]
       elsif $miqHostCfg.vimHost
         c = $miqHostCfg.vimHost
-        return nil if c[:username].nil?
+        if c[:username].nil?
+          $log.warn "Host credentials are missing: skipping snapshot information."
+          return nil
+        end
         creds = {'host' => (c[:hostname] || c[:ipaddress]), 'user' => c[:username], 'password' => c[:password], 'use_vim_broker' => c[:use_vim_broker]}
       end
     end
@@ -611,7 +614,12 @@ class VmConfig
       hostVim = nil
       if miqvm.vim.isVirtualCenter?
         hostVim = connect_to_host_vim('snapshot_metadata', miqvm.vmConfigFile)
-        return if hostVim.nil?
+
+        if hostVim.nil?
+          $log.warn "Snapshots information will be skipped due to EMS host missing credentials."
+          return
+        end
+
         vimDs = hostVim.getVimDataStore(ds)
       else
         vimDs = miqvm.vim.getVimDataStore(ds)
