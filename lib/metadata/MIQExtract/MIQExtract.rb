@@ -2,6 +2,7 @@ require 'MiqVm/MiqVm'
 require 'metadata/util/md5deep'
 require 'util/miq-xml'
 require 'ostruct'
+require 'manageiq-password'
 require 'metadata/util/win32/Win32Accounts'
 require 'metadata/util/win32/Win32Software'
 require 'metadata/util/win32/Win32Services'
@@ -16,7 +17,6 @@ require 'metadata/ScanProfile/VmScanProfiles'
 require 'VMwareWebService/MiqVim'
 require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
 require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance'
-require 'util/miq-password'
 require 'VMwareWebService/MiqVimBroker'
 
 class MIQExtract
@@ -36,12 +36,12 @@ class MIQExtract
       @target = filename
       @configFile = filename.respond_to?(:vmConfigFile) ? @target.vmConfigFile : nil
 
-      $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
+      $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{ManageIQ::Password.sanitize_string(ost.scanData.inspect)}]"
     else
       @externalMount = false
       @configFile = filename.gsub(/^"/, "").gsub(/"$/, "")
 
-      $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
+      $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{ManageIQ::Password.sanitize_string(ost.scanData.inspect)}]"
       ost.openParent = true if ost.scanData.fetch_path('snapshot', 'use_existing') == true
       ost.force = false if ost.scanData.fetch_path('snapshot', 'forceFleeceDefault') == false
       ost.snapshotDescription = ost.scanData.fetch_path('snapshot', 'description') if ost.scanData.fetch_path('snapshot', 'description')
