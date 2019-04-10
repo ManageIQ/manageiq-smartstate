@@ -60,7 +60,7 @@ class MD5deep
 
     # First check if we are passed a fully qualifed file name
     if @fs.fileExists?(filename)
-      processFile(startDir, globPattern, @xml.root)
+      isDir?(filename) ? processDirAsFile(startDir, globPattern, @xml.root) : processFile(startDir, globPattern, @xml.root)
     else
       # If the file is not found then process the data as a glob pattern.
       @fs.dirGlob(globPattern) do |f|
@@ -105,6 +105,21 @@ class MD5deep
       end
     else
       @fullDirCount += 1
+    end
+  end
+  
+  def processDirAsFile(path, x, xmlNode)
+    if x != "." && x != ".."
+      currDir = File.join(path, x)
+      begin
+        if isDir?(currDir)
+          xmlFileNode = xmlNode.add_element("file", "name" => x, "fqname" => currDir)
+          statHash = {}
+          statHash.merge!(getDirStats(currDir))
+          xmlFileNode.add_attributes(statHash)
+        end
+      rescue Errno::EACCES, RuntimeError, SystemCallError
+      end
     end
   end
 
@@ -165,6 +180,14 @@ class MD5deep
     # If we are processing a member of the File class, use the File::Stat object to get data
     fh = fh.stat if fh.class == File
     {"size" => fh.size, "atime" => fh.atime.getutc.iso8601, "ctime" => fh.ctime.getutc.iso8601, "mtime" => fh.mtime.getutc.iso8601}
+  end
+  
+  def getDirStats(dir)
+    if @fs
+      {"size" => @fs.fileSize(dir), "atime" => @fs.fileAtime(dir).getutc.iso8601, "ctime" => @fs.fileCtime(dir).getutc.iso8601, "mtime" => @fs.fileMtime(dir).getutc.iso8601}
+    else
+      {"size" => File.size(dir), "atime" => File.stat(dir).atime.getutc.iso8601, "ctime" => File.stat(dir).ctime.getutc.iso8601, "mtime" => File.stat(dir).mtime.getutc.iso8601}
+    end
   end
 
   def calculate_sums(xmlNode)
