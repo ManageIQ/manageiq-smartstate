@@ -304,7 +304,7 @@ module XFS
     
     # For compatibility with other filesystem methods
     def aTime
-      self.access_time
+      access_time
     end
 
     def create_time
@@ -313,7 +313,7 @@ module XFS
     
     # For compatibility with other filesystem methods
     def cTime
-      self.create_time
+      create_time
     end
 
     def modification_time
@@ -322,7 +322,7 @@ module XFS
     
     # For compatibility with other filesystem methods
     def mTime
-      self.modification_time
+      modification_time
     end
 
     def permissions
