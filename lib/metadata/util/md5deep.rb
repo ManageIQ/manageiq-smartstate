@@ -108,14 +108,14 @@ class MD5deep
     end
   end
   
-  def process_dir_as_file(path, x, xmlNode)
+  def process_dir_as_file(path, x, xml_node)
     if x != "." && x != ".."
       curr_dir = File.join(path, x)
       if isDir?(curr_dir)
-        xmlFileNode = xmlNode.add_element("file", "name" => x, "fqname" => curr_dir)
+        xml_file_node = xml_node.add_element("file", "name" => x, "fqname" => curr_dir)
         stat_hash = {}
         stat_hash.merge!(get_dir_stats(curr_dir))
-        xmlFileNode.add_attributes(stat_hash)
+        xml_file_node.add_attributes(stat_hash)
       end
     end
   end
