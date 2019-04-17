@@ -107,7 +107,7 @@ class MD5deep
       @fullDirCount += 1
     end
   end
-  
+
   def process_dir_as_file(path, x, xml_node)
     if x != "." && x != ".."
       curr_dir = File.join(path, x)
@@ -178,7 +178,7 @@ class MD5deep
     fh = fh.stat if fh.class == File
     {"size" => fh.size, "atime" => fh.atime.getutc.iso8601, "ctime" => fh.ctime.getutc.iso8601, "mtime" => fh.mtime.getutc.iso8601}
   end
-  
+
   def get_dir_stats(dir)
     if @fs
       {"size" => @fs.fileSize(dir), "atime" => @fs.fileAtime(dir).getutc.iso8601, "ctime" => @fs.fileCtime(dir).getutc.iso8601, "mtime" => @fs.fileMtime(dir).getutc.iso8601}
