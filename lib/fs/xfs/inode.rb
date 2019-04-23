@@ -302,12 +302,27 @@ module XFS
       @access_time ||= Time.at(@in['atime_secs'])
     end
 
+    # For compatibility with other filesystem methods
+    def aTime
+      access_time
+    end
+
     def create_time
       @create_time ||= Time.at(@in['ctime_secs'])
     end
 
+    # For compatibility with other filesystem methods
+    def cTime
+      create_time
+    end
+
     def modification_time
       @modification_time ||= Time.at(@in['mtime_secs'])
+    end
+
+    # For compatibility with other filesystem methods
+    def mTime
+      modification_time
     end
 
     def permissions
