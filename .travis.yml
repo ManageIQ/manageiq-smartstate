@@ -2,7 +2,7 @@ sudo: false
 cache: bundler
 language: ruby
 rvm:
-- 2.4.5
+- 2.4.6
 - 2.5.3
 after_script: bundle exec codeclimate-test-reporter
 notifications:
