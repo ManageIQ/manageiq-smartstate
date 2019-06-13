@@ -137,8 +137,14 @@ class MiqOpenStackInstance
           $log.warn "#{log_prefix}: pointer from instance doesn't match #{snapshot_image_id}"
         end
         $log.info "#{log_prefix}: deleting snapshot image"
-        if (volume_snapshot_id = get_image_metadata_snapshot_id(compute_service.images.get(image_id)))
-          delete_volume_snapshot(volume_snapshot_id)
+
+        image = compute_service.images.get(image_id)
+        image.metadata.each do |m|
+          next unless m.key == "block_device_mapping"
+          m.value.each do |volume_snapshot|
+            volume_snapshot_id = volume_snapshot["snapshot_id"]
+            delete_volume_snapshot(volume_snapshot_id) if volume_snapshot_id
+          end
         end
         snapshot.destroy
         snapshot_metadata.destroy
