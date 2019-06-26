@@ -515,7 +515,12 @@ class VmConfig
             next if d['capacityInKB'].nil?
             next if (filename = d.fetch_path('backing', 'fileName')).nil?
             disk = vim_disks[filename.to_s] = {}
-            disk[:disk_type] = (d.fetch_path('backing', 'thinProvisioned') == 'true') ? 'thin' : 'thick'
+
+            # check if it's raw disk type, using same logic as in vmware refresher_parser.
+            mode = d.fetch_path('backing', 'compatibilityMode')
+            disk_type = "rdm-#{mode[0...-4]}" if mode
+
+            disk[:disk_type] = mode ? disk_type : ((d.fetch_path('backing', 'thinProvisioned') == 'true') ? 'thin' : 'thick')
             disk[:provision_size] = d['capacityInKB'].to_i * 1024
             disk[:display_name] = d.fetch_path('deviceInfo', 'label').to_s
             disk[:vim_index] = d['key'].to_i
