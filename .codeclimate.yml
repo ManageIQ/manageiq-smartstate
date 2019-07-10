@@ -4,19 +4,17 @@ exclude_paths:
 - "**.xml"
 - "**.yaml"
 - "**.yml"
-- "lib/metadata/linux/test/Packages"
-- "lib/metadata/linux/test/tc_LinuxUtils.rb"
-- "locale/"
-- "spec/"
-- "test/"
-- "tools/"
-- "tmp/"
+- lib/metadata/linux/test/Packages
+- lib/metadata/linux/test/tc_LinuxUtils.rb
+- locale/
+- spec/
+- test/
+- tools/
+- tmp/
 engines:
   brakeman:
-    # very slow :sad_panda:
     enabled: false
   bundler-audit:
-    # requires Gemfile.lock
     enabled: false
   csslint:
     enabled: false
@@ -27,19 +25,18 @@ engines:
         ruby:
           mass_threshold: 25
           count_threshold: 5
-        javascript:
+        javascript: 
   eslint:
     enabled: false
-    channel: "eslint-3"
+    channel: eslint-3
   fixme:
-    # let's enable later
     enabled: false
   markdownlint:
-    # let's enable later
     enabled: false
   rubocop:
     enabled: true
-    config: '.rubocop_cc.yml'
+    config: ".rubocop_cc.yml"
+    channel: rubocop-0-69
 checks:
   method-complexity:
     enabled: true
@@ -47,9 +44,9 @@ checks:
       threshold: 8
 prepare:
   fetch:
-  - url: "https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml"
+  - url: https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml
     path: ".rubocop_base.yml"
-  - url: "https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_cc_base.yml"
+  - url: https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_cc_base.yml
     path: ".rubocop_cc_base.yml"
 ratings:
   paths:
