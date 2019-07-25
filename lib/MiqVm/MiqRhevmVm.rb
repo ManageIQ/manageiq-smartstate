@@ -25,11 +25,11 @@ class MiqRhevmVm < MiqVm
   end
 
   def getCfg(_snap = nil)
-    cfg_props = @rhevmVm.attributes
+    cfg_props = @rhevmVm.as_json.with_indifferent_access
 
     raise MiqException::MiqVimError, "Failed to retrieve configuration information for VM" if cfg_props.nil?
 
-    storage_domains = @rhevm.storagedomains
+    storage_domains = @rhevm.collect_storagedomains
     $log.debug "MiqRhevmVm#getCfg: storage_domains = #{storage_domains.inspect}"
 
     cfg_hash = {}
@@ -39,15 +39,15 @@ class MiqRhevmVm < MiqVm
     cfg_hash['numvcpu']     = cfg_props.fetch_path(:cpu, :sockets)
 
     # Collect disk information
-    @rhevmVm.attributes[:disks] = @rhevmVm.send(:disks, :disk) if @rhevmVm[:disks].nil?
-    @rhevmVm.disks.each_with_index do |disk, idx|
+    disks = @rhevm.collect_vm_disks(@rhevmVm)
+    disks.each_with_index do |disk, idx|
       $log.debug "MiqRhevmVm#getCfg: disk = #{disk.inspect}"
-      storage_domain = disk[:storage_domains].first
+      storage_domain = disk.storage_domains.first
       if storage_domain.nil?
-        $log.info "Disk <#{disk[:name]}> is skipped due to unassigned storage domain"
+        $log.info("Disk <#{disk.name}> is skipped due to unassigned storage domain")
         next
       end
-      storage_id     = storage_domain && storage_domain[:id]
+      storage_id     = storage_domain.id
       storage_obj    = storage_domains_by_id[storage_id]
 
       file_path = file_path_for_storage_type(storage_obj, disk)
@@ -56,13 +56,13 @@ class MiqRhevmVm < MiqVm
       cfg_hash["#{tag}.present"]    = "true"
       cfg_hash["#{tag}.devicetype"] = "disk"
       cfg_hash["#{tag}.filename"]   = file_path.to_s
-      cfg_hash["#{tag}.format"]     = disk[:format]
+      cfg_hash["#{tag}.format"]     = disk.format
     end
     cfg_hash
   end
 
   def file_path_for_storage_type(storage_obj, disk)
-    storage_type = storage_obj && storage_obj.attributes[:storage][:type]
+    storage_type = storage_obj&.storage&.type
 
     # TODO: account for other storage types here.
     case storage_type
@@ -75,38 +75,38 @@ class MiqRhevmVm < MiqVm
   end
 
   def nfs_mount_root
-    @nfs_mount_root ||= @ost.nfs_mount_root || "/mnt/#{@rhevmVm.attributes[:id]}"
+    @nfs_mount_root ||= @ost.nfs_mount_root || "/mnt/#{@rhevmVm.id}"
   end
 
   def fs_file_path(storage_obj, disk)
-    storage_id  = storage_obj.attributes[:id]
-    disk_id     = disk.attributes[:id]
-    image_id    = disk.attributes[:image_id]
+    storage_id  = storage_obj.id
+    disk_id     = disk.id
+    image_id    = disk.image_id
     mount_point = nfs_mounts[storage_id][:mount_point]
 
     ::File.join(mount_point, storage_id, 'images', disk_id, image_id)
   end
 
   def lun_file_path(storage_obj, disk)
-    storage_id = storage_obj.attributes[:id]
-    disk_id    = disk[:image_id].blank? ? disk.attributes[:id] : disk.attributes[:image_id]
+    storage_id = storage_obj.id
+    disk_id    = disk.image_id || disk.id
 
     ::File.join('/dev', storage_id, disk_id)
   end
 
   def storage_domains_by_id
-    @storage_domains_by_id ||= @rhevm.storagedomains.each_with_object({}) { |sd, sdh| sdh[sd.attributes[:id]] = sd }
+    @storage_domains_by_id ||= @rhevm.collect_storagedomains.each_with_object({}) { |sd, sdh| sdh[sd.id] = sd }
   end
 
   #
   # Returns uri and mount points, hashed by storage ID.
   #
   def add_fs_mount(storage_obj)
-    storage_id = storage_obj.attributes[:id]
+    storage_id = storage_obj.id
     return if nfs_mounts[storage_id]
 
     mount_point = ::File.join(nfs_mount_root, nfs_mount_dir(storage_obj))
-    type = storage_obj.attributes[:storage][:type]
+    type = storage_obj.storage.type
     nfs_mounts[storage_id] = {
       :uri         => "#{type}://#{nfs_uri(storage_obj)}",
       :mount_point => mount_point,
@@ -116,8 +116,8 @@ class MiqRhevmVm < MiqVm
   end
 
   def nfs_uri(storage_obj)
-    storage = storage_obj.attributes[:storage]
-    "#{storage[:address]}:#{storage[:path]}"
+    storage = storage_obj.storage
+    "#{storage.address}:#{storage.path}"
   end
 
   def nfs_mounts
