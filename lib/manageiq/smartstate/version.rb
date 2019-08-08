@@ -1,5 +1,5 @@
 module ManageIQ
   module Smartstate
-    VERSION = "0.2.24".freeze
+    VERSION = "0.3.0".freeze
   end
 end
