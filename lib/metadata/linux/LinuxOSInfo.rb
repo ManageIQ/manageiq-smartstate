@@ -9,7 +9,7 @@ module MiqLinux
     DHCLIENTFILE = "/var/lib/dhclient/"
     DEBIANDHCLIENTFILE = "/var/lib/dhcp3/"
     DEBIANIFCFGILE = "/etc/network"
-    DISTRIBUTIONS = ["mandriva", "mandrake", "mandrakelinux", "gentoo", "SuSE", "fedora", "redhat", "knoppix", "debian", "lsb", "distro"]
+    DISTRIBUTIONS = ["mandriva", "mandrake", "mandrakelinux", "gentoo", "SuSE", "fedora", "redhat", "knoppix", "debian", "lsb", "distro", "alpine"]
 
     def initialize(fs)
       @fs = fs
