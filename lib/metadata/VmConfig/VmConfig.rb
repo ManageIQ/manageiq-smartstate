@@ -478,10 +478,15 @@ class VmConfig
           end
         elsif miqvm.rhevm
           # First add the VM's active disk files.
-          miqvm.rhevmVm.disks.each { |disk| @files << rhevm_disk_file_entry(disk) }
+          disks = miqvm.rhevm.collect_vm_disks(miqvm.rhevmVm)
+          disks.each { |disk| @files << rhevm_disk_file_entry(disk) }
           # Then add the files associtaed with inactive snapshots.
-          miqvm.rhevmVm.snapshots.each do |snap|
-            snap.disks.each { |disk| @files << rhevm_disk_file_entry(disk) unless snap[:type] == 'active' }
+          miqvm.rhevm.collect_snapshots(miqvm.rhevmVm).each do |snap|
+            next if snap.snapshot_type == 'active'
+
+            miqvm.rhevm.collect_disks_of_snapshot(snap).each do |disk|
+              @files << rhevm_disk_file_entry(disk)
+            end
           end
         end
       rescue => err
@@ -493,12 +498,10 @@ class VmConfig
   end
 
   def rhevm_disk_file_entry(disk)
-    storage_domain = disk[:storage_domains].first
-    storage_id     = storage_domain && storage_domain[:id]
-    disk_key       = disk[:image_id].blank? ? :id : :image_id
-    fullPath       = storage_id && File.join('/dev', storage_id, disk[disk_key])
-
-    {:path => fullPath, :name => disk[disk_key], :size => disk[:actual_size].to_i}
+    storage_id = disk.storage_domains.first&.id
+    disk_id = disk.image_id || disk.id
+    full_path = storage_id && File.join('/dev', storage_id, disk_id)
+    {:path => full_path, :name => disk_id, :size => disk.actual_size.to_i}
   end
   private :rhevm_disk_file_entry
 
@@ -545,12 +548,12 @@ class VmConfig
             end
           end
         elsif miqvm.rhevmVm
-          miqvm.rhevmVm.disks.each do |disk|
-            storage_domain = disk[:storage_domains].first
-            storage_id = storage_domain && storage_domain[:id]
-            disk_key = disk[:image_id].blank? ? :id : :image_id
-            fullPath = storage_id && File.join('/dev', storage_id, disk[disk_key])
-            d = {:path => fullPath, :name => disk[:name].to_s, :size => disk[:size].to_i}
+          disks = miqvm.rhevm.collect_vm_disks(miqvm.rhevmVm)
+          disks.each do |disk|
+            storage_id = disk.storage_domains.first&.id
+            disk_id = disk.image_id || disk.id
+            full_path = storage_id && File.join('/dev', storage_id, disk_id)
+            d = {:path => full_path, :name => disk.name.to_s, :size => disk.actual_size.to_i}
             @disk_files << d
           end
         end
