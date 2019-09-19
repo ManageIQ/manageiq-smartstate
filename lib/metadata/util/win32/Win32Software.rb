@@ -15,6 +15,7 @@ module MiqWin32
       #     'PackageName', :package_name,
       #     'ProductIcon', :product_icon,
       #     'PackageName', :package_name,
+      'InstallDate', :install_time,
     ]
 
     APP_PATHS_MAPPING = [
@@ -81,7 +82,7 @@ module MiqWin32
       #     reg_doc = regHnd.loadHive("software", ["Microsoft"])
       reg_doc = regHnd.loadHive('software',
                                 [{:key => 'Microsoft/Windows NT/CurrentVersion/Hotfix', :value => ['fix description', 'comments', 'installed', 'service pack', 'valid']},
-                                 {:key => 'Microsoft/Windows/CurrentVersion/Installer/UserData', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'Comments', 'InstallLocation']},
+                                 {:key => 'Microsoft/Windows/CurrentVersion/Installer/UserData', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'Comments', 'InstallLocation', 'InstallDate']},
                                  {:key => 'Microsoft/Windows/CurrentVersion/Uninstall', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'FileDescription', 'ReleaseType', 'InstallDate']},
                                  {:key => 'Wow6432Node/Microsoft/Windows/CurrentVersion/Uninstall', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'FileDescription', 'ReleaseType', 'InstallDate']},
                                  {:key => 'Microsoft/Windows/CurrentVersion/App Paths', :value => ['(Default)', 'FileDescription', 'CompanyName', 'ProductVersion', 'FileDescription', 'ProductName', 'lang', 'path']},
@@ -137,6 +138,7 @@ module MiqWin32
       return if (attrs = XmlFind.decode(element, mapping))[:name].nil?
       attrs[:typename] = type_name; attrs[:product_key] = @product_keys[attrs[:name]]
       clean_up_path(attrs)
+      convert_times(attrs)
       @applications << attrs unless isDupApp?(attrs)
     end
 
@@ -242,6 +244,12 @@ module MiqWin32
       end
     end
 
+    def convert_times(attrs)
+      [:install_time].each do |i|
+        attrs[i] = attrs[i].to_time if attrs[i]
+      end
+    end
+
     def self.DecodeProductKey(product_key)
       return if product_key.blank? || product_key.length < 67
       y = []; product_key.split(",")[52..67].each { |b| y << b.hex }
@@ -316,5 +324,6 @@ module MiqWin32
       return nil if (time_int = ((th + tl) - 116444736000000000) / 10000000) < 0
       Time.at(time_int).getutc rescue nil
     end
+
   end # Class Software
 end # Module MiqWin32
