@@ -105,7 +105,7 @@ class MiqRpmPackages
   private
 
   def time_tag?(tag)
-    tag == "installtime" || tag == "buildtime"
+    ['installtime', 'buildtime'].include?(tag)
   end
 
   def convert(tag, val)
