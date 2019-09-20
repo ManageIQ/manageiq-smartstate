@@ -324,6 +324,5 @@ module MiqWin32
       return nil if (time_int = ((th + tl) - 116444736000000000) / 10000000) < 0
       Time.at(time_int).getutc rescue nil
     end
-
   end # Class Software
 end # Module MiqWin32
