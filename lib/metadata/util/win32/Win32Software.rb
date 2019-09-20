@@ -246,7 +246,7 @@ module MiqWin32
 
     def convert_times(attrs)
       [:install_time].each do |i|
-        attrs[i] = attrs[i].to_time if attrs[i]
+        attrs[i] = attrs[i].in_time_zone if attrs[i]
       end
     end
 
