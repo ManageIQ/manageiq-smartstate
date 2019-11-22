@@ -63,22 +63,28 @@ module MiqOpenStackCommon
     }
     volume = volume_service.volumes.new(volume_options)
     volume.save
-    begin
-      while volume.status != 'available'
-        sleep(10)
-        volume = volume_service.volumes.get(volume.id)
-      end
-      response = volume_service.action(volume.id, 'os-volume_upload_image' => {
-                                         :image_name => "Temp Image from #{snapshot.name}",
-                                         :disk_format => disk_format})
-      image_id = response.body["os-volume_upload_image"]["image_id"]
-      while image_service.images.get(image_id).status.downcase != 'active'
-        sleep(10)
-      end
-      return image_service.images.get(image_id)
-    ensure
-      volume.destroy
+
+    while volume.status != 'available'
+      sleep(10)
+      volume = volume_service.volumes.get(volume.id)
     end
+
+    response = volume_service.action(volume.id, 'os-volume_upload_image' => {
+                                       :image_name => "Temp Image from #{snapshot.name}",
+                                       :disk_format => disk_format})
+    image_id = response.body["os-volume_upload_image"]["image_id"]
+
+    while image_service.images.get(image_id).status.downcase != 'active'
+      sleep(10)
+    end
+
+    $log.debug "#{log_prefix}: Deleting temp volume #{volume.name} in #{volume.status} status"
+    volume.destroy
+
+    return image_service.images.get(image_id)
+  rescue => ex
+    $log.error "#{log_prefix}: Create image from Snapshot step raised error"
+    $log.error ex
   end
   
   def get_image_file_glance_v2(image_id)
