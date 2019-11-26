@@ -22,9 +22,11 @@ class MiqRpmPackages
   RELEASE     = 1002
   SUMMARY     = 1004
   DESCRIPTION = 1005
+  BUILDTIME   = 1006
   INSTALLTIME = 1008
   VENDOR      = 1011
   GROUP       = 1016
+  URL         = 1020
   ARCH        = 1022
   REQUIRES    = 1049
 
@@ -34,9 +36,11 @@ class MiqRpmPackages
     1002 => "release",
     1004 => "summary",
     1005 => "description",
+    1006 => "buildtime",
     1008 => "installtime",
     1011 => "vendor",
     1016 => "category",  # group
+    1020 => "url",
     1022 => "arch",
     1049 => "depends",   # requires
   }
@@ -101,7 +105,7 @@ class MiqRpmPackages
   private
 
   def time_tag?(tag)
-    tag == "installtime"
+    ['installtime', 'buildtime'].include?(tag)
   end
 
   def convert(tag, val)
@@ -148,6 +152,7 @@ if __FILE__ == $0
   rpmPkgs.each do |pkg|
     puts "Package: #{pkg.name}"
     puts "\tInstall Time: #{pkg.installtime}"
+    puts "\tBuild Time: #{pkg.buildtime}"
     puts "\tVersion: #{pkg.version}"
     puts "\tRelease: #{pkg.release}"
     puts "\tSummary: #{pkg.summary}"
@@ -155,6 +160,7 @@ if __FILE__ == $0
     puts "\tArchitecture: #{pkg.arch}"
     puts "\tCategory: #{pkg.category}"
     puts "\tDescription: #{pkg.description}"
+    puts "\tURL: #{pkg.url}"
     puts "\tDepends: #{pkg.depends}"
   end
 end
