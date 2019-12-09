@@ -175,7 +175,7 @@ module MiqLinux
       pkgs = doc.add_element 'applications'
       @packages.each do |p|
         next unless p.installed
-        pkgs.add_element('application', {"name" => p.name, "version" => p.version, "description" => p.description, "typename" => p.category, "arch" => p.arch, "release" => p.release, "install_time" => p.installtime, "build_time" => p.buildtime, "url" => p.url})
+        pkgs.add_element('application', {"name" => p.name, "version" => p.version, "description" => p.description, "typename" => p.category, "arch" => p.arch, "release" => p.release, "install_time" => p.installtime})
         # "status" => p.status, "depends" => p.depends
       end
       doc
