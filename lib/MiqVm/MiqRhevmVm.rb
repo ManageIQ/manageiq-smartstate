@@ -129,8 +129,8 @@ class MiqRhevmVm < MiqVm
   end
 
   def mount_storage
-    require 'util/mount/miq_nfs_session'
-    require 'util/mount/miq_glusterfs_session'
+    require 'mount/miq_nfs_session'
+    require 'mount/miq_glusterfs_session'
     log_header = "MIQ(MiqRhevmVm.mount_storage)"
     $log.info "#{log_header} called"
 
