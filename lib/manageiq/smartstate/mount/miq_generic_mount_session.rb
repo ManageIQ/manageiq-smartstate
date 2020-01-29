@@ -14,6 +14,8 @@ class MiqGenericMountSession < MiqFileStorage::Interface
   require 'util/mount/miq_smb_session'
   require 'util/mount/miq_glusterfs_session'
 
+  class NoSuchFileOrDirectory < RuntimeError; end
+
   attr_accessor :settings, :mnt_point, :logger
 
   def initialize(log_settings)
@@ -144,7 +146,7 @@ class MiqGenericMountSession < MiqFileStorage::Interface
     rescue => err
       if err.kind_of?(RuntimeError) && err.message =~ /No such file or directory/
         msg = "No such file or directory when connecting to host: [#{@host}] share: [#{@mount_path}]"
-        raise MiqException::MiqLogFileNoSuchFileOrDirectory, msg
+        raise NoSuchFileOrDirectory, msg
       end
       msg = "Connecting to host: [#{@host}], share: [#{@mount_path}] encountered error: [#{err.class.name}] [#{err.message}]"
       logger.error("#{log_header} #{msg}...#{err.backtrace.join("\n")}")
@@ -355,7 +357,7 @@ class MiqGenericMountSession < MiqFileStorage::Interface
       logger.info("#{log_header} Deleting [#{relpath}] on [#{log_uri}]...")
       FileUtils.rm_rf(relpath)
       logger.info("#{log_header} Deleting [#{relpath}] on [#{log_uri}]...complete")
-    rescue MiqException::MiqLogFileNoSuchFileOrDirectory => err
+    rescue NoSuchFileOrDirectory => err
       logger.warn("#{log_header} No such file or directory to delete: [#{log_uri}]")
     rescue => err
       msg = "Deleting [#{relpath}] on [#{log_uri}], failed due to err '#{err.message}'"
