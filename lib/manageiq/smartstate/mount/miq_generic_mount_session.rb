@@ -141,10 +141,6 @@ class MiqGenericMountSession < MiqFileStorage::Interface
       raise "Connect: Cannot communicate with: #{@host} - verify the URI host value and your DNS settings" unless self.pingable?
 
       mount_share
-    rescue MiqException::MiqLogFileMountPointMissing => err
-      logger.warn("#{log_header} Connecting to host: [#{@host}], share: [#{@mount_path}] encountered error: [#{err.class.name}] [#{err.message}]...retrying after disconnect")
-      disconnect
-      retry
     rescue => err
       if err.kind_of?(RuntimeError) && err.message =~ /No such file or directory/
         msg = "No such file or directory when connecting to host: [#{@host}] share: [#{@mount_path}]"
