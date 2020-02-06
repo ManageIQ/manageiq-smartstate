@@ -15,6 +15,7 @@ module MiqWin32
       #     'PackageName', :package_name,
       #     'ProductIcon', :product_icon,
       #     'PackageName', :package_name,
+      'InstallDate', :install_time,
     ]
 
     APP_PATHS_MAPPING = [
@@ -81,7 +82,7 @@ module MiqWin32
       #     reg_doc = regHnd.loadHive("software", ["Microsoft"])
       reg_doc = regHnd.loadHive('software',
                                 [{:key => 'Microsoft/Windows NT/CurrentVersion/Hotfix', :value => ['fix description', 'comments', 'installed', 'service pack', 'valid']},
-                                 {:key => 'Microsoft/Windows/CurrentVersion/Installer/UserData', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'Comments', 'InstallLocation']},
+                                 {:key => 'Microsoft/Windows/CurrentVersion/Installer/UserData', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'Comments', 'InstallLocation', 'InstallDate']},
                                  {:key => 'Microsoft/Windows/CurrentVersion/Uninstall', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'FileDescription', 'ReleaseType', 'InstallDate']},
                                  {:key => 'Wow6432Node/Microsoft/Windows/CurrentVersion/Uninstall', :value => ['DisplayName', 'Publisher', 'DisplayVersion', 'FileDescription', 'ReleaseType', 'InstallDate']},
                                  {:key => 'Microsoft/Windows/CurrentVersion/App Paths', :value => ['(Default)', 'FileDescription', 'CompanyName', 'ProductVersion', 'FileDescription', 'ProductName', 'lang', 'path']},
@@ -137,6 +138,7 @@ module MiqWin32
       return if (attrs = XmlFind.decode(element, mapping))[:name].nil?
       attrs[:typename] = type_name; attrs[:product_key] = @product_keys[attrs[:name]]
       clean_up_path(attrs)
+      convert_times(attrs)
       @applications << attrs unless isDupApp?(attrs)
     end
 
@@ -239,6 +241,12 @@ module MiqWin32
         ["\\", ";"].each { |c| attrs[:path].chomp!(c) }
         attrs[:path].gsub!(/^"/, "")
         attrs[:path].gsub!(/"$/, "")
+      end
+    end
+
+    def convert_times(attrs)
+      [:install_time].each do |i|
+        attrs[i] = attrs[i].in_time_zone if attrs[i]
       end
     end
 
