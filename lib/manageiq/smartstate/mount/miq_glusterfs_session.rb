@@ -24,15 +24,17 @@ class MiqGlusterfsSession < MiqGenericMountSession
     logger.info(
       "#{log_header} Connecting to host: [#{@host}], share: [#{@mount_path}] using mount point: [#{@mnt_point}]...")
 
-    mount = "mount"
-    mount << " -r" if settings_read_only?
+    mount_args      = {:t => "glusterfs"}
+    mount_args[:r]  = nil if settings_read_only?
+    mount_args[nil] = %W[#{@host}:#{@mount_path} #{@mnt_point}]
 
     # Quote the host:exported directory since the directory can have spaces in it
     case Sys::Platform::IMPL
     when :macosx
-      runcmd("sudo #{mount} -t glusterfs -o resvport '#{@host}:#{@mount_path}' #{@mnt_point}")
+      mount_args[:o] = "resvport"
+      runcmd("sudo mount", :params => mount_args)
     when :linux
-      runcmd("#{mount} -t glusterfs '#{@host}:#{@mount_path}' #{@mnt_point}")
+      runcmd("mount", :params => mount_args)
     else
       raise "platform not supported"
     end

@@ -18,11 +18,20 @@ describe MiqGenericMountSession do
   end
 
   it ".runcmd will retry with sudo if needed" do
-    cmd = "mount X Y"
-    expect(described_class).to receive(:`).once.with("#{cmd} 2>&1")
-    expect(described_class).to receive(:`).with("sudo #{cmd} 2>&1")
-    expect($CHILD_STATUS).to receive(:exitstatus).once.and_return(1)
+    cmd      = "mount"
+    args     = "--foo bar"
+    fake_out = "uh oh"
+    fake_err = "err: not good"
 
-    described_class.runcmd(cmd)
+    cmd_bad_result  = AwesomeSpawn::CommandResult.new("#{cmd} #{args}", fake_out, fake_err, 1)
+    cmd_error       = AwesomeSpawn::CommandResultError.new("mount failed", cmd_bad_result)
+    cmd_good_result = AwesomeSpawn::CommandResult.new("sudo #{cmd} #{args}", "", "", 0)
+
+    spawn_args      = { :foo => :bar, :combined_output => true }
+
+    expect(AwesomeSpawn).to receive(:run!).once.with(cmd, spawn_args).and_raise(cmd_error)
+    expect(AwesomeSpawn).to receive(:run!).once.with("sudo #{cmd}", spawn_args).and_return(cmd_good_result)
+
+    described_class.runcmd("mount", :foo => :bar)
   end
 end
