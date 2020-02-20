@@ -140,10 +140,15 @@ class MD5deep
           ext = File.extname(currFile).downcase
           if @opts.winVerList.include?(ext)
             if @opts.versioninfo || @opts.imports
-              peHdr = PEheader.new(fh) rescue nil
-              unless peHdr.nil?
-                xmlFileNode.add_element("versioninfo", peHdr.versioninfo) if @opts.versioninfo && !peHdr.versioninfo.blank?
-                xmlFileNode.add_element("libraries", "imports" => peHdr.getImportList) if @opts.imports && !peHdr.imports.blank?
+              begin
+                peHdr = PEheader.new(fh) rescue nil
+                unless peHdr.nil?
+                  xmlFileNode.add_element("versioninfo", peHdr.versioninfo) if @opts.versioninfo && !peHdr.versioninfo.blank?
+                  xmlFileNode.add_element("libraries", "imports" => peHdr.getImportList) if @opts.imports && !peHdr.imports.blank?
+                end
+              rescue TypeError => err
+                $log.debug "processFile: TypeError handling PEheader; skipping PEheader info"
+                $log.debug err.backtrace.join("\n")
               end
             end
           end
