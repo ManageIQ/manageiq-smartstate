@@ -126,40 +126,38 @@ class MD5deep
 
       begin
         #       unless File.directory?(currFile) then
-        unless isDir?(currFile)
-          # File we have an exclusion list and the current file is in it, skip to the next file
-          @fullFileCount += 1
-          fh = fileOpen(currFile)
+        return if isDir?(currFile)
 
-          xmlFileNode = xmlNode.add_element("file", "name" => x, "fqname" => currFile)
-          statHash = {}
-          statHash.merge!(getFileStats(fh))
-          statHash.merge!(calculate_digest(fh))
-          xmlFileNode.add_attributes(statHash)
+        # File we have an exclusion list and the current file is in it, skip to the next file
+        @fullFileCount += 1
+        fh = fileOpen(currFile)
 
-          ext = File.extname(currFile).downcase
-          if @opts.winVerList.include?(ext)
-            if @opts.versioninfo || @opts.imports
-              begin
-                peHdr = PEheader.new(fh) rescue nil
-                unless peHdr.nil?
-                  xmlFileNode.add_element("versioninfo", peHdr.versioninfo) if @opts.versioninfo && !peHdr.versioninfo.blank?
-                  xmlFileNode.add_element("libraries", "imports" => peHdr.getImportList) if @opts.imports && !peHdr.imports.blank?
-                end
-              rescue TypeError => err
-                $log.debug "processFile: TypeError handling PEheader; skipping PEheader info"
-                $log.debug err.backtrace.join("\n")
-              end
-            end
-          end
+        xmlFileNode = xmlNode.add_element("file", "name" => x, "fqname" => currFile)
+        statHash = {}
+        statHash.merge!(getFileStats(fh))
+        statHash.merge!(calculate_digest(fh))
+        xmlFileNode.add_attributes(statHash)
 
-          getFileContents(fh, xmlFileNode) if @opts.contents == true
-          fh.close
+        ext = File.extname(currFile).downcase
+        if @opts.winVerList.include?(ext)
+          pe_hdr = PEheader.new(fh) rescue nil
+          process_pe_header(pe_hdr, xmlFileNode) unless pe_hdr.nil?
         end
+
+        getFileContents(fh, xmlFileNode) if @opts.contents == true
+        fh.close
       rescue Errno::EACCES, RuntimeError, SystemCallError
         fh.close if fh.kind_of?(File) && !fh.closed?
       end
     end
+  end
+
+  def process_pe_header(pe_hdr, xml_file_node)
+    xml_file_node.add_element("versioninfo", pe_hdr.versioninfo) if @opts.versioninfo && pe_hdr.versioninfo.present?
+    xml_file_node.add_element("libraries", "imports" => pe_hdr.getImportList) if @opts.imports && pe_hdr.imports.present?
+  rescue TypeError => err
+    $log.info "processFile: TypeError handling PEheader; skipping PEheader info"
+    $log.debug err.backtrace.join("\n")
   end
 
   def isDir?(currFile)
