@@ -1,6 +1,7 @@
 require 'time'
 require 'metadata/util/win32/peheader'
 require 'metadata/util/win32/versioninfo'
+require 'metadata/util/find_class_methods'
 require 'util/miq-xml'
 require 'ostruct'
 require 'util/miq-encode'
@@ -47,8 +48,13 @@ class MD5deep
   end
 
   def self.scan_glob(fs, filename, options = {})
+    begin
     md5 = MD5deep.new(fs, options)
     md5.scan_glob(filename)
+    rescue Exception => err
+      $log.info "MD5.scan_glob: Exception #{err} rescued"
+      $log.debug err.backtrace.join("\n")
+    end
   end
 
   def scan_glob(filename)
@@ -56,21 +62,34 @@ class MD5deep
     startDir = File.dirname(filename)
     globPattern = File.basename(filename)
     @xml.root.add_attribute("base_path", startDir)
-    @fs.chdir(startDir)
 
     # First check if we are passed a fully qualifed file name
     if @fs.fileExists?(filename)
       isDir?(filename) ? process_dir_as_file(startDir, globPattern, @xml.root) : processFile(startDir, globPattern, @xml.root)
     else
       # If the file is not found then process the data as a glob pattern.
-      @fs.dirGlob(globPattern) do |f|
-        # $log.info "Glob file found: [#{f}]"
+      begin
+      FindClassMethods.glob(filename, @fs) do |f|
+        $log.debug "scan_glob: FindClassMethods.glob returned \"#{f}\""
         # Passing "startDir" as the first parameter is a work-around for issues
         # when scanning Win VMs from Linux where the path returned from dirGlob
         # do not include the drive letter.
         # Below is the original line
-        # processFile(File.dirname(f), File.basename(f), @xml.root)
-        processFile(startDir, File.basename(f), @xml.root)
+        begin
+          startDir = File.dirname(f)
+          $log.debug "scan_glob: startDir after File.dirname for #{f} is #{startDir}"
+          processFile(startDir, File.basename(f), @xml.root)
+          $log.debug "scan_glob: xml after processFile for #{f} is #{@xml.to_s}"
+        rescue Exception => err
+          $log.info "scan_glob: Exception #{err} rescued"
+          $log.debug err.backtrace.join("\n")
+        end
+
+      end
+      rescue Exception => err
+        $log.info "scan_glob: Exception #{err} rescued"
+        $log.debug "scan_glob: xml in rescue after processFile for #{f} is #{@xml.to_s}"
+        $log.debug err.backtrace.join("\n")
       end
     end
     @xml
@@ -150,6 +169,7 @@ class MD5deep
         fh.close if fh.kind_of?(File) && !fh.closed?
       end
     end
+    $log.debug "processFile: finished @xml is #{@xml.to_s}"
   end
 
   def process_pe_header(pe_hdr, xml_file_node)
@@ -295,7 +315,7 @@ if __FILE__ == $0
       $log.warn err
       $log.fatal err.backtrace.join("\n")
     end
-  rescue => err
+  rescue Exception => err
     $log.fatal err
     $log.fatal err.backtrace.join("\n")
   end
