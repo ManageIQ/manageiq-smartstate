@@ -60,12 +60,12 @@ class MD5deep
   def scan_glob(filename)
     filename.tr!("\\", "/")
     startDir = File.dirname(filename)
-    globPattern = File.basename(filename)
     @xml.root.add_attribute("base_path", startDir)
 
     # First check if we are passed a fully qualifed file name
     if @fs.fileExists?(filename)
-      isDir?(filename) ? process_dir_as_file(startDir, globPattern, @xml.root) : processFile(startDir, globPattern, @xml.root)
+      base_file = File.basename(filename)
+      isDir?(filename) ? process_dir_as_file(startDir, base_file, @xml.root) : processFile(startDir, base_file, @xml.root)
     else
       # If the file is not found then process the data as a glob pattern.
       begin
