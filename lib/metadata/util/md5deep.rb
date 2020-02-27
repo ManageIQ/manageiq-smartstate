@@ -48,13 +48,8 @@ class MD5deep
   end
 
   def self.scan_glob(fs, filename, options = {})
-    begin
     md5 = MD5deep.new(fs, options)
     md5.scan_glob(filename)
-    rescue Exception => err
-      $log.info "MD5.scan_glob: Exception #{err} rescued"
-      $log.debug err.backtrace.join("\n")
-    end
   end
 
   def scan_glob(filename)
@@ -69,26 +64,15 @@ class MD5deep
     else
       # If the file is not found then process the data as a glob pattern.
       begin
-      FindClassMethods.glob(filename, @fs) do |f|
-        $log.debug "scan_glob: FindClassMethods.glob returned \"#{f}\""
-        # Passing "startDir" as the first parameter is a work-around for issues
-        # when scanning Win VMs from Linux where the path returned from dirGlob
-        # do not include the drive letter.
-        # Below is the original line
-        begin
-          startDir = File.dirname(f)
-          $log.debug "scan_glob: startDir after File.dirname for #{f} is #{startDir}"
-          processFile(startDir, File.basename(f), @xml.root)
-          $log.debug "scan_glob: xml after processFile for #{f} is #{@xml.to_s}"
-        rescue Exception => err
-          $log.info "scan_glob: Exception #{err} rescued"
-          $log.debug err.backtrace.join("\n")
+        FindClassMethods.glob(filename, @fs) do |f|
+          # Passing "startDir" as the first parameter is a work-around for issues
+          # when scanning Win VMs from Linux where the path returned from dirGlob
+          # do not include the drive letter.
+          processFile(File.dirname(f), File.basename(f), @xml.root)
+          $log.debug "scan_glob: xml after processFile for #{f} is #{@xml}"
         end
-
-      end
       rescue Exception => err
         $log.info "scan_glob: Exception #{err} rescued"
-        $log.debug "scan_glob: xml in rescue after processFile for #{f} is #{@xml.to_s}"
         $log.debug err.backtrace.join("\n")
       end
     end
@@ -169,7 +153,7 @@ class MD5deep
         fh.close if fh.kind_of?(File) && !fh.closed?
       end
     end
-    $log.debug "processFile: finished @xml is #{@xml.to_s}"
+    $log.debug "processFile: finished @xml is #{@xml}"
   end
 
   def process_pe_header(pe_hdr, xml_file_node)
@@ -315,7 +299,7 @@ if __FILE__ == $0
       $log.warn err
       $log.fatal err.backtrace.join("\n")
     end
-  rescue Exception => err
+  rescue => err
     $log.fatal err
     $log.fatal err.backtrace.join("\n")
   end
