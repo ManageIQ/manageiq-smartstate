@@ -5,7 +5,7 @@ require 'memory_buffer'
 require 'zlib'
 
 module VMWareSparseDisk
-  SPARSE_MAGIC_NUMBER = 0x564d444b # 'V' 'M' 'D' 'K'
+  SPARSE_MAGIC_NUMBER = "VMDK".unpack1("L>") # 0x564d444b
 
   SPARSE_EXTENT_HEADER = BinaryStruct.new([
     # the magic number is used to verify the validity of each sparse extent when the extent is opened
@@ -15,8 +15,8 @@ module VMWareSparseDisk
 
     # SparseExtentHeader is stored on disk in little-endian byte order, so if you examine the first eight bytes of a VMDK file,
     # you see either:
-    #   'K' D' 'M' 'V' 0x01 0x00 0x00 0x00
-    #   'K' D' 'M' 'V' 0x02 0x00 0x00 0x00
+    #   'K' 'D' 'M' 'V' 0x01 0x00 0x00 0x00
+    #   'K' 'D' 'M' 'V' 0x02 0x00 0x00 0x00
 
     # flags contains the following bits of information.
     'L',  'flags',                # bit 0:  valid new line detection test
@@ -202,7 +202,7 @@ module VMWareSparseDisk
     buf = @vmwareSparseDisk_file.read(BYTES_PER_SECTOR)
     @grainDirectory = []
 
-    (0..(GDES_PER_GD - 1)).each do |index|
+    GDES_PER_GD.times do |index|
       @grainDirectory[index] = buf[index, GDE_SIZE].unpack1('L')
     end
 
@@ -263,11 +263,7 @@ module VMWareSparseDisk
   end
 
   def parseGrainTable(buffer)
-    gt = []
-    (0..(GTES_PER_GT - 1)).each do |index|
-      gt[index] = buffer[index, GTE_SIZE].unpack1('L')
-    end
-    gt
+    GTES_PER_GT.times.map { |index| buffer[index, GTE_SIZE].unpack1('L') }
   end
 
   def readGrainTable(gde)
@@ -303,8 +299,8 @@ module VMWareSparseDisk
   def read_compressed_grain(grain_offset)
     @vmwareSparseDisk_file.seek(grain_offset, IO::SEEK_SET)
     buffer = @vmwareSparseDisk_file.read(SIZEOF_SPARSE_EXTENT_COMPRESSED_GRAIN_HEADER)
-    compressed_grain_header = OpenStruct.new(SPARSE_EXTENT_COMPRESSED_GRAIN_HEADER.decode(buffer))
-    buffer = @vmwareSparseDisk_file.read(compressed_grain_header.size)
+    compressed_grain_header = SPARSE_EXTENT_COMPRESSED_GRAIN_HEADER.decode(buffer)
+    buffer = @vmwareSparseDisk_file.read(compressed_grain_header['size'])
     Zlib::Inflate.inflate(buffer)
   end
 
