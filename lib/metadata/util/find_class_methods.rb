@@ -44,8 +44,6 @@ module FindClassMethods
   # @yield files found
   #
   def self.find(path, max_depth = nil)
-    raise SystemCallError.new(path, Errno::ENOENT::Errno) unless @fs.fileExists?(path)
-
     block_given? || (return enum_for(__method__, path, max_depth))
 
     depths = [0]
