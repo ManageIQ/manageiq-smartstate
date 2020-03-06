@@ -56,6 +56,8 @@ class MD5deep
     filename.tr!("\\", "/")
     startDir = File.dirname(filename)
     @xml.root.add_attribute("base_path", startDir)
+    path_prefix = startDir[0, 2]
+    @drive_letter = path_prefix.match?(/^\w\:/) ? path_prefix : ""
 
     # First check if we are passed a fully qualifed file name
     if @fs.fileExists?(filename)
@@ -63,23 +65,25 @@ class MD5deep
       isDir?(filename) ? process_dir_as_file(startDir, base_file, @xml.root) : processFile(startDir, base_file, @xml.root)
     else
       # If the file is not found then process the data as a glob pattern.
-      begin
-        FindClassMethods.glob(filename, @fs) do |f|
-          # Passing "startDir" as the first parameter is a work-around for issues
-          # when scanning Win VMs from Linux where the path returned from dirGlob
-          # do not include the drive letter.
-          processFile(File.dirname(f), File.basename(f), @xml.root)
-          $log.debug "scan_glob: xml after processFile for #{f} is #{@xml}"
-        end
-      rescue Exception => err
-        $log.info "scan_glob: Exception #{err} rescued"
-        $log.debug err.backtrace.join("\n")
-      end
+      process_each_glob_file(filename)
     end
     @xml
   end
 
+  def process_each_glob_file(file_name)
+    FindClassMethods.glob(file_name, @fs) do |f|
+      # Passing "startDir" as the first parameter is a work-around for issues
+      # when scanning Win VMs from Linux where the path returned from dirGlob
+      # do not include the drive letter.
+      processFile(File.dirname(f), File.basename(f), @xml.root)
+    end
+  rescue => err
+    $log.info "scan_glob: Exception #{err} rescued"
+    $log.debug err.backtrace.join("\n")
+  end
+
   def read_fs(path, xmlNode)
+    @drive_letter = @drive_letter.nil? ? "" : @drive_letter
     if @fs
       @fs.dirForeach(path)  { |x| processFile(path, x, xmlNode) }
       @fs.dirForeach(path)  { |x| processDir(path,  x, xmlNode) }
@@ -94,7 +98,7 @@ class MD5deep
 
   def processDir(path, x, xmlNode)
     if x != "." && x != ".."
-      currFile = File.join(path, x)
+      currFile = File.join(@drive_letter, path, x)
 
       begin
         if File.directory?(currFile)
@@ -113,7 +117,7 @@ class MD5deep
 
   def process_dir_as_file(path, x, xml_node)
     if x != "." && x != ".."
-      curr_dir = File.join(path, x)
+      curr_dir = File.join(@drive_letter, path, x)
       if isDir?(curr_dir)
         xml_file_node = xml_node.add_element("file", "name" => x, "fqname" => curr_dir)
         stat_hash = {}
@@ -125,7 +129,7 @@ class MD5deep
 
   def processFile(path, x, xmlNode)
     if (@opts.exclude.include?(x) == false) && x[0..0] != "$"
-      currFile = File.join(path, x)
+      currFile = File.join(@drive_letter, path, x)
 
       begin
         #       unless File.directory?(currFile) then
@@ -160,7 +164,7 @@ class MD5deep
     xml_file_node.add_element("versioninfo", pe_hdr.versioninfo) if @opts.versioninfo && pe_hdr.versioninfo.present?
     xml_file_node.add_element("libraries", "imports" => pe_hdr.getImportList) if @opts.imports && pe_hdr.imports.present?
   rescue TypeError => err
-    $log.info "processFile: TypeError handling PEheader; skipping PEheader info"
+    $log.info "process_pe_header: TypeError handling PEheader; skipping PEheader info"
     $log.debug err.backtrace.join("\n")
   end
 

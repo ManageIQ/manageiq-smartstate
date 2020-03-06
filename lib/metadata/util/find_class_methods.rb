@@ -11,27 +11,31 @@ module FindClassMethods
   #
   def self.glob(glob_pattern, filesys, flags = 0)
     @fs = filesys
-    search_path, specified_path, glob = dir_and_glob(glob_pattern)
-
-    return [] unless @fs.fileExists?(search_path)
+    return [] unless (glob = dir_and_glob(glob_pattern))
 
     ra = []
-    find(search_path, glob_depth(glob)) do |p|
-      next if p == search_path
-
-      if search_path == File::SEPARATOR
-        p.sub!(File::SEPARATOR, "")
-      else
-        p.sub!("#{search_path}#{File::SEPARATOR}", "")
-      end
-
-      next if p == ""
-      next unless File.fnmatch(glob, p, flags)
-
-      p = File.join(specified_path, p) if specified_path
-      block_given? ? yield(p) : ra << p
+    find(@search_path, glob_depth(glob)) do |p|
+      p = check_file(p, glob, flags)
+      p && block_given? ? yield(p) : ra << p
     end
     ra.sort_by(&:downcase)
+  end
+
+  #
+  # Determine if the file returned from "find" will be used or skipped.
+  #
+  def self.check_file(file, glob, flags)
+    return nil if file == @search_path
+
+    if @search_path == File::SEPARATOR
+      file.sub!(File::SEPARATOR, "")
+    else
+      file.sub!("#{@search_path}#{File::SEPARATOR}", "")
+    end
+
+    return nil if file == "" || !File.fnmatch(glob, file, flags)
+
+    @specified_path ? File.join(@specified_path, file) : file
   end
 
   #
@@ -51,28 +55,27 @@ module FindClassMethods
 
     while (file = paths.shift)
       depth = depths.shift
-      catch(:prune) do
-        yield file.dup.taint
-        if @fs.fileExists?(file) && @fs.fileDirectory?(file)
-          next if max_depth && depth + 1 > max_depth
+      yield file.dup.taint
+      next if max_depth && depth + 1 > max_depth
 
-          begin
-            files = @fs.dirEntries(file)
-          rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::ELOOP, Errno::ENAMETOOLONG
-            $log.info "find: while-loop @fs.dirEntries #{file} returned an error"
-            next
-          end
-          files.sort!
-          files.reverse_each do |f|
-            next if [".", ".."].include?(f)
-
-            f = File.join(file, f)
-            paths.unshift f.untaint
-            depths.unshift depth + 1
-          end
-        end
+      get_dir_entries(file).each do |f|
+        f = File.join(file, f)
+        paths.unshift f.untaint
+        depths.unshift depth + 1
       end
     end
+  end
+
+  def self.get_dir_entries(directory)
+    return [] unless @fs.fileExists?(directory) && @fs.fileDirectory?(directory)
+
+    files = @fs.dirEntries(directory)
+    files.difference([".", ".."])
+    files.sort!
+    files.reverse_each
+  rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::ELOOP, Errno::ENAMETOOLONG
+    $log.info "find: while-loop @fs.dirEntries #{directory} returned an error"
+    []
   end
 
   GLOB_CHARS = '*?[{'.freeze
@@ -87,26 +90,32 @@ module FindClassMethods
   # @return [String] paths to files found
   #
   def self.dir_and_glob(glob_pattern)
-    stripped_path  = glob_pattern.sub(/^[a-zA-Z]:/, "")
-    glob_path      = Pathname.new(stripped_path)
-    search_path    = File::SEPARATOR
-    specified_path = File::SEPARATOR
+    stripped_path   = glob_pattern.sub(/^[a-zA-Z]:/, "")
+    glob_path       = Pathname.new(stripped_path)
+    @search_path    = File::SEPARATOR
+    @specified_path = File::SEPARATOR
 
     unless glob_path.absolute?
-      search_path    = Dir.getwd
-      specified_path = nil
+      @search_path    = Dir.getwd
+      @specified_path = nil
     end
 
+    components   = path_components(glob_path)
+    @search_path = File.expand_path(@search_path, "/")
+    @fs.fileExists?(@search_path) ? File.join(components) : nil
+  end
+
+  def self.path_components(glob_path)
     components = glob_path.each_filename.to_a
     while (comp = components.shift)
       if glob_str?(comp)
         components.unshift(comp)
         break
       end
-      search_path = File.join(search_path, comp)
-      specified_path = specified_path ? File.join(specified_path, comp) : comp
+      @search_path = File.join(@search_path, comp)
+      @specified_path = @specified_path ? File.join(@specified_path, comp) : comp
     end
-    return File.expand_path(search_path, "/"), specified_path, File.join(components)
+    components
   end
 
   # Return max levels which glob pattern may resolve to
