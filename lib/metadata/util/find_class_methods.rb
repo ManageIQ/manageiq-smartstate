@@ -105,14 +105,14 @@ module FindClassMethods
     @fs.fileExists?(@search_path) ? File.join(components) : nil
   end
 
-  def self.path_components(glob_path)
+  def self.path_components(glob_path, search_path = @search_path)
     components = glob_path.each_filename.to_a
     while (comp = components.shift)
       if glob_str?(comp)
         components.unshift(comp)
         break
       end
-      @search_path = File.join(@search_path, comp)
+      @search_path = File.join(search_path, comp)
       @specified_path = @specified_path ? File.join(@specified_path, comp) : comp
     end
     components
