@@ -315,17 +315,24 @@ module LinuxMount
       #
       fs, lp = getFsPathBase(ncp)
       if fs.fileSymLink?(lp)
-        sl = getSymLink(fs, lp)
-        if sl[0, 1] == '/'
-          cp = sl
-        else
-          cp = File.join(cp, sl)
-        end
+        cp = follow_all_symlinks(fs, lp, cp)
       else
         cp = ncp
       end
     end
     (cp)
+  end
+
+  def follow_all_symlinks(fs, lp, cp)
+    while fs.fileSymLink?(lp)
+      sl = getSymLink(fs, lp)
+      if sl[0, 1] == '/'
+        lp = sl
+      else
+        lp = File.join(cp, sl)
+      end
+    end
+    lp
   end
 
   def getSymLink(fs, p)
