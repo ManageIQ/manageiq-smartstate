@@ -309,30 +309,27 @@ module LinuxMount
     #
     components.each do |c|
       ncp = File.join(cp, c)
-      #
-      # Each file system know how to check for,
-      # and read its own links.
-      #
-      fs, lp = getFsPathBase(ncp)
-      if fs.fileSymLink?(lp)
-        cp = follow_all_symlinks(fs, lp, cp)
-      else
-        cp = ncp
-      end
+      cp = follow_all_symlinks(ncp)
     end
     (cp)
   end
 
-  def follow_all_symlinks(fs, lp, cp)
-    while fs.fileSymLink?(lp)
-      sl = getSymLink(fs, lp)
-      if sl[0, 1] == '/'
-        lp = sl
+  def follow_all_symlinks(link_ptr)
+    #
+    # Each filesystem knows how to check for,
+    # and read its own links.
+    #
+    no_more_links = nil
+    until no_more_links
+      filesys, link_ptr = getFsPathBase(link_ptr)
+      if filesys.fileSymLink?(link_ptr)
+        symlink = getSymLink(filesys, linkptr)
+        link_ptr = symlink[0, 1] == '/' ? symlink : File.join(comp, symlink)
       else
-        lp = File.join(cp, sl)
+        no_more_links = true
       end
     end
-    lp
+    link_ptr
   end
 
   def getSymLink(fs, p)
