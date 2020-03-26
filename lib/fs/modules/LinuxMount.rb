@@ -311,7 +311,7 @@ module LinuxMount
       ncp = File.join(cp, c)
       cp = follow_all_symlinks(ncp)
     end
-    (cp)
+    cp
   end
 
   def follow_all_symlinks(link_ptr)
@@ -319,12 +319,12 @@ module LinuxMount
     # Each filesystem knows how to check for,
     # and read its own links.
     #
-    no_more_links = nil
+    no_more_links = false
     until no_more_links
       filesys, link_ptr = getFsPathBase(link_ptr)
       if filesys.fileSymLink?(link_ptr)
         symlink = getSymLink(filesys, linkptr)
-        link_ptr = symlink[0, 1] == '/' ? symlink : File.join(comp, symlink)
+        link_ptr = symlink[0, 1] == '/' ? symlink : File.join(File.dirname(link_ptr), symlink)
       else
         no_more_links = true
       end
