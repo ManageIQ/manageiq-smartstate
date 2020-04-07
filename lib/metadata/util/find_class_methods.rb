@@ -15,8 +15,9 @@ module FindClassMethods
 
     ra = []
     find(@search_path, glob_depth(glob)) do |p|
-      p = check_file(p, glob, flags)
-      p && block_given? ? yield(p) : ra << p
+      if (p = check_file(p, glob, flags))
+        block_given? ? yield(p) : ra << p
+      end
     end
     ra.sort_by(&:downcase)
   end
