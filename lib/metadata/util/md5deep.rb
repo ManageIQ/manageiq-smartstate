@@ -229,7 +229,7 @@ class MD5deep
       begin
         fileName.seek(0, IO::SEEK_SET)
         # Loop over each digest and add the file contents
-        while buf = fileName.read(10240000)
+        while (buf = fileName.read(10_240_000))
           digest.each_pair { |_k, v| v << buf }
         end
       rescue NoMethodError => method_err
