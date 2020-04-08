@@ -232,9 +232,6 @@ class MD5deep
         while (buf = fileName.read(10_240_000))
           digest.each_pair { |_k, v| v << buf }
         end
-      rescue NoMethodError => method_err
-        $log.error "Exception NoMethodError #{method_err} reading file to calculate digest"
-        $log.debug method_err.backtrace.join("\n")
       rescue => err
         $log.error "Error #{err} reading file to calculate digest"
         $log.debug err.backtrace.join("\n")
