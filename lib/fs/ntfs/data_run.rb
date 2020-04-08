@@ -282,7 +282,7 @@ module NTFS
 
       @runSpec.each_slice(2) do |lcn, len|
         total_clusters += len
-        next unless total_clusters > start_vcn
+        next unless lcn && len && total_clusters > start_vcn
 
         start = lcn + (vcn - (total_clusters - len))
         count = len - (start - lcn)
