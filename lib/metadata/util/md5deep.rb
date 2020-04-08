@@ -78,7 +78,7 @@ class MD5deep
       processFile(File.dirname(f), File.basename(f), @xml.root)
     end
   rescue => err
-    $log.info "scan_glob: Exception #{err} rescued"
+    $log.error "process_each_glob_file: Exception #{err} rescued"
     $log.debug err.backtrace.join("\n")
   end
 
@@ -226,10 +226,15 @@ class MD5deep
       # Create hash for requested digests
       digest = create_digest_hash
 
-      fileName.seek(0, IO::SEEK_SET)
-      # Loop over each digest and add the file contents
-      while buf = fileName.read(10240000)
-        digest.each_pair { |_k, v| v << buf }
+      begin
+        fileName.seek(0, IO::SEEK_SET)
+        # Loop over each digest and add the file contents
+        while (buf = fileName.read(10_240_000))
+          digest.each_pair { |_k, v| v << buf }
+        end
+      rescue => err
+        $log.error "Error #{err} reading file to calculate digest"
+        $log.debug err.backtrace.join("\n")
       end
     end
 
