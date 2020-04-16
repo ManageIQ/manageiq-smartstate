@@ -71,7 +71,7 @@ module FindClassMethods
     return [] unless @fs.fileExists?(directory) && @fs.fileDirectory?(directory)
 
     files = @fs.dirEntries(directory)
-    files.difference([".", ".."])
+    files -= [".", ".."]
     files.sort!
     files.reverse_each
   rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::ELOOP, Errno::ENAMETOOLONG
