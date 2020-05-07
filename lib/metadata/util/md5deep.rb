@@ -72,9 +72,10 @@ class MD5deep
 
   def process_each_glob_file(file_name)
     FindClassMethods.glob(file_name, @fs) do |f|
-      # Passing "startDir" as the first parameter is a work-around for issues
-      # when scanning Win VMs from Linux where the path returned from dirGlob
-      # do not include the drive letter.
+      # Prepending @drive_letter to the file is a work-around for issues
+      # when scanning Win VMs from Linux where the path returned from glob
+      # does not include the drive letter.
+      f = File.join(@drive_letter, f)
       processFile(File.dirname(f), File.basename(f), @xml.root)
     end
   rescue => err
@@ -98,7 +99,7 @@ class MD5deep
 
   def processDir(path, x, xmlNode)
     if x != "." && x != ".."
-      currFile = File.join(@drive_letter, path, x)
+      currFile = File.join(path, x)
 
       begin
         if File.directory?(currFile)
@@ -117,7 +118,7 @@ class MD5deep
 
   def process_dir_as_file(path, x, xml_node)
     if x != "." && x != ".."
-      curr_dir = File.join(@drive_letter, path, x)
+      curr_dir = File.join(path, x)
       if isDir?(curr_dir)
         xml_file_node = xml_node.add_element("file", "name" => x, "fqname" => curr_dir)
         stat_hash = {}
@@ -129,7 +130,7 @@ class MD5deep
 
   def processFile(path, x, xmlNode)
     if (@opts.exclude.include?(x) == false) && x[0..0] != "$"
-      currFile = File.join(@drive_letter, path, x)
+      currFile = File.join(path, x)
 
       begin
         #       unless File.directory?(currFile) then
