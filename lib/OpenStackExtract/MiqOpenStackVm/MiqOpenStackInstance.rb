@@ -1,4 +1,4 @@
-require 'util/miq_tempfile'
+require 'miq_tempfile'
 require_relative '../../MiqVm/MiqVm'
 require_relative 'MiqOpenStackCommon'
 
