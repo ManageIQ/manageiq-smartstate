@@ -4,7 +4,7 @@ require 'fs/ext3/group_descriptor_table'
 require 'fs/ext3/inode'
 
 require 'binary_struct'
-require 'util/miq-uuid'
+require 'uuidtools'
 require 'stringio'
 require 'memory_buffer'
 

@@ -4,7 +4,7 @@ require 'fs/ext4/group_descriptor_table'
 require 'fs/ext4/inode'
 
 require 'binary_struct'
-require 'util/miq-uuid'
+require 'uuidtools'
 require 'stringio'
 require 'memory_buffer'
 
@@ -225,7 +225,7 @@ module Ext4
     end
 
     def groupDescriptorSize
-      @groupDescriptorSize ||= is_enabled_64_bit? ? @sb['group_desc_size'] : GDE_SIZE 
+      @groupDescriptorSize ||= is_enabled_64_bit? ? @sb['group_desc_size'] : GDE_SIZE
     end
 
     def freeBytes

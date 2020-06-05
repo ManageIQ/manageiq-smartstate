@@ -5,7 +5,7 @@
 
 require 'ostruct'
 require 'binary_struct'
-require 'util/miq-uuid'
+require 'uuidtools'
 
 class BinaryStruct
   def self.stepDecode(data, format)
