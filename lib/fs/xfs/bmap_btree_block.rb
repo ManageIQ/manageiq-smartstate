@@ -1,5 +1,5 @@
 require 'binary_struct'
-require 'util/miq-uuid'
+require 'uuidtools'
 require 'stringio'
 
 require 'rufus/lru'

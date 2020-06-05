@@ -1,4 +1,4 @@
-require 'util/miq-uuid'
+require 'uuidtools'
 
 module NTFS
   # There is no real data definition for this class - it consists entirely of GUIDs.
