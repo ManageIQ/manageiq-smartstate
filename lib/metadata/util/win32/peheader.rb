@@ -15,8 +15,6 @@ class PEheader
   IMAGE_NT_SIGNATURE = "PE\0\0"
   IMAGE_DOS_SIGNATURE = "MZ"
 
-  attr_reader :imports, :icons, :messagetables, :versioninfo
-
   def initialize(path)
     @fname = path
     @dataDirs = []
@@ -91,19 +89,19 @@ class PEheader
   end
 
   def imports
-    @import_array ||= getImports
+    @imports ||= getImports
   end
 
   def icons
-    @icon_array ||= getIcons(@fBuf)
+    @icons ||= getIcons(@fBuf)
   end
 
   def messagetables
-    @messagetable_hash ||= getMessagetables
+    @messagetables ||= getMessagetables
   end
 
   def versioninfo
-    @versioninfo_array ||= getVersioninfo
+    @versioninfo ||= getVersioninfo
   end
 
   # //////////////////////////////////////////////////////////////////////////
