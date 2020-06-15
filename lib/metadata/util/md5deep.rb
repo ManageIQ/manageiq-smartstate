@@ -179,9 +179,9 @@ class MD5deep
 
   def fileOpen(currFile)
     if @fs
-      fh = @fs.fileOpen(currFile)
+      @fs.fileOpen(currFile)
     else
-      fh = File.open(currFile)
+      File.open(currFile)
     end
   end
 

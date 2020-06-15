@@ -684,8 +684,8 @@ class Win32EventLog
       reg.each_key do |subKey, _wtime|
         subpath = "#{src}\\#{subKey}"
         subKey.downcase!
-        Win32::Registry::HKEY_LOCAL_MACHINE.open(subpath) do |reg|
-          reg.each_value do |name, _type, data|
+        Win32::Registry::HKEY_LOCAL_MACHINE.open(subpath) do |subreg|
+          subreg.each_value do |name, _type, data|
             case name
             when 'EventMessageFile', 'ParameterMessageFile', 'CategoryMessageFile' then
               fn = data.to_s
