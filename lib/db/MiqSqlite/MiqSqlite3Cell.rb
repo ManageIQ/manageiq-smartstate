@@ -5,7 +5,6 @@ require 'enumerator'
 
 require 'binary_struct'
 require_relative 'MiqSqlite3Util'
-require_relative 'MiqSqlite3Page'
 
 module MiqSqlite3DB
   class MiqSqlite3Cell
