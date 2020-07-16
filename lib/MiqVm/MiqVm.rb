@@ -206,6 +206,7 @@ class MiqVm
   end
 end # class MiqVm
 
+=begin
 if __FILE__ == $0
   require 'metadata/util/win32/boot_info_win'
 
@@ -345,3 +346,4 @@ if __FILE__ == $0
   vm.unmount
   puts "...done"
 end
+=end
