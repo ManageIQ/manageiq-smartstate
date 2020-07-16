@@ -364,7 +364,7 @@ class VmConfig
 
   def resolve_ds_path(filename)
     # TODO: Determine if we need to do any work here.
-    ds, dir, _name = split_filename(filename)
+    ds, _dir, _name = split_filename(filename)
     return filename unless ds.nil?
 
     @ds_replace ||= {}
