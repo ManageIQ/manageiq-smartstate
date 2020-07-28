@@ -321,9 +321,9 @@ module LinuxMount
     #
     no_more_links = false
     until no_more_links
-      filesys, link_ptr = getFsPathBase(link_ptr)
-      if filesys.fileSymLink?(link_ptr)
-        symlink = getSymLink(filesys, link_ptr)
+      filesys, tmp_link_ptr = getFsPathBase(link_ptr)
+      if filesys.fileSymLink?(tmp_link_ptr)
+        symlink = getSymLink(filesys, tmp_link_ptr)
         link_ptr = symlink[0, 1] == '/' ? symlink : File.join(File.dirname(link_ptr), symlink)
       else
         no_more_links = true
