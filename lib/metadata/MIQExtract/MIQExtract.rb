@@ -1,4 +1,3 @@
-require 'MiqVm/MiqVm'
 require 'metadata/util/md5deep'
 require 'util/miq-xml'
 require 'ostruct'

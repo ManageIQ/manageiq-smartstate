@@ -1,5 +1,4 @@
 require 'miq_tempfile'
-require_relative '../../MiqVm/MiqVm'
 require_relative 'MiqOpenStackCommon'
 
 class MiqOpenStackImage

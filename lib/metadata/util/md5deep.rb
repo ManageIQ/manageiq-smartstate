@@ -13,6 +13,8 @@ class MD5deep
   def initialize(fs = nil, options = {})
     @fullFileCount = 0
     @fullDirCount = 0
+    @drive_letter = nil
+
     # Create XML document
     @xml = XmlHash.createDoc(:filesystem)
     @fs = fs.kind_of?(MiqFS) ? fs : nil
