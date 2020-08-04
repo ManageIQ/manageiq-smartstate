@@ -5,7 +5,6 @@ require 'sys-uname'
 require 'uri'
 
 require 'util/miq-exception'
-require 'util/miq-uuid'
 require 'util/miq_file_storage'
 require 'util/runcmd'
 
