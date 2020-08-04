@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rufus-lru",          "~>1.0.3"
   spec.add_dependency "sys-uname",          "~>1.2.1"
   spec.add_dependency "uuidtools",          "~>2.1"
-  spec.add_dependency "vmware_web_service", "~>1.0"
+  spec.add_dependency "vmware_web_service", "~>2.0"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
