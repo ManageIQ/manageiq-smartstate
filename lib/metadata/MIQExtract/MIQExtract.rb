@@ -99,7 +99,7 @@ class MIQExtract
         yield({:msg => 'Scanning Profile-Registry'}) if block_given?
 
         filters = []
-        reg_filters[:HKCU].to_miq_a.each { |f| filters << {:key => split_registry(f['key']).join('/'), :depth => f['depth']} }
+        Array.wrap(reg_filters[:HKCU]).each { |f| filters << {:key => split_registry(f['key']).join('/'), :depth => f['depth']} }
         @scanProfiles.parse_data(@target, RemoteRegistry.new(@systemFs, @xml_class).loadCurrentUser(filters)) unless filters.empty?
 
         filters = {}
@@ -126,7 +126,7 @@ class MIQExtract
 
   def extract(category, &blk)
     xml = nil
-    category.to_miq_a.each do |c|
+    Array.wrap(category).each do |c|
       c = c.downcase
       xml = case c
             when "accounts" then getAccounts(c)
