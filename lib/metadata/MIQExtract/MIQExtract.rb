@@ -126,7 +126,7 @@ class MIQExtract
 
   def extract(category, &blk)
     xml = nil
-    Array.wrap(category).each do |c|
+    Array.wrap(category.presence).each do |c|
       c = c.downcase
       xml = case c
             when "accounts" then getAccounts(c)
