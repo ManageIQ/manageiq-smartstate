@@ -42,7 +42,7 @@ class MiqRhevmVm < MiqVm
     disks = @rhevm.collect_vm_disks(@rhevmVm)
     disks.each_with_index do |disk, idx|
       $log.debug "MiqRhevmVm#getCfg: disk = #{disk.inspect}"
-      storage_domain = disk.storage_domains.first
+      storage_domain = disk.storage_domains&.first
       if storage_domain.nil?
         $log.info("Disk <#{disk.name}> is skipped due to unassigned storage domain")
         next
