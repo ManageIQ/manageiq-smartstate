@@ -498,7 +498,7 @@ class VmConfig
   end
 
   def rhevm_disk_file_entry(disk)
-    storage_id = disk.storage_domains.first&.id
+    storage_id = disk.storage_domains&.first&.id
     disk_id = disk.image_id || disk.id
     full_path = storage_id && File.join('/dev', storage_id, disk_id)
     {:path => full_path, :name => disk_id, :size => disk.actual_size.to_i}
@@ -550,7 +550,7 @@ class VmConfig
         elsif miqvm.rhevmVm
           disks = miqvm.rhevm.collect_vm_disks(miqvm.rhevmVm)
           disks.each do |disk|
-            storage_id = disk.storage_domains.first&.id
+            storage_id = disk.storage_domains&.first&.id
             disk_id = disk.image_id || disk.id
             full_path = storage_id && File.join('/dev', storage_id, disk_id)
             d = {:path => full_path, :name => disk.name.to_s, :size => disk.actual_size.to_i}
