@@ -251,11 +251,13 @@ module MiqWin32
     end
 
     def self.DecodeProductKey(product_key)
-      return if product_key.blank? || product_key.length < 67
-      y = []; product_key.split(",")[52..67].each { |b| y << b.hex }
-      return MIQEncode.base24Decode(y)
+      parts = product_key.to_s.split(",")
+      return if parts.length < 67
+
+      ManageIQ::Smartstate::Util.base24_decode(parts[52..67].map(&:hex))
     rescue => err
       $log.error "MIQ(DecodeProductKey): [#{err}]"
+      nil
     end
 
     private

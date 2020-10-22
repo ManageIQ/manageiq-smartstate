@@ -92,14 +92,6 @@ class FleeceHives
     xmlCol
   end
 
-  def self.DecodeProductKey(product_key)
-    return if product_key.blank? || product_key.length < 67
-    y = []; product_key.split(",")[52..67].each { |b| y << b.hex }
-    return MIQEncode.base24Decode(y)
-  rescue => err
-    $log.error "MIQ(OS-DecodeProductKey): [#{err}]"
-  end
-
   def self.collectProductKeys(_xml, xmlCol, regHnd)
     prodKeys = MIQRexml.findElement("software/productkeys", xmlCol.root)
     regHnd.digitalProductKeys.each do |e|
