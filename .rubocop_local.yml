@@ -1,7 +1,7 @@
 #
 # Overrides
 #
-GlobalVars:
+Style/GlobalVars:
   AllowedVariables:
   # Loggers
   - $log
