@@ -1,9 +1,11 @@
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 require 'fs/ntfs/utils'
 require 'fs/ntfs/attrib_type'
 
 module NTFS
+  using ManageIQ
+
   # Standard attribute header.
   # Each attribute begins with one of these.
   STANDARD_ATTRIBUTE_HEADER = BinaryStruct.new([

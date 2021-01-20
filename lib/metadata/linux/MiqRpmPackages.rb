@@ -1,11 +1,13 @@
 require 'binary_struct'
 require 'util/miq-hash_struct'
 require 'db/MiqBdb/MiqBdb'
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 # RPM Specification located at: http://jrpm.sourceforge.net/rpmspec/index.html
 
 class MiqRpmPackages
+  using ManageIQ
+
   #
   # The data types we support.
   #

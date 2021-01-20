@@ -1,11 +1,12 @@
 require 'fs/iso9660/util'
-
 require 'sys-uname'
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 module Iso9660
   class BootSector
+    using ManageIQ
+
     # Universal Volume Descriptor ID.
     DESCRIPTOR_ID = "CD001"
 

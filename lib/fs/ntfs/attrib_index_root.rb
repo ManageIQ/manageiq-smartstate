@@ -1,10 +1,12 @@
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 require 'fs/ntfs/index_node_header'
 require 'fs/ntfs/directory_index_node'
 require 'fs/ntfs/index_record_header'
 
 module NTFS
+  using ManageIQ
+
   #
   # INDEX_ROOT - Attribute: Index root (0x90).
   #

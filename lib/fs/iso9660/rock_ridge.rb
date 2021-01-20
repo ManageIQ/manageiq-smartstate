@@ -1,7 +1,9 @@
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 module Iso9660
+  using ManageIQ
+
   # SUSP extensions are present if the first two characters of the SUA of
   # the first directory entry are "SP". After SUSP is identified, if the
   # first two characters of any directory entry's SUA are "RR" a Rock Ridge
