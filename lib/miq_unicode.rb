@@ -2,7 +2,7 @@ module ManageIQ
   module UnicodeString
     refine String do
       def UnicodeToUtf8
-        dup.force_encoding("UTF-16LE").encode("UTF-8")
+        dup.UnicodeToUtf8!
       end
 
       def UnicodeToUtf8!
@@ -10,7 +10,7 @@ module ManageIQ
       end
 
       def Utf8ToUnicode
-        dup.force_encoding("UTF-8").encode("UTF-16LE")
+        dup.Utf8ToUnicode!
       end
 
       def Utf8ToUnicode!
@@ -18,7 +18,7 @@ module ManageIQ
       end
 
       def AsciiToUtf8
-        dup.force_encoding("ISO-8859-1").encode("UTF-8")
+        dup.AsciiToUtf8!
       end
 
       def AsciiToUtf8!
@@ -26,7 +26,7 @@ module ManageIQ
       end
 
       def Utf8ToAscii
-        dup.force_encoding("UTF-8").encode("ISO-8859-1")
+        dup.Utf8ToAscii!
       end
 
       def Utf8ToAscii!
@@ -34,7 +34,7 @@ module ManageIQ
       end
 
       def Ucs2ToAscii
-        dup.force_encoding("UTF-16LE").encode("ISO-8859-1")
+        dup.Ucs2ToAscii!
       end
 
       def Ucs2ToAscii!
