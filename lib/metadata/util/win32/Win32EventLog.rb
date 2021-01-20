@@ -26,7 +26,7 @@ require 'util/miq-exception'
 require 'metadata/util/event_log_filter'
 
 class Win32EventLog
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   # Standard file log names
   SYSTEM_LOGS = %w(Application System Security)

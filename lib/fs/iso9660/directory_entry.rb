@@ -4,7 +4,7 @@ require 'binary_struct'
 require 'miq_unicode'
 
 module Iso9660
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   # FlagBits: FB_
   FB_HIDDEN     = 0x01  # 0 if not hidden.

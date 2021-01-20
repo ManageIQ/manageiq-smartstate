@@ -8,7 +8,7 @@ require 'util/miq-extensions'
 require 'VMwareWebService/MiqVimBroker'
 
 class VmConfig
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   attr_reader :configFile
 

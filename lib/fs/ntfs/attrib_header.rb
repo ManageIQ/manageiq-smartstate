@@ -4,7 +4,7 @@ require 'fs/ntfs/utils'
 require 'fs/ntfs/attrib_type'
 
 module NTFS
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   # Standard attribute header.
   # Each attribute begins with one of these.

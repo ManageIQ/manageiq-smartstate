@@ -11,7 +11,7 @@ require 'miq_unicode'
 #       to open them and display each resolution contained in the icon (if more than one).
 
 class PEheader
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   IMAGE_NT_SIGNATURE = "PE\0\0"
   IMAGE_DOS_SIGNATURE = "MZ"

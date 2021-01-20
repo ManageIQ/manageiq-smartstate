@@ -2,7 +2,7 @@ require 'binary_struct'
 require 'miq_unicode'
 
 module Iso9660
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   # SUSP extensions are present if the first two characters of the SUA of
   # the first directory entry are "SP". After SUSP is identified, if the

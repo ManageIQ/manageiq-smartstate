@@ -8,7 +8,7 @@ require 'disk/modules/MiqLargeFile'
 require 'disk/modules/vhdx_bat_entry'
 
 module VhdxDisk
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   # NOTE: All values are stored in network byte order.
 

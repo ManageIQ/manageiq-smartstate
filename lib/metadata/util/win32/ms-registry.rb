@@ -13,7 +13,7 @@ DEBUG_LOG_PERFORMANCE = false
 DEBUG_FILE_READS = false
 
 class MSRegHive
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   attr_reader :fileLoadTime, :fileParseTime, :digitalProductKeys, :xmlNode
 

@@ -6,7 +6,7 @@ require 'miq_unicode'
 # RPM Specification located at: http://jrpm.sourceforge.net/rpmspec/index.html
 
 class MiqRpmPackages
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   #
   # The data types we support.

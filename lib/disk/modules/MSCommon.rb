@@ -5,7 +5,7 @@ require 'memory_buffer'
 require 'Scvmm/miq_hyperv_disk'
 
 module MSCommon
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   # NOTE: All values are stored in network byte order.
 

@@ -5,7 +5,7 @@ require 'miq_unicode'
 require 'fs/ntfs/attrib_standard_information'
 
 module NTFS
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   #
   # FILE_NAME_ATTR - Attribute: Filename (0x30)

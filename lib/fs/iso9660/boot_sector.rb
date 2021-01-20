@@ -5,7 +5,7 @@ require 'miq_unicode'
 
 module Iso9660
   class BootSector
-    using ManageIQ
+    using ManageIQ::UnicodeString
 
     # Universal Volume Descriptor ID.
     DESCRIPTOR_ID = "CD001"

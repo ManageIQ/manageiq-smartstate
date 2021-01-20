@@ -5,7 +5,7 @@ require 'fs/ntfs/directory_index_node'
 require 'fs/ntfs/index_record_header'
 
 module NTFS
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   #
   # INDEX_ROOT - Attribute: Index root (0x90).

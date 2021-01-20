@@ -12,7 +12,7 @@ require 'miq_unicode'
 # (which yields uppercase names on XP).
 
 module Fat32
-  using ManageIQ
+  using ManageIQ::UnicodeString
 
   DIR_ENT_SFN = BinaryStruct.new([
     'a11',  'name',         # If name[0] = 0, unallocated; if name[0] = 0xe5, deleted. DOES NOT INCLUDE DOT.
