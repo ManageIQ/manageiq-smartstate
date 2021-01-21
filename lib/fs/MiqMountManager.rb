@@ -8,6 +8,7 @@ class MiqMountManager < MiqFS
   def self.mountVolumes(volMgr, vmCfg, ost = nil)
     rootTrees = []
     noFsVolumes = []
+
     volMgr.visibleVolumes.each do |dobj|
       $log.debug("MiqMountManager.mountVolumes >> fileName=#{dobj.dInfo.fileName}, partition=#{dobj.partNum}") if $log
       fs = MiqFS.getFS(dobj)
@@ -20,10 +21,7 @@ class MiqMountManager < MiqFS
         rootTrees << new(rsm, dobj, volMgr, vmCfg, ost)
       end
     end
-    if volMgr.kind_of?(MiqNativeVolumeManager)
-      require 'MetakitFS'
-      rootTrees.each { |rt| rt.findPayload(noFsVolumes) } unless noFsVolumes.empty?
-    end
+
     rootTrees
   end # def self.mountVolumes
 
@@ -40,31 +38,6 @@ class MiqMountManager < MiqFS
 
     super(rootModule, rootVolume)
   end # def initialize
-
-  def findPayload(noFsVolumes)
-    $log.debug "MiqMountManager.findPayload: searching for payloads:" if $log
-    noFsVolumes.each do |v|
-      next unless v.respond_to?(:devFile)
-      if v.devFile
-        $log.debug "\tMiqMountManager.findPayload: devFile = #{v.devFile}" if $log
-        v.mkfile = v.devFile
-        unless MetakitFS.supported?(v)
-          $log.debug "\tMiqMountManager.findPayload: devFile = #{v.devFile} not mkfs, skipping" if $log
-          v.mkfile = nil
-          next
-        end
-        mkFs = MiqFS.new(MetakitFS, v)
-        if mkFs.fsId == "MIQPAYLOAD"
-          $log.debug "\tMiqMountManager.findPayload: payload found devFile = #{v.devFile}" if $log
-          @payloads << mkFs
-        else
-          $log.debug "\tMiqMountManager.findPayload: devFile = #{v.devFile} not payload, fsId = #{mkFs.fsId}" if $log
-        end
-      else
-        $log.debug "\tMiqMountManager.findPayload: devFile not set, fileName = #{v.dInfo.fileName}" if $log
-      end
-    end
-  end
 
   #
   # Override standard MiqFS methods to account for mount indirection.

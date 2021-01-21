@@ -105,12 +105,7 @@ module VimDatastoreFS
   #
   #     fpos = 0
   #     fsize = @pSize.get(fileRow)
-  #     if ftruncate && fsize != 0
-  #         @pSize.set fileRow, 0
-  #         @pData.set fileRow, Metakit::Bytes.new("", 0)
-  #     elsif fappend
-  #         fpos = fsize
-  #     end
+  #     fpos = fsize if fappend
   #
   #     return(MkFile.new(p, fileRow, fpos, fread, fwrite))
   # end # def fs_fileOpen
