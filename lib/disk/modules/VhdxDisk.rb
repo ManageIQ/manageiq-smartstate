@@ -1,6 +1,6 @@
 # encoding: US-ASCII
 
-require 'util/miq-unicode'
+require 'miq_unicode'
 require 'binary_struct'
 require 'disk/MiqDisk'
 require 'memory_buffer'
@@ -8,6 +8,8 @@ require 'disk/modules/MiqLargeFile'
 require 'disk/modules/vhdx_bat_entry'
 
 module VhdxDisk
+  using ManageIQ::UnicodeString
+
   # NOTE: All values are stored in network byte order.
 
   VHDX_FILE_IDENTIFIER = BinaryStruct.new([

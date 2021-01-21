@@ -1,10 +1,12 @@
 require 'fs/ntfs/utils'
 require 'util/win32/nt_util'
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 require 'fs/ntfs/attrib_standard_information'
 
 module NTFS
+  using ManageIQ::UnicodeString
+
   #
   # FILE_NAME_ATTR - Attribute: Filename (0x30)
   #

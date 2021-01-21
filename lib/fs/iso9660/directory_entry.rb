@@ -1,10 +1,11 @@
 require 'fs/iso9660/util'
 require 'fs/iso9660/rock_ridge'
-
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 module Iso9660
+  using ManageIQ::UnicodeString
+
   # FlagBits: FB_
   FB_HIDDEN     = 0x01  # 0 if not hidden.
   FB_DIRECTORY  = 0x02  # 0 if file.

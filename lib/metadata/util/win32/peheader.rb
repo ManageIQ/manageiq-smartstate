@@ -1,9 +1,8 @@
 # encoding: US-ASCII
 
 require 'stringio'
-
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 # Notes:
 #       The peheader object member 'icons' is an array of icons in the file. Sub 0 is the application
@@ -12,6 +11,8 @@ require 'util/miq-unicode'
 #       to open them and display each resolution contained in the icon (if more than one).
 
 class PEheader
+  using ManageIQ::UnicodeString
+
   IMAGE_NT_SIGNATURE = "PE\0\0"
   IMAGE_DOS_SIGNATURE = "MZ"
 

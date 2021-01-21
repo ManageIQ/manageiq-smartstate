@@ -1,8 +1,10 @@
 require 'fs/ntfs/utils'
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 module NTFS
+  using ManageIQ::UnicodeString
+
   #
   # ATTR_LIST_ENTRY - Attribute: Attribute list (0x20).
   #

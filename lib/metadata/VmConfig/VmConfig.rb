@@ -1,6 +1,6 @@
 require 'pathname'
 require 'metadata/VMMount/VMMount'
-require 'util/miq-unicode'
+require 'miq_unicode'
 require 'util/miq-xml'
 require 'VMwareWebService/MiqVimInventory'
 require 'timeout'
@@ -8,6 +8,8 @@ require 'util/miq-extensions'
 require 'VMwareWebService/MiqVimBroker'
 
 class VmConfig
+  using ManageIQ::UnicodeString
+
   attr_reader :configFile
 
   def initialize(filename)

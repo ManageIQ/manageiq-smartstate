@@ -1,7 +1,7 @@
 # encoding: US-ASCII
 
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 require 'enumerator'
 require 'util/miq-xml'
 require 'util/xml/xml_hash'
@@ -13,6 +13,8 @@ DEBUG_LOG_PERFORMANCE = false
 DEBUG_FILE_READS = false
 
 class MSRegHive
+  using ManageIQ::UnicodeString
+
   attr_reader :fileLoadTime, :fileParseTime, :digitalProductKeys, :xmlNode
 
   # Size of the HBIN data (as well as initiale REGF) segments

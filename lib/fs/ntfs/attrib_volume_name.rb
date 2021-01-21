@@ -1,6 +1,8 @@
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 module NTFS
+  using ManageIQ::UnicodeString
+
   #
   # VOLUME_NAME - Attribute: Volume name (0x60).
   #

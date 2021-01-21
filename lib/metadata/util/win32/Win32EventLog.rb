@@ -19,13 +19,15 @@ require 'digest/md5'
 
 # Common utilities.
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 require 'util/miq-xml'
 require 'util/miq-exception'
 
 require 'metadata/util/event_log_filter'
 
 class Win32EventLog
+  using ManageIQ::UnicodeString
+
   # Standard file log names
   SYSTEM_LOGS = %w(Application System Security)
   BUFFER_READ_SIZE = 10485760  # 10 MB buffer

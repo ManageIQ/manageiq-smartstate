@@ -1,9 +1,8 @@
 # encoding: US-ASCII
 
 require 'stringio'
-
 require 'binary_struct'
-require 'util/miq-unicode'
+require 'miq_unicode'
 
 # ////////////////////////////////////////////////////////////////////////////
 # // Data definitions.
@@ -13,6 +12,7 @@ require 'util/miq-unicode'
 # (which yields uppercase names on XP).
 
 module Fat32
+  using ManageIQ::UnicodeString
 
   DIR_ENT_SFN = BinaryStruct.new([
     'a11',  'name',         # If name[0] = 0, unallocated; if name[0] = 0xe5, deleted. DOES NOT INCLUDE DOT.
@@ -39,17 +39,17 @@ module Fat32
     'S',  'reserved2',  # Reserved.
     'a4', 'name3'       # UNICODE chars 12-13 of name.
   ])
-  
+
   CHARS_PER_LFN   = 13
   LFN_NAME_MAXLEN = 260
   DIR_ENT_SIZE    = 32
   ATTRIB_OFFSET   = 11
-  
+
   # ////////////////////////////////////////////////////////////////////////////
   # // Class.
 
   class DirectoryEntry
-    
+
     # From the UTF-8 perspective.
     # LFN name components: entry hash name, char offset, length.
     LFN_NAME_COMPONENTS = [
@@ -61,19 +61,19 @@ module Fat32
     LFN_NC_HASHNAME = 0
     LFN_NC_OFFSET   = 1
     LFN_NC_LENGTH   = 2
-    
+
     # SFN failure cases.
     SFN_NAME_LENGTH   = 1
     SFN_EXT_LENGTH    = 2
     SFN_NAME_NULL     = 3
     SFN_NAME_DEVICE   = 4
     SFN_ILLEGAL_CHARS = 5
-    
+
     # LFN failure cases.
     LFN_NAME_LENGTH   = 1
     LFN_NAME_DEVICE   = 2
     LFN_ILLEGAL_CHARS = 3
-    
+
     # FileAttributes
     FA_READONLY   = 0x01
     FA_HIDDEN     = 0x02
@@ -82,7 +82,7 @@ module Fat32
     FA_DIRECTORY  = 0x10
     FA_ARCHIVE    = 0x20
     FA_LFN        = 0x0f
-    
+
     # DOS time masks.
     MSK_DAY   = 0x001f  # Range: 1 - 31
     MSK_MONTH = 0x01e0  # Right shift 5, Range: 1 - 12
@@ -90,18 +90,18 @@ module Fat32
     MSK_SEC   = 0x001f  # Range: 0 - 29 WARNING: 2 second granularity on this.
     MSK_MIN   = 0x07e0  # Right shift 5, Range: 0 - 59
     MSK_HOUR  = 0xf800  # Right shift 11, Range: 0 - 23
-    
+
     # AllocationFlags
     AF_NOT_ALLOCATED  = 0x00
     AF_DELETED        = 0xe5
     AF_LFN_LAST       = 0x40
-    
+
     # Members.
     attr_reader :unused, :name, :dirty
     attr_accessor :parentCluster, :parentOffset
     # NOTE: Directory is responsible for setting parent.
     # These describe the cluster & offset of the START of the directory entry.
-    
+
     # Initialization
     def initialize(buf = nil)
       # Create for write.
@@ -109,7 +109,7 @@ module Fat32
         self.create
         return
       end
-      
+
       # Handle possibly multiple LFN records.
       data = StringIO.new(buf); @lfn_ents = []
       checksum = 0; @name = ""
@@ -119,12 +119,12 @@ module Fat32
           @unused = ""
           return
         end
-        
+
         # If attribute contains 0x0f then LFN entry.
         isLfn = buf[ATTRIB_OFFSET] == FA_LFN
         @dir_ent = isLfn ? DIR_ENT_LFN.decode(buf) : DIR_ENT_SFN.decode(buf)
         break if !isLfn
-        
+
         # Ignore this entry if deleted or not allocated.
         af = @dir_ent['seq_num']
         if af == AF_DELETED || af == AF_NOT_ALLOCATED
@@ -132,19 +132,19 @@ module Fat32
           @unused = data.read()
           return
         end
-        
+
         # Set checksum or make sure it's the same
         checksum = @dir_ent['checksum'] if checksum == 0
         raise "Directory entry LFN checksum mismatch." if @dir_ent['checksum'] != checksum
-        
+
         # Track LFN entry, gather names & prepend to name.
         @lfn_ents << @dir_ent
         @name = getLongNameFromEntry(@dir_ent) + @name
       end #LFN loop
-      
+
       # Push the rest of the data back.
       @unused = data.read()
-      
+
       # If this is the last record of an LFN chain, check the checksum.
       if checksum != 0
         csum = calcChecksum
@@ -156,7 +156,7 @@ module Fat32
           raise "Checksum error"
         end
       end
-      
+
       # Populate name if not LFN.
       if @name == "" && !@dir_ent['name'].empty?
         @name = @dir_ent['name'][0, 8].strip
@@ -167,21 +167,21 @@ module Fat32
 
     # ////////////////////////////////////////////////////////////////////////////
     # // Class helpers & accessors.
-    
+
     # Return this entry as a raw string.
     def raw
       out = ""
       @lfn_ents.each {|ent| out += BinaryStruct.encode(ent, DIR_ENT_LFN)} if @lfn_ents
       out += BinaryStruct.encode(@dir_ent, DIR_ENT_SFN)
     end
-    
+
     # Number of dir ent structures (both sfn and lfn).
     def numEnts
       num = 1
       num += @lfn_ents.size if @lfn_ents
       return num
     end
-    
+
     # Return normalized 8.3 name.
     def shortName
       name = @dir_ent['name'][0, 8].strip
@@ -189,7 +189,7 @@ module Fat32
       name += "." + ext if ext != ""
       return name
     end
-    
+
     # Construct & return long name from lfn entries.
     def longName
       return nil if @lfn_ents == nil
@@ -197,7 +197,7 @@ module Fat32
       @lfn_ents.reverse.each {|ent| name += getLongNameFromEntry(ent)}
       return name
     end
-    
+
     # WRITE: change filename.
     def name=(filename)
       @dirty = true
@@ -215,17 +215,17 @@ module Fat32
         @name = filename
       end
     end
-    
+
     # WRITE: change magic number.
     def magic=(magic)
       @dirty = true
       @dir_ent['reserved1'] = magic
     end
-    
+
     def magic
       return @dir_ent['reserved1']
     end
-    
+
     # WRITE: change attribs.
     def setAttribute(attrib, set = true)
       @dirty = true
@@ -235,27 +235,27 @@ module Fat32
         @dir_ent['attributes'] &= (~attrib)
       end
     end
-    
+
     # WRITE: change length.
     def length=(len)
       @dirty = true
       @dir_ent['file_size'] = len
     end
-    
+
     # WRITE: change first cluster.
     def firstCluster=(first_clus)
       @dirty = true
       @dir_ent['first_clus_hi'] = (first_clus >> 16)
       @dir_ent['first_clus_lo'] = (first_clus & 0xffff)
     end
-    
+
     # WRITE: change access time.
     def aTime=(tim)
       @dirty = true
       time, day = rubyToDosTime(tim)
       @dir_ent['atime_day'] = day
     end
-    
+
     # To support root dir times (all zero).
     def zeroTime
       @dirty = true
@@ -263,13 +263,13 @@ module Fat32
       @dir_ent['ctime_tos'] = 0; @dir_ent['ctime_hms'] = 0; @dir_ent['ctime_day'] = 0
       @dir_ent['mtime_hms'] = 0; @dir_ent['mtime_day'] = 0
     end
-    
+
     # WRITE: change modified (written) time.
     def mTime=(tim)
       @dirty = true
       @dir_ent['mtime_hms'], @dir_ent['mtime_day'] = rubyToDosTime(tim)
     end
-    
+
     # WRITE: write or rewrite directory entry.
     def writeEntry(bs)
       return if not @dirty
@@ -290,7 +290,7 @@ module Fat32
       bs.putCluster(cluster, buf)
       @dirty = false
     end
-    
+
     # WRITE: delete file.
     def delete(bs)
       # Deallocate data chain.
@@ -301,43 +301,43 @@ module Fat32
       @dirty = true
       self.writeEntry(bs)
     end
-    
+
     def close(bs)
       writeEntry(bs) if @dirty
     end
-    
+
     def attributes
       return @dir_ent['attributes']
     end
-    
+
     def length
       return @dir_ent['file_size']
     end
-    
+
     def firstCluster
       return (@dir_ent['first_clus_hi'] << 16) + @dir_ent['first_clus_lo']
     end
-    
+
     def isDir?
       return true if @dir_ent['attributes'] & FA_DIRECTORY == FA_DIRECTORY
       return false
     end
-    
+
     def mTime
       return dosToRubyTime(@dir_ent['mtime_day'], @dir_ent['mtime_hms'])
     end
-    
+
     def aTime
       return dosToRubyTime(@dir_ent['atime_day'], 0)
     end
-    
+
     def cTime
       return dosToRubyTime(@dir_ent['ctime_day'], @dir_ent['ctime_hms'])
     end
-        
+
     # ////////////////////////////////////////////////////////////////////////////
     # // Utility functions.
-    
+
     def getLongNameFromEntry(ent)
       pre_name = ""; hashNames = %w(name name2 name3)
       hashNames.each {|name|
@@ -351,7 +351,7 @@ module Fat32
       }
       return pre_name
     end
-    
+
     def incShortName
       @dirty = true
       num = @dir_ent['name'][7].to_i
@@ -363,7 +363,7 @@ module Fat32
         @lfn_ents.each {|ent| ent['checksum'] = csum}
       end
     end
-    
+
     def create
       @dirty = true
       @dir_ent = Hash.new
@@ -377,7 +377,7 @@ module Fat32
       # Must fill all members or BinaryStruct.encode fails.
       self.magic = 0x00; self.length = 0; self.firstCluster = 0 #magic used to be 0x18
     end
-    
+
     def mkLongName(name)
       @lfn_ents = mkLfn(name)
       @dir_ent['name'] = mkSfn(name)
@@ -387,7 +387,7 @@ module Fat32
       csum = calcChecksum()
       @lfn_ents.each {|ent| ent['checksum'] = csum}
     end
-    
+
     def mkLfn(name)
       name = mkLegalLfn(name)
       lfn_ents = []
@@ -420,11 +420,11 @@ module Fat32
       lfn_ents[0]['seq_num'] |= AF_LFN_LAST
       return lfn_ents
     end
-    
+
     def mkSfn(name)
       return mkLegalSfn(name)
     end
-    
+
     def isIllegalSfn(name)
       # Check: name length, extension length, NULL file name,
       # device names as file names & illegal chars.
@@ -437,14 +437,14 @@ module Fat32
       return SFN_ILLEGAL_CHARS if name.index(/[;+=\[\]',\"*\\<>\/?\:|]/) != nil
       return false
     end
-    
+
     def checkForDeviceName(fn)
       %w[aux com1 com2 com3 com4 lpt lpt1 lpt2 lpt3 lpt4 mailslot nul pipe prn].each {|bad|
         return true if fn == bad
       }
       return false
     end
-    
+
     def mkLegalSfn(name)
       name = name.upcase; name = name.delete(" ")
       name = name + "." if not name.include?(".")
@@ -454,18 +454,18 @@ module Fat32
       fn = fn[0, 6] + "~1" if fn.length > 8
       return (fn.ljust(8) + ext.ljust(3)).gsub(/[;+=\[\]',\"*\\<>\/?\:|]/, "_")
     end
-    
+
     def isIllegalLfn(name)
       return LFN_NAME_LENGTH if name.length > LFN_NAME_MAXLEN
       return LFN_ILLEGAL_CHARS if name.index(/\/\\:><?/) != nil
       return false
     end
-    
+
     def mkLegalLfn(name)
       name = name[0...LFN_NAME_MAXLEN] if name.length > LFN_NAME_MAXLEN
       return name.gsub(/\/\\:><?/, "_")
     end
-    
+
     def calcChecksum
       name = @dir_ent['name']; csum = 0
       0.upto(10) {|i|
@@ -473,7 +473,7 @@ module Fat32
       }
       return csum
     end
-    
+
     def dosToRubyTime(dos_day, dos_time)
       # Extract d,m,y,s,m,h & range check.
       day = dos_day & MSK_DAY; day = 1 if day == 0
@@ -487,7 +487,7 @@ module Fat32
       # Make a Ruby time.
       return Time.mktime(year, month, day, hour, min, sec)
     end
-    
+
     def rubyToDosTime(tim)
       # Time
       sec = tim.sec; sec -= 1 if sec == 60 #correction for possible leap second.
@@ -501,7 +501,7 @@ module Fat32
       dos_day = (year << 9) + (month << 5) + day
       return dos_time, dos_day
     end
-    
+
     # Dump object.
     def dump
       out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
@@ -535,6 +535,6 @@ module Fat32
       out += "First clus lo: 0x#{'%04x' % @dir_ent['first_clus_lo']}\n"
       out += "File size    : 0x#{'%08x' % @dir_ent['file_size']}\n"
     end
-    
+
   end
 end # module Fat32
