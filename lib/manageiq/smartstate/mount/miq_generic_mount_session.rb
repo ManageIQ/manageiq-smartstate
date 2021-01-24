@@ -16,7 +16,8 @@ class MiqGenericMountSession < MiqFileStorage::Interface
 
   class NoSuchFileOrDirectory < RuntimeError; end
 
-  attr_accessor :settings, :mnt_point, :logger
+  attr_accessor :settings, :mnt_point
+  attr_writer :logger
 
   def initialize(log_settings)
     raise "URI missing" unless log_settings.key?(:uri)
