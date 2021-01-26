@@ -1,4 +1,8 @@
+require 'miq_unicode'
+
 module CfgConfig
+  using ManageIQ::UnicodeString
+
   def convert(filename)
     @convertText = ""
     $log.debug "Processing Windows Configuration file [#{filename}]"

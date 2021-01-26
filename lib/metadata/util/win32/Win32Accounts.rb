@@ -2,8 +2,11 @@
 
 require 'util/miq-xml'
 require 'enumerator'
+require 'miq_unicode'
 
 module MiqWin32
+  using ManageIQ::UnicodeString
+
   class Accounts
     attr_reader :users, :groups
 
