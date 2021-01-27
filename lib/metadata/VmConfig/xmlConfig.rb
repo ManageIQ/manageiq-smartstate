@@ -1,5 +1,5 @@
 require 'util/miq-xml'
-require 'util/runcmd'
+require 'awesome_spawn'
 
 module XmlConfig
   def convert(filename)
@@ -12,9 +12,9 @@ module XmlConfig
       if Sys::Platform::IMPL == :linux
         begin
           # First check to see if the command is available
-          MiqUtil.runcmd("virsh list")
+          AwesomeSpawn.run!("virsh", :params => ["list"])
           begin
-            xml_data = MiqUtil.runcmd("virsh dumpxml #{File.basename(filename, ".*")}")
+            xml_data = AwesomeSpawn.run!("virsh", :params => ["dumpxml", File.basename(filename, ".*")], :combined_output => true).output
           rescue => err
             $log.error "#{err}\n#{err.backtrace.join("\n")}"
           end

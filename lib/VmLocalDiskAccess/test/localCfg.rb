@@ -1,14 +1,12 @@
 require 'util/miq-xml'
-require 'util/runcmd'
 require 'metadata/VmConfig/VmConfig'
 require 'VolumeManager/MiqNativeVolumeManager'
 require 'fs/MiqMountManager'
+require 'awesome_spawn'
 
 module MiqNativeMountManager
-  LSHW = "lshw"
-
   def self.mountVolumes
-    lshwXml = MiqUtil.runcmd("#{LSHW} -xml")
+    lshwXml = AwesomeSpawn.run!("lshw", :params => ["-xml"], :combined_output => true).output
     nodeHash = Hash.new { |h, k| h[k] = [] }
     doc = MiqXml.load(lshwXml)
     doc.find_match("//node").each { |n| nodeHash[n.attributes["id"].split(':', 2)[0]] << n }
