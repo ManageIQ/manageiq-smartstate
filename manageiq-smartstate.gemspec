@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "activesupport"
+  spec.add_dependency "awesome_spawn",      "~> 1.5"
   spec.add_dependency "azure-armrest",      "~> 0.9"
   spec.add_dependency "binary_struct",      "~> 2.1"
   spec.add_dependency "iniparse"
