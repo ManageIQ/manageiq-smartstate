@@ -32,9 +32,9 @@ class MiqNfsSession < MiqGenericMountSession
     case Sys::Platform::IMPL
     when :macosx
       mount_args[:o] = "resvport"
-      runcmd("sudo mount", :params => mount_args)
+      sudo_mount(mount_args)
     when :linux
-      runcmd("mount", :params => mount_args)
+      mount(mount_args)
     else
       raise "platform not supported"
     end

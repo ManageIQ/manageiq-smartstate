@@ -1,4 +1,5 @@
 require "util/mount/miq_generic_mount_session"
+require "awesome_spawn/spec_helper"
 
 describe MiqGenericMountSession do
   it "#connect returns a string pointing to the mount point" do
@@ -17,21 +18,85 @@ describe MiqGenericMountSession do
     expect(described_class.new(:uri => '/tmp/abc').mount_share).to_not eq(described_class.new(:uri => '/tmp/abc').mount_share)
   end
 
-  it ".runcmd will retry with sudo if needed" do
-    cmd      = "mount"
-    args     = "--foo bar"
-    fake_out = "uh oh"
-    fake_err = "err: not good"
+  include AwesomeSpawn::SpecHelper
 
-    cmd_bad_result  = AwesomeSpawn::CommandResult.new("#{cmd} #{args}", fake_out, fake_err, 1)
-    cmd_error       = AwesomeSpawn::CommandResultError.new("mount failed", cmd_bad_result)
-    cmd_good_result = AwesomeSpawn::CommandResult.new("sudo #{cmd} #{args}", "", "", 0)
+  describe "#mount" do
+    let(:args) { {:foo => :bar} }
 
-    spawn_args      = { :foo => :bar, :combined_output => true }
+    it "works on success" do
+      stub_good_run!("mount", :params => args, :combined_output => true)
 
-    expect(AwesomeSpawn).to receive(:run!).once.with(cmd, spawn_args).and_raise(cmd_error)
-    expect(AwesomeSpawn).to receive(:run!).once.with("sudo #{cmd}", spawn_args).and_return(cmd_good_result)
+      described_class.new(:uri => nil).mount(args)
+    end
 
-    described_class.runcmd("mount", :foo => :bar)
+    it "will retry with sudo on failure" do
+      stub_bad_run!("mount",       :params => args, :combined_output => true)
+      stub_good_run!("sudo mount", :params => args, :combined_output => true)
+
+      described_class.new(:uri => nil).mount(args)
+    end
+
+    it "raises on failure and sudo failure" do
+      stub_bad_run!("mount",      :params => args, :combined_output => true)
+      stub_bad_run!("sudo mount", :params => args, :combined_output => true)
+
+      expect { described_class.new(:uri => nil).mount(args) }.to raise_error(AwesomeSpawn::CommandResultError)
+    end
+  end
+
+  describe "#sudo_mount" do
+    let(:args) { {:foo => :bar} }
+
+    it "works on success" do
+      stub_good_run!("sudo mount", :params => args, :combined_output => true)
+
+      described_class.new(:uri => nil).sudo_mount(args)
+    end
+
+    it "raises on failure" do
+      stub_bad_run!("sudo mount", :params => args, :combined_output => true)
+
+      expect { described_class.new(:uri => nil).sudo_mount(args) }.to raise_error(AwesomeSpawn::CommandResultError)
+    end
+  end
+
+  describe "#umount" do
+    let(:mount_point) { "/mnt/foo" }
+
+    it "works on success" do
+      stub_good_run!("umount", :params => [mount_point], :combined_output => true)
+
+      described_class.new(:uri => nil).umount(mount_point)
+    end
+
+    it "will retry with sudo on failure" do
+      stub_bad_run!("umount",       :params => [mount_point], :combined_output => true)
+      stub_good_run!("sudo umount", :params => [mount_point], :combined_output => true)
+
+      described_class.new(:uri => nil).umount(mount_point)
+    end
+
+    it "raises on failure and sudo failure" do
+      stub_bad_run!("umount",      :params => [mount_point], :combined_output => true)
+      stub_bad_run!("sudo umount", :params => [mount_point], :combined_output => true)
+
+      expect { described_class.new(:uri => nil).umount(mount_point) }.to raise_error(AwesomeSpawn::CommandResultError)
+    end
+  end
+
+  describe "#sudo_umount" do
+    let(:mount_point) { "/mnt/foo" }
+
+    it "works on success" do
+      stub_good_run!("sudo umount", :params => [mount_point], :combined_output => true)
+
+      described_class.new(:uri => nil).sudo_umount(mount_point)
+    end
+
+    it "raises on failure" do
+      stub_bad_run!("sudo umount", :params => [mount_point], :combined_output => true)
+
+      expect { described_class.new(:uri => nil).sudo_umount(mount_point) }.to raise_error(AwesomeSpawn::CommandResultError)
+    end
   end
 end
