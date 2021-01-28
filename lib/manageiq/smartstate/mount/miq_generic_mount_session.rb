@@ -29,21 +29,32 @@ class MiqGenericMountSession < MiqFileStorage::Interface
     @logger ||= $log.nil? ? :: Logger.new(STDOUT) : $log
   end
 
-  def runcmd(cmd_str, args = {})
-    self.class.runcmd(cmd_str, args)
+  def mount(args)
+    run_command("mount", args)
+  rescue AwesomeSpawn::CommandResultError => err
+    raise if err.result.exit_status != 1
+
+    sudo_mount(args)
   end
 
-  def self.runcmd(cmd_str, args = {})
-    MiqUtil.runcmd(cmd_str, args)
-  rescue AwesomeSpawn::CommandResultError => cmd_err
-    # If sudo is required, ensure you have /etc/sudoers.d/miq
-    # Cmnd_Alias MOUNTALL = /bin/mount, /bin/umount
-    # %wheel ALL = NOPASSWD: MOUNTALL
-    if cmd_err.result.exit_status == 1 && cmd_str =~ /^(mount|umount)$/
-      MiqUtil.runcmd("sudo #{cmd_str}", args)
-    else
-      raise cmd_err
-    end
+  def sudo_mount(args)
+    run_command("sudo mount", args)
+  end
+
+  def umount(mount_point)
+    run_command("umount", [mount_point])
+  rescue AwesomeSpawn::CommandResultError => err
+    raise if err.result.exit_status != 1
+
+    sudo_umount(mount_point)
+  end
+
+  def sudo_umount(mount_point)
+    run_command("sudo umount", [mount_point])
+  end
+
+  private def run_command(command, args)
+    AwesomeSpawn.run!(command, :params => args, :combined_output => true).output
   end
 
   def self.in_depot_session(opts, &_block)
@@ -467,9 +478,9 @@ class MiqGenericMountSession < MiqFileStorage::Interface
   def self.raw_disconnect(mnt_point)
     case Sys::Platform::IMPL
     when :macosx
-      runcmd("sudo umount", :params => [mnt_point])
+      sudo_umount(mnt_point)
     when :linux
-      runcmd("umount", :params => [mnt_point])
+      umount(mnt_point)
     else
       raise "platform not supported"
     end
