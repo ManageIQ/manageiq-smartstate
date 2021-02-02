@@ -3,10 +3,10 @@ require 'fileutils'
 require 'logger'
 require 'sys-uname'
 require 'uri'
+require 'awesome_spawn'
 
 require 'util/miq-exception'
 require 'util/miq_file_storage'
-require 'util/runcmd'
 
 class MiqGenericMountSession < MiqFileStorage::Interface
   require 'util/mount/miq_local_mount_session'
