@@ -1,6 +1,4 @@
 require 'minitest/unit'
-require 'enumerator'
-
 require 'fs/ext3/block_pointers_path'
 include  Ext3
 

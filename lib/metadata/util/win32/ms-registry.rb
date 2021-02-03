@@ -2,7 +2,6 @@
 
 require 'binary_struct'
 require 'miq_unicode'
-require 'enumerator'
 require 'util/miq-xml'
 require 'util/xml/xml_hash'
 
