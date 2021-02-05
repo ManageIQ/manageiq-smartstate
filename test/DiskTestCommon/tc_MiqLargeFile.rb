@@ -1,6 +1,5 @@
 require 'disk/modules/MiqLargeFile'
 require 'metadata/util/md5deep'
-require 'enumerator'
 require 'minitest/unit'
 require 'tmpdir'
 

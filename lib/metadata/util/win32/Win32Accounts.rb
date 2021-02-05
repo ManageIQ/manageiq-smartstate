@@ -1,7 +1,6 @@
 # encoding: US-ASCII
 
 require 'util/miq-xml'
-require 'enumerator'
 require 'miq_unicode'
 
 module MiqWin32

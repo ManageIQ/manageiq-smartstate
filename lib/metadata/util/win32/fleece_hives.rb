@@ -1,7 +1,6 @@
 require 'util/miq-xml'
 require 'digest/md5'
 require 'metadata/util/win32/remote-registry'
-require 'enumerator'
 require 'util/miq-encode'
 
 class FleeceHives

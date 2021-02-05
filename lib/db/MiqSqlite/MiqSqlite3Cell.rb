@@ -1,8 +1,6 @@
 # encoding: US-ASCII
 
 require 'ostruct'
-require 'enumerator'
-
 require 'binary_struct'
 require_relative 'MiqSqlite3Util'
 

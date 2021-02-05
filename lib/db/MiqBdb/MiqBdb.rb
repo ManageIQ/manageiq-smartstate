@@ -89,8 +89,6 @@
 #
 ############################################################################################
 
-require 'enumerator'
-
 require 'binary_struct'
 require 'util/miq-hash_struct'
 

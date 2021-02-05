@@ -1,5 +1,3 @@
-require 'enumerator'
-
 module Win32
   class SystemPath
     # BCD WMI Provider Enumerations (values)

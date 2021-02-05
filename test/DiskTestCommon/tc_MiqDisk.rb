@@ -1,6 +1,5 @@
 require 'disk/MiqDisk'
 require 'ostruct'
-require 'enumerator'
 require 'minitest/unit'
 
 module DiskTestCommon
