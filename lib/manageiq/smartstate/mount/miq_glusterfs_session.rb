@@ -13,7 +13,7 @@ class MiqGlusterfsSession < MiqGenericMountSession
 
   def connect
     _scheme, _userinfo, @host, _port, _registry, @mount_path, _opaque, _query, _fragment =
-      URI.split(URI.encode(@settings[:uri]))
+      URI.split(URI::DEFAULT_PARSER.escape(@settings[:uri]))
     super
   end
 
