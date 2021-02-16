@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "vcr", "~>3.0.2"
   spec.add_development_dependency "webmock", "~>2.3.1"
 end
