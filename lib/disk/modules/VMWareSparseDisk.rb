@@ -200,11 +200,7 @@ module VMWareSparseDisk
     # the grain tables.
     #
     buf = @vmwareSparseDisk_file.read(BYTES_PER_SECTOR)
-    @grainDirectory = []
-
-    GDES_PER_GD.times do |index|
-      @grainDirectory[index] = buf[index, GDE_SIZE].unpack1('L')
-    end
+    @grainDirectory = GDES_PER_GD.times.map { |index| buf[index, GDE_SIZE].unpack1('L') }
 
     #
     # In a Hosted Sparse Extent, all the grain tables are created when the sparse extent is created,
@@ -320,10 +316,10 @@ module VMWareSparseDisk
     gte = getGTE(grain_number)
 
     #
+    # when GTE >  1 - all reads: from the sparse disk
     # when GTE is 0 - reads with no parent: return 0s
     #               - reads with    parent: read from parent
     # when GTE is 1 - all reads: return 0s
-    # when GTE >  1 - all reads: from the sparse disk
     #
     if gte > 1
       read_grain_from_disk(gte, offset, length)
