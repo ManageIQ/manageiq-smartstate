@@ -66,21 +66,21 @@ describe MiqGenericMountSession do
     it "works on success" do
       stub_good_run!("umount", :params => [mount_point], :combined_output => true)
 
-      described_class.new(:uri => nil).umount(mount_point)
+      described_class.umount(mount_point)
     end
 
     it "will retry with sudo on failure" do
       stub_bad_run!("umount",       :params => [mount_point], :combined_output => true)
       stub_good_run!("sudo umount", :params => [mount_point], :combined_output => true)
 
-      described_class.new(:uri => nil).umount(mount_point)
+      described_class.umount(mount_point)
     end
 
     it "raises on failure and sudo failure" do
       stub_bad_run!("umount",      :params => [mount_point], :combined_output => true)
       stub_bad_run!("sudo umount", :params => [mount_point], :combined_output => true)
 
-      expect { described_class.new(:uri => nil).umount(mount_point) }.to raise_error(AwesomeSpawn::CommandResultError)
+      expect { described_class.umount(mount_point) }.to raise_error(AwesomeSpawn::CommandResultError)
     end
   end
 
@@ -90,13 +90,13 @@ describe MiqGenericMountSession do
     it "works on success" do
       stub_good_run!("sudo umount", :params => [mount_point], :combined_output => true)
 
-      described_class.new(:uri => nil).sudo_umount(mount_point)
+      described_class.sudo_umount(mount_point)
     end
 
     it "raises on failure" do
       stub_bad_run!("sudo umount", :params => [mount_point], :combined_output => true)
 
-      expect { described_class.new(:uri => nil).sudo_umount(mount_point) }.to raise_error(AwesomeSpawn::CommandResultError)
+      expect { described_class.sudo_umount(mount_point) }.to raise_error(AwesomeSpawn::CommandResultError)
     end
   end
 end
