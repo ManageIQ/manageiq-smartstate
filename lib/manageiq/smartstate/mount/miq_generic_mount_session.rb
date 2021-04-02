@@ -16,6 +16,12 @@ class MiqGenericMountSession < MiqFileStorage::Interface
 
   class NoSuchFileOrDirectory < RuntimeError; end
 
+  class << self
+    def run_command(command, args)
+      AwesomeSpawn.run!(command, :params => args, :combined_output => true).output
+    end
+  end
+
   attr_accessor :settings, :mnt_point
   attr_writer :logger
 
@@ -30,7 +36,7 @@ class MiqGenericMountSession < MiqFileStorage::Interface
   end
 
   def mount(args)
-    run_command("mount", args)
+    self.class.run_command("mount", args)
   rescue AwesomeSpawn::CommandResultError => err
     raise if err.result.exit_status != 1
 
@@ -38,10 +44,10 @@ class MiqGenericMountSession < MiqFileStorage::Interface
   end
 
   def sudo_mount(args)
-    run_command("sudo mount", args)
+    self.class.run_command("sudo mount", args)
   end
 
-  def umount(mount_point)
+  def self.umount(mount_point)
     run_command("umount", [mount_point])
   rescue AwesomeSpawn::CommandResultError => err
     raise if err.result.exit_status != 1
@@ -49,12 +55,8 @@ class MiqGenericMountSession < MiqFileStorage::Interface
     sudo_umount(mount_point)
   end
 
-  def sudo_umount(mount_point)
+  def self.sudo_umount(mount_point)
     run_command("sudo umount", [mount_point])
-  end
-
-  private def run_command(command, args)
-    AwesomeSpawn.run!(command, :params => args, :combined_output => true).output
   end
 
   def self.in_depot_session(opts, &_block)
