@@ -5,7 +5,6 @@ require 'util/miq-xml'
 require 'VMwareWebService/MiqVimInventory'
 require 'timeout'
 require 'util/miq-extensions'
-require 'VMwareWebService/MiqVimBroker'
 
 class VmConfig
   using ManageIQ::UnicodeString
