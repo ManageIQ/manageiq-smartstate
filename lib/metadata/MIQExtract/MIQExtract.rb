@@ -16,7 +16,6 @@ require 'metadata/ScanProfile/VmScanProfiles'
 require 'VMwareWebService/MiqVim'
 require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
 require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance'
-require 'VMwareWebService/MiqVimBroker'
 
 class MIQExtract
   attr_reader :systemFsMsg, :systemFs, :vm
