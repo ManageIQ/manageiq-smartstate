@@ -9,7 +9,7 @@ $vim_log = $log = Logger.new(STDERR)
 SERVER        = raise "please define SERVER"
 USERNAME      = raise "please define USERNAME"
 PASSWORD      = raise "please define PASSWORD"
-vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
+vim = MiqVim.new(:server => SERVER, :username => USERNAME, :password => PASSWORD)
 
 vimVm = nil
 vm    = nil

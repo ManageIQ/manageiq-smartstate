@@ -13,7 +13,7 @@ USERNAME      = raise "please define USERNAME"
 PASSWORD      = raise "please define PASSWORD"
 TARGET_VM     = raise "please define TARGET_VM"
 
-vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
+vim = MiqVim.new(:server => SERVER, :username => USERNAME, :password => PASSWORD)
 
 begin
   vim_vm = vim.getVimVmByFilter("config.name" => TARGET_VM)
