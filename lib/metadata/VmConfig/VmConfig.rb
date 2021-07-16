@@ -413,7 +413,7 @@ class VmConfig
       require 'VMwareWebService/MiqVim'
 
       password_decrypt = ManageIQ::Password.decrypt(ems_host['password'])
-      hostVim = MiqVim.new(ems_host['host'], ems_host['user'], password_decrypt)
+      hostVim = MiqVim.new(:server => ems_host['host'], :username => ems_host['user'], :password => password_decrypt)
       $log.info "#{conn_reason}: Connection to [#{ems_display_text}] completed for VM:[#{vmCfgFile}] in [#{Time.now - st}] seconds"
       return hostVim
     rescue Timeout::Error => err
@@ -431,7 +431,7 @@ class VmConfig
 
     password_decrypt = ManageIQ::Password.decrypt(ems['password'])
     $log.debug "resolve_path_names: emsHost = #{ems['host']}, emsUser = #{ems['user']}" if $log
-    vi = MiqVimInventory.new(ems['host'], ems['user'], password_decrypt)
+    vi = MiqVimInventory.new(:server => ems['host'], :username => ems['user'], :password => password_decrypt)
     return getDsName(filename, vi)
 
   rescue

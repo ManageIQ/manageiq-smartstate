@@ -4,8 +4,8 @@ require 'more_core_extensions/core_ext/object/blank'
 require 'metadata/VmConfig/VmConfig'
 require "VolumeManager/MiqVolumeManager"
 require "fs/MiqFS/MiqFS"
+require "MiqVm/MiqVim"
 require "MiqVm/MiqVm"
-require 'VMwareWebService/MiqVimBroker'
 
 SRC_VM = raise "please define"
 vmCfg = "/Volumes/WDpassport/Virtual Machines/MIQAppliance-win2008x86/Win2008x86.vmx"
@@ -19,8 +19,7 @@ vim = nil
 
 begin
   # Uncomment following 2 lines for clienr/server connection.
-  # broker = MiqVimBroker.new(:client)
-  # vim = broker.getMiqVim(SERVER, USERNAME, PASSWORD)
+  # vim = MiqVim.new(:server => SERVER, :username => USERNAME, :password => PASSWORD)
   # miqVm = vim.getVimVmByFilter("config.name" => SRC_VM)
   #
   # vmCfg = miqVm.vmh['summary']['config']['vmPathName']
