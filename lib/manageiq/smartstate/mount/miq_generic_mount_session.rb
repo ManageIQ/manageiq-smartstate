@@ -6,13 +6,11 @@ require 'uri'
 require 'awesome_spawn'
 
 require 'util/miq-exception'
-require 'util/miq_file_storage'
+require 'manageiq/smartstate/miq_file_storage'
 
 class MiqGenericMountSession < MiqFileStorage::Interface
-  require 'util/mount/miq_local_mount_session'
-  require 'util/mount/miq_nfs_session'
-  require 'util/mount/miq_smb_session'
-  require 'util/mount/miq_glusterfs_session'
+  require 'manageiq/smartstate/mount/miq_nfs_session'
+  require 'manageiq/smartstate/mount/miq_glusterfs_session'
 
   class NoSuchFileOrDirectory < RuntimeError; end
 
