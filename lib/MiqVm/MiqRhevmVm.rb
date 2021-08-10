@@ -148,9 +148,9 @@ class MiqRhevmVm < MiqVm
 
         case mount_info[:type]
         when "nfs"
-          MiqNfsSession.new(mount_info).connect
+          ManageIQ::Smartstate::NfsSession.new(mount_info).connect
         when "glusterfs"
-          MiqGlusterfsSession.new(mount_info).connect
+          ManageIQ::Smartstate::GlusterfsSession.new(mount_info).connect
         end
 
         @ost.nfs_storage_mounted = true
@@ -169,7 +169,7 @@ class MiqRhevmVm < MiqVm
     return if nfs_mounts.empty?
     begin
       $log.warn "#{log_header} Unmount all items from <#{nfs_mount_root}>"
-      nfs_mounts.each_value { |mnt| MiqNfsSession.disconnect(mnt[:mount_point]) }
+      nfs_mounts.each_value { |mnt| ManageIQ::Smartstate::RhevmVmNfsSession.disconnect(mnt[:mount_point]) }
       FileUtils.rm_rf(nfs_mount_root)
       @ost.nfs_storage_mounted = false
     rescue
