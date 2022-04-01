@@ -35,12 +35,11 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "camcorder"
-  spec.add_development_dependency "codeclimate-test-reporter", "~> 1.0.0"
   spec.add_development_dependency "manageiq-style"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "rspec",     "~> 3.0"
+  spec.add_development_dependency "simplecov", ">= 0.21.2"
   spec.add_development_dependency "sqlite3"
-  spec.add_development_dependency "vcr", "~>3.0.2"
-  spec.add_development_dependency "webmock", "~>2.3.1"
+  spec.add_development_dependency "vcr",       "~>3.0.2"
+  spec.add_development_dependency "webmock",   "~>2.3.1"
 end
