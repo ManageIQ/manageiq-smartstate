@@ -8,11 +8,7 @@ module MSVSFixedDisk
 
     fileMode = MiqDiskCommon.file_mode
 
-    if dInfo.hyperv_connection
-      @ms_flat_disk_file = MSCommon.connect_to_hyperv(dInfo)
-    else
-      @ms_flat_disk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
-    end
+    @ms_flat_disk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
   end
 
   def d_read(pos, len)

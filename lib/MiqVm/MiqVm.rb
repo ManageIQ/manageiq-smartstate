@@ -48,11 +48,6 @@ class MiqVm
       @vmConfig = VmConfig.new(getCfg(@ost.snapId))
       $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
       $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
-    # TODO: move this to miq_scvmm_vm
-    elsif (@scvmm = @ost.miq_scvmm)
-      $log.debug "MiqVm::initialize: accessing VM through HyperV server" if $log.debug?
-      @vmConfig = VmConfig.new(getCfg(@ost.snapId))
-      $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
     else
       @vimVm = nil
       @vmConfig = VmConfig.new(vmCfg)
@@ -90,8 +85,6 @@ class MiqVm
         end
         $log.debug "openDisks: using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
         dInfo.vixDiskInfo[:connection]  = @vdlConnection
-      elsif @ost.miq_hyperv
-        init_disk_info(dInfo, df)
       else
         dInfo.fileName = df
         disk_format = @vmConfig.getHash["#{dtag}.format"]  # Set by rhevm for iscsi and fcp disks

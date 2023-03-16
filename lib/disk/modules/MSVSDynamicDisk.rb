@@ -6,11 +6,7 @@ module MSVSDynamicDisk
     self.diskType = "MSVS Dynamic"
     self.blockSize = MSCommon::SECTOR_LENGTH
     fileMode = MiqDiskCommon.file_mode(dInfo)
-    @ms_disk_file = if dInfo.hyperv_connection
-                      MSCommon.connect_to_hyperv(dInfo)
-                    else
-                      MiqLargeFile.open(dInfo.fileName, fileMode)
-                    end
+    @ms_disk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
     MSCommon.d_init_common(dInfo, @ms_disk_file)
   end
 

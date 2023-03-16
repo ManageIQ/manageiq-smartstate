@@ -8,13 +8,7 @@ module MSVSDiffDisk
     self.diskType = "MSVS Differencing"
     self.blockSize = MSCommon::SECTOR_LENGTH
     fileMode = MiqDiskCommon.file_mode(dInfo)
-    if dInfo.hyperv_connection
-      @hyperv_connection = dInfo.hyperv_connection
-      @ms_disk_file      = MSCommon.connect_to_hyperv(dInfo)
-    else
-      @hyperv_connection = nil
-      @ms_disk_file      = MiqLargeFile.open(dInfo.fileName, fileMode) unless dInfo.baseOnly
-    end
+    @ms_disk_file      = MiqLargeFile.open(dInfo.fileName, fileMode) unless dInfo.baseOnly
     MSCommon.d_init_common(dInfo, @ms_disk_file) unless dInfo.baseOnly
 
     # Get parent locators.
@@ -68,7 +62,6 @@ module MSVSDiffDisk
       @parent_ostruct                   = OpenStruct.new
       @parent_ostruct.fileName          = locator['fileName']
       @parent_ostruct.driveType         = dInfo.driveType
-      @parent_ostruct.hyperv_connection = @hyperv_connection unless @hyperv_connection.nil?
       @parent                           = MiqDisk.getDisk(@parent_ostruct)
     end
   end

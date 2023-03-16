@@ -2,7 +2,6 @@ require 'disk/modules/MiqLargeFile'
 require 'miq_unicode'
 require 'binary_struct'
 require 'memory_buffer'
-require 'Scvmm/miq_hyperv_disk'
 
 module MSCommon
   using ManageIQ::UnicodeString
@@ -68,18 +67,6 @@ module MSCommon
   HEADER_LOCATION = 512
   BLOCK_NOT_ALLOCATED = 0xffffffff
   SUPPORTED_HEADER_VERSION = 0x00010000
-
-  def self.connect_to_hyperv(ostruct)
-    connection  = ostruct.hyperv_connection
-    @network    = ostruct.driveType == "Network"
-    hyperv_disk = MiqHyperVDisk.new(connection[:host],
-                                    connection[:user],
-                                    connection[:password],
-                                    connection[:port],
-                                    @network)
-    hyperv_disk.open(ostruct.fileName)
-    hyperv_disk
-  end
 
   def self.d_init_common(dInfo, file)
     @dInfo = dInfo
