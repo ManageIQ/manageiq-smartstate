@@ -37,15 +37,9 @@ module XmlConfig
     end
     xml_type = nil
     xml_type = :xen unless xml.find_first("//vm/thinsyVmm").nil?
-    xml_type = :ms_hyperv  unless xml.find_first("//configuration/properties/type_id").nil?
     xml_type = :kvm if xml.root.name == 'domain' && ['kvm', 'qemu'].include?(xml.root.attributes['type'])
 
     raise "Specified XML file [#{filename}] is not a valid VM configuration file." if xml_type.nil?
-
-    if xml_type == :ms_hyperv
-      require "metadata/VmConfig/xmlMsHyperVConfig"
-      extend  XmlMsHyperVConfig
-    end
 
     xml_to_config(xml)
 

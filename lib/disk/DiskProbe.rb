@@ -9,7 +9,7 @@ module DiskProbe
     p.chomp!(".rb")
   end
   # Reorder known probes for optimization
-  %w(VixDiskProbe VMWareDiskProbe RhevmDiskProbe VhdxDiskProbe).reverse_each do |probe|
+  %w(VixDiskProbe VMWareDiskProbe RhevmDiskProbe).reverse_each do |probe|
     PROBE_FILES.unshift(probe) if PROBE_FILES.delete(probe)
   end
   PROBE_FILES.push("LocalDevProbe") if PROBE_FILES.delete("LocalDevProbe")
