@@ -1,3 +1,4 @@
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'util/xml/xml_utils'
 require 'util/xml/xml_hash'

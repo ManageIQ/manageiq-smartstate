@@ -1,4 +1,5 @@
 require 'sys-uname'
+require 'manageiq/gems/pending'
 require 'util/miq-system'
 
 if Sys::Platform::IMPL == :linux && MiqSystem.arch == :x86_64

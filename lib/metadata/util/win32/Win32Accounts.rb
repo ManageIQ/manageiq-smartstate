@@ -1,5 +1,6 @@
 # encoding: US-ASCII
 
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'miq_unicode'
 

@@ -20,6 +20,7 @@ require 'digest/md5'
 # Common utilities.
 require 'binary_struct'
 require 'miq_unicode'
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'util/miq-exception'
 

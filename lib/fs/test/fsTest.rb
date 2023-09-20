@@ -1,4 +1,4 @@
-require 'manageiq-gems-pending'
+require 'manageiq/gems/pending'
 require 'ostruct'
 require 'disk/MiqDisk'
 require 'fs/MiqFS/MiqFS'

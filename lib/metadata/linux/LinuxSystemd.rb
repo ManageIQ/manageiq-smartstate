@@ -1,3 +1,4 @@
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 
 # iniparse needed to handle duplicate options (inifile will overwrite)

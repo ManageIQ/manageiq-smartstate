@@ -1,3 +1,4 @@
+require 'manageiq/gems/pending'
 require 'util/miq-hash_struct'
 require 'util/miq-xml'
 require 'metadata/linux/MiqRpmPackages'

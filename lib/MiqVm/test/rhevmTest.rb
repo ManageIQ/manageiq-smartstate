@@ -1,4 +1,4 @@
-require 'manageiq-gems-pending'
+require 'manageiq/gems/pending'
 require 'ostruct'
 require 'MiqVm/MiqVm'
 require 'ovirt'

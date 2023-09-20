@@ -1,4 +1,5 @@
 require 'binary_struct'
+require 'manageiq/gems/pending'
 require 'util/miq-hash_struct'
 require 'db/MiqSqlite/MiqSqlite3'
 

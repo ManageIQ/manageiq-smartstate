@@ -1,5 +1,6 @@
 require 'MiqVm/MiqVm'
 require 'metadata/MIQExtract/MIQExtract'
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'digest/md5'
 require 'minitest/unit'

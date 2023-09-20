@@ -1,3 +1,4 @@
+require 'manageiq/gems/pending'
 require 'util/win32/nt_util'
 require 'binary_struct'
 

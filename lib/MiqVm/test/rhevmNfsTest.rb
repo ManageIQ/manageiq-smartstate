@@ -2,7 +2,7 @@
 # This test assumes the NFS share of the storage in question is mounted on the appliance.
 #
 
-require 'manageiq-gems-pending'
+require 'manageiq/gems/pending'
 require 'ostruct'
 require 'MiqVm/MiqVm'
 
