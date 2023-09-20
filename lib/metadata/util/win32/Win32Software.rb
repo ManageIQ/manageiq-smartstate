@@ -1,3 +1,4 @@
+require 'manageiq/gems/pending'
 require 'util/xml/xml_utils'
 require 'util/miq-xml'
 require 'metadata/util/win32/peheader'

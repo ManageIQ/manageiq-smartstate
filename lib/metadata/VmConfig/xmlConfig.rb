@@ -1,3 +1,4 @@
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'awesome_spawn'
 

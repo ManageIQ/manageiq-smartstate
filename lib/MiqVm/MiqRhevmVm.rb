@@ -129,6 +129,7 @@ class MiqRhevmVm < MiqVm
   end
 
   def mount_storage
+    require 'manageiq/gems/pending'
     require 'util/mount/miq_nfs_session'
     require 'util/mount/miq_glusterfs_session'
     log_header = "MIQ(MiqRhevmVm.mount_storage)"

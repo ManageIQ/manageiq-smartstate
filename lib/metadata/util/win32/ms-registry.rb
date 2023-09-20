@@ -2,6 +2,7 @@
 
 require 'binary_struct'
 require 'miq_unicode'
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'util/xml/xml_hash'
 

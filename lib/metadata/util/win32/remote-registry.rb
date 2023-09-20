@@ -1,4 +1,5 @@
 require 'metadata/util/win32/ms-registry'
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'util/xml/xml_hash'
 require 'metadata/util/win32/system_path_win'

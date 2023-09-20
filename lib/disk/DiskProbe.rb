@@ -1,4 +1,5 @@
 module DiskProbe
+  require 'manageiq/gems/pending'
   require 'util/miq-exception'
   MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
 

@@ -1,4 +1,4 @@
-require 'manageiq-gems-pending'
+require 'manageiq/gems/pending'
 require 'ostruct'
 require 'more_core_extensions/core_ext/object/blank'
 require 'metadata/VmConfig/VmConfig'

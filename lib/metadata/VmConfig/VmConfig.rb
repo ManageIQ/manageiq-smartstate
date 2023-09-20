@@ -1,6 +1,7 @@
 require 'pathname'
 require 'metadata/VMMount/VMMount'
 require 'miq_unicode'
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'VMwareWebService/MiqVimInventory'
 require 'timeout'

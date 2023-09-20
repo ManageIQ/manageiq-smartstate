@@ -4,6 +4,7 @@ require 'logger'
 $log = Logger.new(File.expand_path("../../../../log/#{File.basename(__FILE__, ".*")}.log", __dir__))
 
 require 'metadata/MIQExtract/MIQExtract'
+require 'manageiq/gems/pending'
 require 'util/miq-process'
 require 'sys-uname'
 

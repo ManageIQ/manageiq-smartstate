@@ -90,6 +90,7 @@
 ############################################################################################
 
 require 'binary_struct'
+require 'manageiq/gems/pending'
 require 'util/miq-hash_struct'
 
 require_relative 'MiqBdbHash'

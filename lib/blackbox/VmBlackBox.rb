@@ -1,5 +1,6 @@
 require 'ostruct'
 require 'yaml'
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'blackbox/xmlStorage'
 require 'metadata/VmConfig/VmConfig'

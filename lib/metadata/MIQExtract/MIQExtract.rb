@@ -1,4 +1,5 @@
 require 'metadata/util/md5deep'
+require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'ostruct'
 require 'manageiq-password'
