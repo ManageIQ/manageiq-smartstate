@@ -1,3 +1,4 @@
+require 'awesome_spawn'
 require 'MiqVm/MiqVm'
 
 class MiqRhevmVm < MiqVm
@@ -51,12 +52,17 @@ class MiqRhevmVm < MiqVm
       storage_obj    = storage_domains_by_id[storage_id]
 
       file_path = file_path_for_storage_type(storage_obj, disk)
+      file_path_s = file_path.to_s
 
       tag = "scsi0:#{idx}"
       cfg_hash["#{tag}.present"]    = "true"
       cfg_hash["#{tag}.devicetype"] = "disk"
-      cfg_hash["#{tag}.filename"]   = file_path.to_s
+      cfg_hash["#{tag}.filename"]   = file_path_s
       cfg_hash["#{tag}.format"]     = disk.format
+
+      if storage_type_block?(storage_obj.storage.type) && !lv_active?(file_path_s)
+        AwesomeSpawn.run!("sudo lvchange", :params => [:activate, "y", file_path_s])
+      end
     end
     cfg_hash
   end
@@ -65,8 +71,7 @@ class MiqRhevmVm < MiqVm
     storage_type = storage_obj&.storage&.type
 
     # TODO: account for other storage types here.
-    case storage_type
-    when "nfs", "glusterfs"
+    if storage_type_file?(storage_type)
       add_fs_mount(storage_obj)
       fs_file_path(storage_obj, disk)
     else
@@ -176,5 +181,20 @@ class MiqRhevmVm < MiqVm
     rescue
       $log.warn "#{log_header} Failed to unmount all items from <#{nfs_mount_root}>.  Reason: <#{$!}>"
     end
+  end
+
+  private
+
+  # Output attributes of LV in column format and parse to retrieve active status
+  def lv_active?(lv_path)
+    AwesomeSpawn.run!("sudo lvs", :params => [:noheadings, :o, "lv_active", lv_path]).output.strip == "active"
+  end
+
+  def storage_type_block?(storage_type)
+    ["ISCSI", "FCP"].include?(storage_type.upcase)
+  end
+
+  def storage_type_file?(storage_type)
+    ["NFS", "GLUSTERFS"].include?(storage_type.upcase)
   end
 end
