@@ -56,12 +56,12 @@ module FindClassMethods
 
     while (file = paths.shift)
       depth = depths.shift
-      yield file.dup.taint
+      yield file.dup
       next if max_depth && depth + 1 > max_depth
 
       get_dir_entries(file).each do |f|
         f = File.join(file, f)
-        paths.unshift f.untaint
+        paths.unshift f
         depths.unshift depth + 1
       end
     end
