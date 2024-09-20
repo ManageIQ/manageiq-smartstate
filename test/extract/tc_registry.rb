@@ -71,7 +71,7 @@ module Extract
       refute_nil(xml.root.attributes['created_on'])
       refute_nil(xml.root.attributes['display_time'])
       assert_instance_of(String, xml.root.attributes['display_time'])
-      assert_instance_of(Fixnum, eval(xml.root.attributes['created_on']))
+      assert_instance_of(Integer, eval(xml.root.attributes['created_on']))
 
       # Use the as an exit point to generate the reference xml for testing
       # createReferenceXml(xml, category)
