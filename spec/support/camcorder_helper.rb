@@ -38,7 +38,7 @@ module Camcorder
 
   class Recorder
     def start
-      if File.exists?(filename)
+      if File.exist?(filename)
         contents = File.read(filename)
         @recordings = YAML.respond_to?(:safe_load) ? YAML.safe_load(contents, :permitted_classes => [Camcorder::Recording, Symbol]) : YAML.load(contents)
         @replaying = true
