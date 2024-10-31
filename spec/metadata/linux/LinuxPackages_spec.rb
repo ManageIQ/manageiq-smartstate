@@ -5,6 +5,7 @@ describe MiqLinux::Packages do
 
   before do
     allow(fs).to receive(:fileExists?).and_return(false)
+    allow(fs).to receive(:fileDirectory?).and_return(false)
   end
 
   context "with a dpkg status file" do
@@ -73,6 +74,34 @@ describe MiqLinux::Packages do
           "installed" => true
         )
       end
+    end
+  end
+
+  context "with a conarydb file" do
+    before do
+      expect(fs).to receive(:fileExists?).with(MiqLinux::Packages::CONARY_FILE).and_return(true)
+      expect(fs)
+        .to receive(:fileOpen)
+        .with(MiqLinux::Packages::CONARY_FILE, "r")
+        .and_return(File.open(File.expand_path('../../db/MiqSqlite/conary.db', __dir__), "r"))
+      expect(fs).to receive(:fileSize).twice.with(MiqLinux::Packages::CONARY_FILE).and_return(File.size(File.expand_path('../../db/MiqSqlite/conary.db', __dir__)))
+    end
+
+    it "returns a list of packages" do
+      result = described_class.new(fs)
+
+      expect(result.instance_variable_get(:@packages).count).to eq(212)
+    end
+
+    it "returns relevant information for each package" do
+      result = described_class.new(fs)
+      kernel = result.instance_variable_get(:@packages).detect { |p| p.name == 'kernel' }
+
+      expect(kernel.to_hash).to include(
+        :name      => "kernel",
+        :version   => "/conary.rpath.com@rpl:devel//1/2.6.19.7-0.3-1",
+        :installed => true
+      )
     end
   end
 end
