@@ -6,7 +6,7 @@ require 'metadata/linux/MiqConaryPackages'
 
 module MiqLinux
   class Packages
-    attr_accessor :fs
+    attr_accessor :fs, :packages
     #
     # Debian based packageing.
     #
