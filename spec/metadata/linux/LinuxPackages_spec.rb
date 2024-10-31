@@ -42,6 +42,7 @@ describe MiqLinux::Packages do
   context "with an RPM directory" do
     before do
       expect(fs).to receive(:fileDirectory?).with(MiqLinux::Packages::RPM_DB).and_return(true)
+      expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "Packages")).and_return(true)
     end
 
     context "with a Packages Berkeley DB file" do
