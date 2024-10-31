@@ -1,0 +1,22 @@
+Package: linux-image-6.11.4-amd64
+Status: install ok installed
+Priority: optional
+Section: kernel
+Installed-Size: 104414
+Maintainer: Debian Kernel Team <debian-kernel@lists.debian.org>
+Architecture: amd64
+Source: linux-signed-amd64 (6.11.4+1)
+Version: 6.11.4-1
+Replaces: linux-image-6.11.4-amd64-unsigned
+Depends: kmod, linux-base (>= 4.3~), initramfs-tools (>= 0.120+deb8u2) | linux-initramfs-tool
+Recommends: apparmor
+Suggests: firmware-linux-free, linux-doc-6.11, debian-kernel-handbook, grub-pc | grub-efi-amd64 | extlinux
+Breaks: fwupdate (<< 12-7), initramfs-tools (<< 0.120+deb8u2), wireless-regdb (<< 2019.06.03-1~)
+Conflicts: linux-image-6.11.4-amd64-unsigned
+Description: Linux 6.11 for 64-bit PCs (signed)
+ The Linux kernel 6.11 and modules for use on PCs with AMD64, Intel 64 or
+ VIA Nano processors.
+ .
+ The kernel image is signed for use with Secure Boot.
+Built-Using: linux (= 6.11.4-1)
+Homepage: https://www.kernel.org/
