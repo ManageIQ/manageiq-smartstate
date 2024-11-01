@@ -63,7 +63,7 @@ module MiqSqlite3DB
       return if @type != "table" || @name[0..6] == "sqlite_"  # Names beginning with sqlite_ are internal to engine
       @columns = []
       sql = @sql.gsub(/[\n\r]/, "")
-      re1 = /\s*CREATE\s+TABLE\s+(\w+)\s*\((.*)\)\s*/
+      re1 = /\s*CREATE\s+TABLE\s+'?(\w+)'?\s*\((.*)\)\s*/
       m = re1.match(sql)
       tname = m[1].to_s.chomp
       raise "Inconsistent Table Name" if tname != @name
