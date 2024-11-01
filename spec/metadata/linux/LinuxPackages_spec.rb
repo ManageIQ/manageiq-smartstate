@@ -42,11 +42,11 @@ describe MiqLinux::Packages do
   context "with an RPM directory" do
     before do
       expect(fs).to receive(:fileDirectory?).with(MiqLinux::Packages::RPM_DB).and_return(true)
-      expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "Packages")).and_return(true)
     end
 
     context "with a Packages Berkeley DB file" do
       before do
+        expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "Packages")).and_return(true)
         expect(fs)
           .to receive(:fileOpen)
           .with(File.join(MiqLinux::Packages::RPM_DB, "Packages"), "r")
@@ -74,6 +74,24 @@ describe MiqLinux::Packages do
           "depends"   => "rpmlib(VersionedDependencies)\nfileutils\nmodutils\ninitscripts\nmkinitrd\n/bin/sh\nrpmlib(PayloadFilesHavePrefix)\nrpmlib(CompressedFileNames)",
           "installed" => true
         )
+      end
+    end
+
+    context "with a rpmdb.sqlite DB file" do
+      before do
+        expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "Packages")).and_return(false)
+        expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite")).and_return(true)
+        expect(fs).to receive(:fileSize).twice.with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite")).and_return(File.size(File.expand_path('../../db/MiqSqlite/rpmdb-empty.sqlite', __dir__)))
+        expect(fs)
+          .to receive(:fileOpen)
+          .with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite"), "r")
+          .and_return(File.open(File.expand_path('../../db/MiqSqlite/rpmdb-empty.sqlite', __dir__), "r"))
+      end
+
+      it "returns a list of rpm packages" do
+        result = described_class.new(fs)
+
+        expect(result.packages.count).to eq(0)
       end
     end
   end
