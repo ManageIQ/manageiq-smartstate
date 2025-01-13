@@ -4,37 +4,44 @@ class MiqRpmPackages
       @fs           = fs
       @db_file_path = dbFile
 
-      @rpmdb_tempfile = nil
-      @rpmdb_path     = nil
+      @rpmdb_tempdir = nil
+      @rpmdb_path    = nil
 
       if fs.present?
-        rpmdb_file      = fs.fileOpen(@db_file_path, "r")
-        @rpmdb_tempfile = Tempfile.new("rpmdb", :binmode => true)
+        @rpmdb_tempdir = Dir.mktmpdir("rpmdb-")
+        FileUtils.mkdir_p("#{@rpmdb_tempdir}/var/lib/rpm")
+
+        rpmdb_tempfile = File.open("#{@rpmdb_tempdir}/var/lib/rpm/rpmdb.sqlite", "wb")
+        rpmdb_file     = fs.fileOpen(@db_file_path, "r")
 
         loop do
-          chunk = rpmdb_file.read(1024)
+          chunk = rpmdb_file.read(4_096)
           break if chunk.nil?
 
-          @rpmdb_tempfile.write(chunk)
+          rpmdb_tempfile.write(chunk)
         end
 
-        @rpmdb_tempfile.close
+        rpmdb_tempfile.close
         rpmdb_file.close
 
-        @rpmdb_path = @rpmdb_tempfile.path
+        @rpmdb_path = rpmdb_tempfile.path
       else
         @rpmdb_path = @db_file_path
       end
     end
 
     def each
+      require 'rpm'
+
+      RPM.transaction(@rpmdb_tempdir) do |ts|
+        ts.each do |pkg|
+          yield pkg
+        end
+      end
     end
 
     def close
-      if @rpmdb_tempfile
-        @rpmdb_tempfile.close
-        @rpmdb_tempfile.unlink
-      end
+      FileUtils.rm_rf(@rpmdb_tempdir) if @rpmdb_tempdir
     end
   end
 end
