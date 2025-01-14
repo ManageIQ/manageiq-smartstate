@@ -35,7 +35,15 @@ class MiqRpmPackages
 
       RPM.transaction(@rpmdb_tempdir) do |ts|
         ts.each do |pkg|
-          yield pkg
+          tagids = %w[name version release summary description buildtime vendor arch installtime]
+
+          result = tagids.each_with_object({}) { |tag, obj| obj[tag] = pkg[tag.to_sym] }
+          # These have different tag names for the tagid
+          result["category"]  = pkg[:group]
+          result["depends"]   = pkg[:requirename]
+          result["installed"] = true unless result.empty?
+
+          yield MiqHashStruct.new(result)
         end
       end
     end
