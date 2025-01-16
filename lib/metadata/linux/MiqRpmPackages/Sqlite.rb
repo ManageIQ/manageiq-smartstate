@@ -60,7 +60,7 @@ class MiqRpmPackages
 
     def rpm_db_relative
       @rpm_db_relative ||= begin
-        parts = [RbConfig::CONFIG["host_os"] =~ /darwin/ ? "opt/homebrew" : nil, MiqLinux::Packages::RPM_DB].compact
+        parts = [RbConfig::CONFIG["host_os"] =~ /darwin/ ? "opt/homebrew" : nil, "var/lib/rpm"].compact
         File.join(*parts)
       end
     end
