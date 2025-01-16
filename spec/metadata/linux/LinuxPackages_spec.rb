@@ -85,7 +85,6 @@ describe MiqLinux::Packages do
           .to receive(:fileOpen)
           .with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite"), "r")
           .and_return(File.open(File.expand_path('../../db/MiqSqlite/rpmdb-empty.sqlite', __dir__), "r"))
-        expect(fs).to receive(:present?).and_return(true)
       end
 
       it "returns a list of rpm packages" do
