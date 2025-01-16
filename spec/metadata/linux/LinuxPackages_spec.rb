@@ -81,11 +81,11 @@ describe MiqLinux::Packages do
       before do
         expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "Packages")).and_return(false)
         expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite")).and_return(true)
-        expect(fs).to receive(:fileSize).twice.with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite")).and_return(File.size(File.expand_path('../../db/MiqSqlite/rpmdb-empty.sqlite', __dir__)))
         expect(fs)
           .to receive(:fileOpen)
           .with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite"), "r")
           .and_return(File.open(File.expand_path('../../db/MiqSqlite/rpmdb-empty.sqlite', __dir__), "r"))
+        expect(fs).to receive(:present?).and_return(true)
       end
 
       it "returns a list of rpm packages" do
