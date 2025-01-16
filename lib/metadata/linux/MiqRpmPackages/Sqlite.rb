@@ -10,7 +10,9 @@ class MiqRpmPackages
       @rpmdb_tempdir = nil
       @rpmdb_path    = nil
 
-      if fs.present?
+      if fs.nil?
+        @rpmdb_path = @db_file_path
+      else
         @rpmdb_tempdir = Dir.mktmpdir("rpmdb-")
         rpmdb_dir = File.join(@rpmdb_tempdir, rpm_db_relative)
         FileUtils.mkdir_p(rpmdb_dir)
@@ -29,8 +31,6 @@ class MiqRpmPackages
         rpmdb_file.close
 
         @rpmdb_path = rpmdb_tempfile.path
-      else
-        @rpmdb_path = @db_file_path
       end
     end
 
