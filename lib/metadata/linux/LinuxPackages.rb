@@ -155,9 +155,13 @@ module MiqLinux
     #
     def procRPM(dbDir)
       $log.debug "Processing RPM package database"
+
       rpmp = MiqRpmPackages.new(@fs, dbDir)
-      rpmp.each { |p| @packages << p }
-      rpmp.close
+      begin
+        rpmp.each { |p| @packages << p }
+      ensure
+        rpmp.close
+      end
     end
 
     #
