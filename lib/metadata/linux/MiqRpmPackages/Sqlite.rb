@@ -44,7 +44,7 @@ class MiqRpmPackages
           result = tagids.each_with_object({}) { |tag, obj| obj[tag] = pkg[tag.to_sym] }
           # These have different tag names for the tagid
           result["category"]  = pkg[:group]
-          result["depends"]   = pkg[:requirename]
+          result["depends"]   = pkg[:requirename]&.join("\n")
           result["installed"] = true unless result.empty?
 
           yield MiqHashStruct.new(result)
