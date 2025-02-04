@@ -20,12 +20,12 @@ describe MiqLinux::Packages do
     it "returns a list of rpm packages" do
       result = described_class.new(fs)
 
-      expect(result.instance_variable_get(:@packages).count).to eq(1)
+      expect(result.packages.count).to eq(1)
     end
 
     it "returns relevent information for each package" do
       result = described_class.new(fs)
-      kernel = result.instance_variable_get(:@packages).first
+      kernel = result.packages.first
 
       expect(kernel.to_h).to include(
         :name        => "linux-image-6.11.4-amd64",
@@ -55,12 +55,12 @@ describe MiqLinux::Packages do
       it "returns a list of rpm packages" do
         result = described_class.new(fs)
 
-        expect(result.instance_variable_get(:@packages).count).to eq(690)
+        expect(result.packages.count).to eq(690)
       end
 
       it "returns relevent information for each package" do
         result = described_class.new(fs)
-        kernel = result.instance_variable_get(:@packages).detect { |p| p.name == 'kernel' }
+        kernel = result.packages.detect { |p| p.name == 'kernel' }
 
         expect(kernel.to_h).to include(
           "name"      => "kernel",
@@ -90,12 +90,12 @@ describe MiqLinux::Packages do
     it "returns a list of packages" do
       result = described_class.new(fs)
 
-      expect(result.instance_variable_get(:@packages).count).to eq(212)
+      expect(result.packages.count).to eq(212)
     end
 
     it "returns relevant information for each package" do
       result = described_class.new(fs)
-      kernel = result.instance_variable_get(:@packages).detect { |p| p.name == 'kernel' }
+      kernel = result.packages.detect { |p| p.name == 'kernel' }
 
       expect(kernel.to_hash).to include(
         :name      => "kernel",
