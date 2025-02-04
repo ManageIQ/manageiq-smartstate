@@ -4,6 +4,8 @@ require "tmpdir"
 class MiqRpmPackages
   class Sqlite < MiqRpmPackages
     def initialize(fs, dbFile)
+      require "rpm"
+
       @fs           = fs
       @db_file_path = dbFile
 
@@ -14,7 +16,7 @@ class MiqRpmPackages
         @rpmdb_path = @db_file_path
       else
         @rpmdb_tempdir = Dir.mktmpdir("rpmdb-")
-        rpmdb_dir = File.join(@rpmdb_tempdir, rpm_db_relative)
+        rpmdb_dir = File.join(@rpmdb_tempdir, RPM['_dbpath'])
         FileUtils.mkdir_p(rpmdb_dir)
 
         rpmdb_tempfile = File.open(File.join(rpmdb_dir, "rpmdb.sqlite"), "wb")
@@ -35,8 +37,6 @@ class MiqRpmPackages
     end
 
     def each
-      require 'rpm'
-
       RPM.transaction(@rpmdb_tempdir) do |ts|
         ts.each do |pkg|
           tagids = %w[name version release summary description buildtime vendor arch installtime]
@@ -54,15 +54,6 @@ class MiqRpmPackages
 
     def close
       FileUtils.rm_rf(@rpmdb_tempdir) if @rpmdb_tempdir
-    end
-
-    private
-
-    def rpm_db_relative
-      @rpm_db_relative ||= begin
-        parts = [RbConfig::CONFIG["host_os"] =~ /darwin/ ? "opt/homebrew" : nil, "var/lib/rpm"].compact
-        File.join(*parts)
-      end
     end
   end
 end
