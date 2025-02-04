@@ -1,4 +1,3 @@
-require "metadata/linux/LinuxPackages"
 require "tmpdir"
 
 class MiqRpmPackages
