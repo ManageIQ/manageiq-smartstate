@@ -46,6 +46,7 @@ describe MiqLinux::Packages do
 
     context "with a Packages Berkeley DB file" do
       before do
+        expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "Packages")).and_return(true)
         expect(fs)
           .to receive(:fileOpen)
           .with(File.join(MiqLinux::Packages::RPM_DB, "Packages"), "r")
@@ -71,6 +72,36 @@ describe MiqLinux::Packages do
           "category"  => "System Environment/Kernel",
           "arch"      => "i686",
           "depends"   => "rpmlib(VersionedDependencies)\nfileutils\nmodutils\ninitscripts\nmkinitrd\n/bin/sh\nrpmlib(PayloadFilesHavePrefix)\nrpmlib(CompressedFileNames)",
+          "installed" => true
+        )
+      end
+    end
+
+    context "with a rpmdb.sqlite DB file" do
+      before do
+        expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "Packages")).and_return(false)
+        expect(fs).to receive(:fileExists?).with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite")).and_return(true)
+        expect(fs)
+          .to receive(:fileOpen)
+          .with(File.join(MiqLinux::Packages::RPM_DB, "rpmdb.sqlite"), "r")
+          .and_return(File.open(File.expand_path('data/rpm/rpmdb.sqlite', __dir__), "r"))
+      end
+
+      it "returns a list of rpm packages" do
+        result = described_class.new(fs)
+
+        expect(result.packages.count).to eq(1)
+
+        package = result.packages.first
+        expect(package.to_h).to include(
+          "name"      => "simple",
+          "version"   => "1.0",
+          "release"   => "0",
+          "summary"   => "Simple dummy package",
+          "vendor"    => nil,
+          "category"  => "Development",
+          "arch"      => "i586",
+          "depends"   => "rpmlib(CompressedFileNames)\nrpmlib(PayloadFilesHavePrefix)\nrpmlib(PayloadIsLzma)",
           "installed" => true
         )
       end
