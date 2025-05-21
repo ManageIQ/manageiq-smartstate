@@ -161,6 +161,8 @@ class MiqOpenStackInstance
   def miq_vm
     raise "Instance: #{instance.id}, does not have snapshot reference." unless snapshot_image_id
     @miq_vm ||= begin
+      require "MiqVm/MiqVm"
+
       @temp_image_file = get_image_file(snapshot_image_id)
       hardware  = "scsi0:0.present = \"TRUE\"\n"
       hardware += "scsi0:0.filename = \"#{@temp_image_file.path}\"\n"
