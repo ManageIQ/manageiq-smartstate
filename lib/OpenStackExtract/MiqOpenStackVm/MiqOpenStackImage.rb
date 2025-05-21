@@ -33,6 +33,8 @@ class MiqOpenStackImage
 
   def miq_vm
     @miq_vm ||= begin
+      require "MiqVm/MiqVm"
+
       @temp_image_file = get_image_file
       hardware  = "scsi0:0.present = \"TRUE\"\n"
       hardware += "scsi0:0.filename = \"#{@temp_image_file.path}\"\n"
