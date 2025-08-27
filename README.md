@@ -1,7 +1,7 @@
 # ManageIQ::Smartstate
 
 [![Gem Version](https://badge.fury.io/rb/manageiq-smartstate.svg)](http://badge.fury.io/rb/manageiq-smartstate)
-[![CI](https://github.com/ManageIQ/manageiq-smartstate/actions/workflows/ci.yaml/badge.svg)](https://github.com/ManageIQ/manageiq-smartstate/actions/workflows/ci.yaml)
+[![CI](https://github.com/ManageIQ/manageiq-smartstate/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/ManageIQ/manageiq-smartstate/actions/workflows/ci.yaml)
 [![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq-smartstate.svg)](https://codeclimate.com/github/ManageIQ/manageiq-smartstate)
 [![Test Coverage](https://codeclimate.com/github/ManageIQ/manageiq-smartstate/badges/coverage.svg)](https://codeclimate.com/github/ManageIQ/manageiq-smartstate/coverage)
 
