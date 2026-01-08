@@ -1,6 +1,6 @@
 require 'disk/MiqDisk'
 require 'ostruct'
-require 'minitest/unit'
+require 'minitest/autorun'
 
 module DiskTestCommon
   class TestMiqDisk < Minitest::Test

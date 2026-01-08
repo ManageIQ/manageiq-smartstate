@@ -1,6 +1,6 @@
 require 'disk/modules/MiqLargeFile'
 require 'metadata/util/md5deep'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'tmpdir'
 
 module DiskTestCommon

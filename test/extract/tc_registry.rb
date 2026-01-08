@@ -3,7 +3,7 @@ require 'metadata/MIQExtract/MIQExtract'
 require 'manageiq/gems/pending'
 require 'util/miq-xml'
 require 'digest/md5'
-require 'minitest/unit'
+require 'minitest/autorun'
 
 module Extract
   class TestRegistry < Minitest::Test

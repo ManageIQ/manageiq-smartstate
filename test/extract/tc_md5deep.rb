@@ -1,5 +1,5 @@
 require 'metadata/util/md5deep'
-require 'minitest/unit'
+require 'minitest/autorun'
 
 module Extract
   class TestVersionInfo < Minitest::Test

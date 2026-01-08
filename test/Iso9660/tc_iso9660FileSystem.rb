@@ -1,5 +1,5 @@
 require 'ostruct'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'disk/MiqDisk'
 require 'fs/MiqFS/MiqFS'
 
