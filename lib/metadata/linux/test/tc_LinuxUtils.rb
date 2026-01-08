@@ -1,4 +1,4 @@
-require 'minitest/unit'
+require 'minitest/autorun'
 
 require 'metadata/linux/LinuxUtils'
 

@@ -1,4 +1,4 @@
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'fs/ext3/block_pointers_path'
 include  Ext3
 

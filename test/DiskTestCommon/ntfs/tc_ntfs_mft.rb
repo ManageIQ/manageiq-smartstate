@@ -1,6 +1,6 @@
 # encoding: US-ASCII
 
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'ostruct'
 
 require_relative '../../VmsFromYaml'

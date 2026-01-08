@@ -1,5 +1,5 @@
 require 'metadata/util/win32/versioninfo'
-require 'minitest/unit'
+require 'minitest/autorun'
 
 module Extract
   class TestVersionInfo < Minitest::Test
