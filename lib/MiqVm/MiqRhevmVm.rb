@@ -136,7 +136,6 @@ class MiqRhevmVm < MiqVm
   def mount_storage
     require 'manageiq/gems/pending'
     require 'util/mount/miq_nfs_session'
-    require 'util/mount/miq_glusterfs_session'
     log_header = "MIQ(MiqRhevmVm.mount_storage)"
     $log.info "#{log_header} called"
 
@@ -155,8 +154,8 @@ class MiqRhevmVm < MiqVm
         case mount_info[:type]
         when "nfs"
           MiqNfsSession.new(mount_info).connect
-        when "glusterfs"
-          MiqGlusterfsSession.new(mount_info).connect
+        else
+          raise "Unsupported filesystem #{mount_info[:type]}"
         end
 
         @ost.nfs_storage_mounted = true
