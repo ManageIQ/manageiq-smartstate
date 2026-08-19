@@ -10,6 +10,8 @@ gem "handsoap", "=0.2.5.5", :require => false, :source => "https://rubygems.mana
 
 minimum_version =
   case ENV['TEST_RAILS_VERSION']
+  when "8.1"
+    "~>8.1.3"
   when "8.0"
     "~>8.0.4"
   else
