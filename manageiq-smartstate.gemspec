@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "manageiq-password",  "< 2"
   spec.add_dependency "memory_buffer",      ">=0.1.0"
   spec.add_dependency "rpm2",               "~>0.1.0"
-  spec.add_dependency "rufus-lru",          "~>1.0.3"
+  spec.add_dependency "rufus-lru",          "~>1.1.0"
   spec.add_dependency "sys-uname",          "~>1.2.1"
   spec.add_dependency "uuidtools",          "~>2.1"
   spec.add_dependency "vmware_web_service", "~>3.0"
