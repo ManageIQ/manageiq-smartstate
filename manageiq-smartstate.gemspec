@@ -44,5 +44,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov", ">= 0.21.2"
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "vcr",       "~>6.4.0"
-  spec.add_development_dependency "webmock",   "~>3.40.0"
+  spec.add_development_dependency "webmock",   "~>3.42.0"
 end
